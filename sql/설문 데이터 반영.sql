@@ -4,7 +4,7 @@ VALUES
 ('OTT'),
 ('Ai'),
 ('Music'),
-('Others');
+('Etc');
 
 # 카드 종류
 INSERT INTO card (card_id, card_name)
@@ -71,3 +71,4 @@ INSERT INTO `user` (`user_id`,`edit_id`,`log`,`email`,`password`,`nickname`,`use
 (49,49,'a049','copperlane49@gmail.com','p3n7r2!Ww9','보리','active','Netflix','youtubeMusic','Chat gpt','유튜브 프리미엄'),
 
 (50,50,'a050','sunnyarchive50@naver.com','q9t2u6@Xx0','주리','active','Netflix, Disney+, 쿠팡플레이','Apple music, 유튜브 뮤직','Gemini','유튜브 프리미엄, 쿠팡와우, 네이버 MYBOX');
+
