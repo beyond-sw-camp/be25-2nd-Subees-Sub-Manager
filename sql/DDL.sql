@@ -17,7 +17,7 @@ CREATE TABLE user (
     email VARCHAR(255) NOT NULL UNIQUE,
     `password` VARCHAR(255) NOT NULL,
     nickname VARCHAR(255) NOT NULL UNIQUE,
-    user_state VARCHAR(255) NOT NULL,
+    user_state ENUM('ACTIVE','INACTIVE','SUSPENDED') NOT NULL,
     email_verified CHAR(1) NOT NULL DEFAULT 'N' CHECK (email_verified IN ('Y','N')),
     email_verified_at DATETIME NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -30,11 +30,13 @@ CREATE TABLE card (
 
 CREATE TABLE payment_method (
     payment_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    card_id BIGINT NOT NULL ,
     user_id BIGINT NOT NULL,
     card_name VARCHAR(255) NULL,
 	 is_active TINYINT(1) NOT NULL DEFAULT 1,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES `user`(user_id)
+    FOREIGN KEY (user_id) REFERENCES `user`(user_id),
+    FOREIGN KEY (card_id) REFERENCES `card`(card_id)
 );
 
 CREATE TABLE add_subscription (
@@ -97,5 +99,3 @@ CREATE TABLE recommendations (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	 FOREIGN KEY (user_id) REFERENCES `user`(user_id)
 );
-UPDATE 
-
