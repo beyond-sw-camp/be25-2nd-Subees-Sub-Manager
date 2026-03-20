@@ -8,6 +8,9 @@
 <!-- ✅ 로고(Back-end는 로고 사용, 포스터 섹션은 제외) -->
 <img src="./이미지/로고/Subees_Logo.png" alt="Subees Logo" width="320" />
 
+<!-- ✅ 로고(Back-end는 로고 사용, 포스터 섹션은 제외) -->
+<img src="./이미지/로고/포스터.png" alt="Subees Phoster" width="720" />
+
 <br/><br/>
 
 <img src="https://img.shields.io/badge/Backend-Spring%20Boot-0f172a?style=for-the-badge" alt="Backend" />
@@ -123,7 +126,10 @@
 
 <a id="프로젝트-시나리오"></a>
 ## 📖 프로젝트 시나리오
-<img src="./이미지/파일/api명세서" alt="api" width="320" />
+<div align="center">
+<img src="./이미지/작업이미지/프로젝트 시나리오.png" alt="api" width="640" />
+</div>
+
 - 예시)
   1. 사용자가 회원가입 및 로그인을 진행한다.
   2. 사용자가 구독 서비스를 등록한다.
