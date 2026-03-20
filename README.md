@@ -146,95 +146,59 @@
 <a id="요구사항-명세서"></a>
 ### 🧩 요구사항 명세서
 <img src="./이미지/로고/Subees_Logo.png" alt="Subees Logo" width="320" />
-https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?usp=sharing&ouid=102208872170708224187&rtpof=true&sd=true
+<링크>https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?usp=sharing&ouid=102208872170708224187&rtpof=true&sd=true
 
 <a id="erd"></a>
-### 🗺️ ERD (Entity Relationship Diagram)
-<!-- TODO: ERD 이미지로 교체 -->
-<div align="center">
-
-<img src="./이미지/포스터/포스터예시.jpg" width="720" alt="ERD (placeholder)" />
-
+### 🗺️ ERD
+<img src="./이미지/작업이미지/ERD.png" alt="ERD" width="640" />
+#### 주요 관계
+- `user` 1 : N `add_subscription`
+- `user` 1 : N `payment_method`
+- `user` 1 : N `notifications`
+- `user` 1 : N `community_posts`
+- `user` 1 : N `community_scrap`
+- `user` 1 : N `recommendations`
+- `card` 1 : N `payment_method`
+- `payment_method` 1 : N `add_subscription`
+- `subscription_category` 1 : N `subscription_item`
+- `subscription_item` 1 : N `add_subscription`
+- `community_posts` 1 : N `community_scrap`
 </div>
 
 <a id="테이블-명세서-및-제약-조건"></a>
 ### 📋 테이블 명세서 및 제약 조건(Constraints)
-🔗 <!-- TODO: 테이블 명세서 링크 -->
+<링크>https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?usp=sharing&ouid=102208872170708224187&rtpof=true&sd=true
+### 테이블 명세서 설명
+본 테이블 설계는 `user`를 중심으로 구독 관리, 결제수단 관리, 커뮤니티, 알림, 추천 기능이 연결되도록 구성하였다.
 
-- PK/FK/Unique/Index 정책
-- 상태 전이 관련 제약(예: 허용 전이만 가능하도록 서버에서 검증)
-- 삭제 정책(Soft delete 여부)
+- `user`: 회원 기본 정보 관리
+- `add_subscription`: 사용자 구독 정보 관리
+- `subscription_item` / `subscription_category`: 구독 항목 및 카테고리 관리
+- `payment_method` / `card`: 사용자 결제수단 및 카드사 정보 관리
+- `community_posts` / `community_scrap`: 게시글 및 스크랩 기능 관리
+- `notifications`: 결제 알림 및 상태 관리
+- `recommendations`: 예산 기반 추천 결과 저장
+- `setting` / `editlog`: 설정 변경 및 수정 이력 관리
 
+주요 제약 조건으로는 이메일·닉네임의 중복 방지를 위한 `UNIQUE`, 금액 및 성별 값 검증을 위한 `CHECK`, 그리고 사용자 및 구독 관련 테이블 간 `FK` 연결을 통해 데이터 무결성을 보장하도록 설계하였다.
 ---
 
-<a id="시스템-아키텍처-및-api-system-architecture--api"></a>
-## 🏗️ 시스템 아키텍처 및 API (System Architecture & API)
-
-<a id="시스템-구성도"></a>
-### 🧱 시스템 구성도 (System Architecture)
-<!-- TODO: 아키텍처 다이어그램으로 교체 -->
-<div align="center">
-
-<img src="./이미지/포스터/포스터예시.jpg" width="720" alt="System Architecture (placeholder)" />
-
-</div>
-
+<a id="시스템-아키텍처"></a>
+## 🏗️ 시스템 아키텍처
+<img src="./이미지/작업이미지/시스템아키텍쳐.png" alt="시스템아키텍쳐" width="640" />
 <a id="api-명세서"></a>
-### 📑 API 명세서 (Swagger 또는 Postman)
-- Swagger: 🔗 <!-- TODO: Swagger URL -->
-- Postman: 🔗 <!-- TODO: Postman 링크 -->
-
-<a id="상태-코드-전이-규칙"></a>
-### 🔁 상태 코드 전이 규칙 (Status Code Transition)
-<!-- TODO: 실제 상태 전이 규칙으로 수정 -->
-| Domain | From | To | Rule |
-|---|---|---|---|
-| Subscription | ACTIVE | CANCELED | <!-- TODO: 결제 종료일/환불 정책 등 --> |
-| Subscription | PENDING | ACTIVE | <!-- TODO --> |
+### 📑 API 명세서
 
 ---
-
-<a id="개발-산출물-및-검증-outputs--validation"></a>
-## ✅ 개발 산출물 및 검증 (Outputs & Validation)
 
 <a id="sql-산출물"></a>
 ### 📄 SQL 산출물 (DDL, 핵심 프로시저/트리거)
-- DDL: `./sql/ddl.sql` <!-- TODO: 경로/파일명 수정 -->
-- Trigger/Procedure: `./sql/triggers.sql` <!-- TODO -->
+추후에 제작 예정
 
 <a id="api-단위-테스트-결과서"></a>
 ### 🧪 API 단위 테스트 결과서 (DB 적재 확인 및 조회 쿼리 증빙)
-🔗 <!-- TODO: 테스트 결과서 링크 -->
-- 케이스: 등록/조회/상태전이/예외 케이스
-- DB 적재 증빙: 쿼리 캡처/로그
-
-<a id="성능동시성-테스트-보고서"></a>
-### ⚡ 성능/동시성 테스트 보고서 (선택 사항)
-🔗 <!-- TODO: 보고서 링크(없으면 생략 가능) -->
-- 동시 요청 시나리오
-- 트랜잭션/락 정책 결과
-
----
-
-<a id="회고-및-트러블슈팅-troubleshooting--review"></a>
-## 🛠️ 회고 및 트러블슈팅 (Troubleshooting & Review)
-
-<a id="주요-트러블슈팅"></a>
-### 🐛 주요 트러블슈팅
-| 이슈 | 원인 | 해결 | 참고 |
-|---|---|---|---|
-| N+1 문제 | <!-- TODO --> | <!-- TODO: fetch join / entity graph / DTO projection --> | <!-- TODO: PR/Issue 링크 --> |
-| 참조 무결성 오류 | <!-- TODO --> | <!-- TODO: FK 설계/삭제 정책 변경 --> | <!-- TODO --> |
+추후에 제작 예정
 
 <a id="프로젝트-마무리-회고-및-향후-확장-계획"></a>
 ### 📝 프로젝트 마무리 회고 및 향후 확장 계획
-- 회고(예시): <!-- TODO -->
-- 확장(예시)
-  - 캐시/레디스 도입
-  - 이벤트 기반 알림 처리
-  - CQRS 분리/읽기 성능 최적화
-
----
-
-## 🧾 License
-<!-- TODO: 라이선스 -->
+추후에 제작 예정
