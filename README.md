@@ -8,6 +8,14 @@
 
 <br/><br/>
 
+<div align="center">
+흩어진 구독시스템을 한번에 
+효율을 높이는 통합 구독 관리 플랫폼
+  
+***Subees_project***
+
+</div>
+
 <img src="./이미지/로고/포스터.png" alt="Subees Poster" width="720" />
 
 <br/><br/>
