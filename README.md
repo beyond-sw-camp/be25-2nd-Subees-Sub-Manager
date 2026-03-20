@@ -185,6 +185,7 @@
 
 <a id="시스템-아키텍처"></a>
 ## 🏗️ 시스템 아키텍처
+<링크>https://app.cloudcraft.co/view/65bc3092-5496-4d52-adb4-1ba4d1d7a0ac?key=4c22b50e-a162-4c2f-89c3-520f55bc47e1
 <img src="./이미지/작업이미지/시스템아키텍쳐.png" alt="시스템아키텍쳐" width="640" />
 <a id="api-명세서"></a>
 ### 📑 API 명세서
