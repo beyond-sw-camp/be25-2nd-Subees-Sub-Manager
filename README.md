@@ -143,75 +143,10 @@
 
 ---
 
-<a id="백엔드-핵심-비즈니스-로직-설명"></a>
-## 🧠 백엔드 핵심 비즈니스 로직 설명
-<!-- TODO: “핵심 도메인” 중심으로 작성 -->
-### 핵심 도메인(예시)
-- User / Auth
-- Subscription
-- Payment(또는 Billing)
-- Notification(선택)
-
-### 핵심 로직(예시)
-- 구독 등록 시: 중복 구독 검증(Unique) → 결제일 정책 검증 → 저장
-- 구독 상태 변경 시: 상태 전이 테이블/규칙 기반 검증 후 변경
-- 결제일 임박 알림: 스케줄러/배치/이벤트 기반 처리
-
----
-
-<a id="기술-스택-tech-stack"></a>
-## 🧰 기술 스택 (Tech Stack)
-| 분류 | 기술 |
-|---|---|
-| Framework | <!-- TODO: Spring Boot --> |
-| Language | <!-- TODO: Java --> |
-| DB | <!-- TODO: MariaDB --> |
-| ORM | <!-- TODO: JPA / QueryDSL --> |
-| Docs | <!-- TODO: Swagger / Postman --> |
-| Infra | <!-- TODO: Docker / AWS / GitHub Actions --> |
-| Test | <!-- TODO: JUnit5 / RestAssured 등 --> |
-
----
-
-<a id="framework--language"></a>
-## 🧩 Framework & Language
-- Spring Boot: <!-- TODO: 버전/채택 이유 -->
-- Java: <!-- TODO: 버전 -->
-
----
-
-<a id="database--orm"></a>
-## 🗄️ Database & ORM
-- MariaDB: <!-- TODO: 버전/설정 -->
-- JPA: <!-- TODO -->
-- QueryDSL: <!-- TODO -->
-
----
-
-<a id="배포-및-인프라"></a>
-## 🚀 배포 및 인프라
-<!-- TODO: 실제 배포 방식으로 수정 -->
-- Docker: <!-- TODO -->
-- AWS: <!-- TODO (EC2/RDS/S3 등) -->
-- GitHub Actions: <!-- TODO (CI/CD 파이프라인) -->
-
----
-
-<a id="요구사항-및-데이터-설계-requirements--db-design"></a>
-## 🧾 요구사항 및 데이터 설계 (Requirements & DB Design)
-
 <a id="요구사항-명세서"></a>
-### 🧩 요구사항 명세서 (기능/비기능)
-🔗 <!-- TODO: 요구사항 문서 링크 -->
-
-- 기능 요구사항(예시)
-  - 회원가입/로그인
-  - 구독 등록/수정/삭제
-  - 결제일 알림
-- 비기능 요구사항(예시)
-  - 인증/인가 정책
-  - 동시성/트랜잭션 규칙
-  - 로깅/모니터링
+### 🧩 요구사항 명세서
+<img src="./이미지/로고/Subees_Logo.png" alt="Subees Logo" width="320" />
+https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?usp=sharing&ouid=102208872170708224187&rtpof=true&sd=true
 
 <a id="erd"></a>
 ### 🗺️ ERD (Entity Relationship Diagram)
