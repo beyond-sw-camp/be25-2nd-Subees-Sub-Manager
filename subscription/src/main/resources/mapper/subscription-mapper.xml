@@ -35,8 +35,46 @@
 
     <select id="selectAll" resultMap="subscriptionResultMap">
         SELECT
-            <include refid="subscriptionColumns"/>
+        <include refid="subscriptionColumns"/>
         FROM add_subscription
+    </select>
+
+    <select id="countDuplicateSubscription" parameterType="com.subees.subscription.subscription.model.dto.CreateSubscriptionRequest" resultType="int">
+        SELECT COUNT(*)
+        FROM add_subscription
+        WHERE item_id = #{itemId}
+          AND payment_id = #{paymentId}
+          AND payment_date = #{paymentDate}
+          AND use_yn = 'Y'
+    </select>
+
+    <insert id="insertSubscription" parameterType="com.subees.subscription.subscription.model.dto.CreateSubscriptionRequest">
+        INSERT INTO add_subscription
+        (
+            item_id,
+            payment_id,
+            price,
+            billing_cycle,
+            payment_date,
+            use_yn,
+            created_at,
+            updated_at
+        )
+        VALUES
+            (
+                #{itemId},
+                #{paymentId},
+                #{price},
+                #{billingCycle},
+                #{paymentDate},
+                'Y',
+                NOW(),
+                NOW()
+            )
+    </insert>
+
+    <select id="selectLastInsertedId" resultType="long">
+        SELECT LAST_INSERT_ID()
     </select>
 
 </mapper>
