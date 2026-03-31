@@ -18,7 +18,7 @@ import java.util.Map;
 
 @RestController //json 반환
 //@Controller // html 반환
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1") //공통 prefix 적용
 @RequiredArgsConstructor // final 필드가 붙은 필수 파라미터 생성자 생성
 public class CommunityController {
 
@@ -26,18 +26,22 @@ public class CommunityController {
 
     // 게시글 목록 조회 - JSON 반환
     @GetMapping("/community/posts")
+    // 타입이 여러 개여서 <Map<String, Object>> 로 적용
     public ResponseEntity<Map<String, Object>> getCommunityPostList(@RequestParam(defaultValue = "1") int page) {
         int size = 10; //한 페이지당 글 수 10개
         PageRequestDto pageRequestDto = new PageRequestDto(page, size);
 
+        //db에서 게시글 조회
+        //match.ceil 페이징 올림 처리 (25개 / 10 = 2.5 ->3 페이지)
         List<CommunityPostListResponseDto> posts = communityService.getCommunityPostList(pageRequestDto);
         int totalCount = communityService.getCommunityPostCount();
         int totalPages = (int) Math.ceil((double) totalCount / size);
 
+        //타입이 여러 개라 Map 묶어서 반환
         Map<String, Object> response = new HashMap<>();
-        response.put("posts", posts);
-        response.put("page", page);
-        response.put("size", size);
+        response.put("posts", posts); //list type
+        response.put("page", page); //int type
+        response.put("size", size); //int type
         response.put("totalCount", totalCount);
         response.put("totalPages", totalPages);
 
