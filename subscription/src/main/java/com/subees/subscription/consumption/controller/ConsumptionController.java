@@ -1,8 +1,8 @@
 package com.subees.subscription.consumption.controller;
 
-import com.subees.subscription.consumption.model.dto.DateDetailListResponseDto;
-import com.subees.subscription.consumption.model.service.CalendarSummaryResultDto;
-import com.subees.subscription.consumption.model.service.ConsumptionService;
+import com.subees.subscription.consumption.dto.DateDetailListResponseDto;
+import com.subees.subscription.consumption.dto.CalendarSummaryResultDto;
+import com.subees.subscription.consumption.service.ConsumptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +25,11 @@ public class ConsumptionController {
     @GetMapping("/date-details")
     public DateDetailListResponseDto selectDateDetailList(@RequestParam Long userId, @RequestParam int year, @RequestParam int month, @RequestParam Integer date){
 
-        return consumptionService.getDateCount(userId, year, month, date);
+        return consumptionService.getDetail(userId, year, month, date);
     }
+
+
+
+
 
 }

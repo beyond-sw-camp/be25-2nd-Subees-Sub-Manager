@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.subees.subscription.consumption.model.mapper.ConsumptionMapper">
+<mapper namespace="com.subees.subscription.consumption.mapper.ConsumptionMapper">
 
     <select id="selectMonthlyTotalAmount" resultType="Integer">
         SELECT COALESCE(SUM(
@@ -15,7 +15,7 @@
             AND (end_date IS NULL OR end_date &gt;= #{monthStart})
     </select>
 
-    <select id="selectCalendarSummary" resultType="com.subees.subscription.consumption.model.dto.CalendarSummaryResponseDto">
+    <select id="selectCalendarSummary" resultType="com.subees.subscription.consumption.dto.CalendarSummaryResponseDto">
         SELECT
             a.subscription_id AS subscriptionId,
             s.item_name AS itemName,
@@ -31,7 +31,7 @@
             AND (a.end_date IS NULL OR a.end_date &gt;= #{monthStart});
     </select>
 
-    <select id="selectDateDetailList" resultType="com.subees.subscription.consumption.model.dto.DateDetailListResponseDto">
+    <select id="selectDateDetailList" resultType="com.subees.subscription.consumption.dto.DateDetailListResponseDto">
         SELECT s.item_name AS itemName,
             CASE
                 WHEN a.billing_cycle = '1M' THEN a.price
