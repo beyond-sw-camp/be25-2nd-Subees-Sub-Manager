@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 상세</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .meta { color: gray; font-size: 0.9em; margin-bottom: 20px; }
+        .content { border-top: 1px solid #ccc; padding-top: 20px; min-height: 200px; }
+        .back { margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <h2 th:text="${post.title}"></h2>
+    <div class="meta">
+        <span th:text="${post.nickname}"></span>
+        &nbsp;|&nbsp;
+        <span th:text="${post.createdAt}"></span>
+        &nbsp;|&nbsp;
+        조회 <span th:text="${post.viewCount}"></span>
+        &nbsp;|&nbsp;
+        스크랩 <span th:text="${post.scrapCount}"></span>
+    </div>
+    <div class="content" th:text="${post.content}"></div>
+    <div class="back">
+        <a th:href="@{/community/posts}">목록으로</a>
+    </div>
+</body>
+</html>

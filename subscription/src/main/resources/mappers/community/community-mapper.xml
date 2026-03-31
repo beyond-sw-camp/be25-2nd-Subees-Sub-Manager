@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.subees.subscription.community.model.mapper.CommunityMapper">
+
+    <!-- 스크링 부트 실행 버튼 실행 안 돼서  type에 경로 추가해주니까 실행됨.  -->
+    <resultMap id="communityListResultMap" type="com.subees.subscription.community.model.dto.CommunityPostListResponseDto">
+        <id     property="postId"     column="post_id"/>
+        <result property="title"      column="title"/>
+        <result property="nickname"   column="nickname"/>
+        <result property="createdAt"  column="created_at"/>
+        <result property="viewCount"  column="view_count"/>
+    </resultMap>
+
+    <!-- 페이징 게시글 조회 -->
+    <select id="selectCommunityPostList" parameterType="com.subees.subscription.community.model.dto.PageRequestDto" resultMap="communityListResultMap">
+        SELECT cp.post_id,
+               cp.title,
+               u.nickname,
+               cp.created_at,
+               cp.view_count
+        FROM community_posts cp
+        LEFT OUTER JOIN user u ON cp.user_id = u.user_id
+        ORDER BY cp.created_at DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <!-- 전체 게시글 수 조회 -->
+    <select id="selectCommunityPostCount" resultType="int">
+        SELECT COUNT(*) FROM community_posts
+    </select>
+
+    <!-- 게시글 상세 조회 -->
+    <resultMap id="communityDetailResultMap" type="com.subees.subscription.community.model.dto.CommunityPostDetailResponseDto">
+        <id     property="postId"     column="post_id"/>
+        <result property="title"      column="title"/>
+        <result property="content"    column="content"/>
+        <result property="nickname"   column="nickname"/>
+        <result property="viewCount"  column="view_count"/>
+        <result property="scrapCount" column="scrap_count"/>
+        <result property="createdAt"  column="created_at"/>
+    </resultMap>
+
+    <select id="selectCommunityPostDetail" parameterType="long" resultMap="communityDetailResultMap">
+        SELECT cp.post_id,
+               cp.title,
+               cp.content,
+               u.nickname,
+               cp.view_count,
+               cp.scrap_count,
+               cp.created_at
+        FROM community_posts cp
+        LEFT OUTER JOIN user u ON cp.user_id = u.user_id
+        WHERE cp.post_id = #{postId}
+    </select>
+
+    <!-- 조회수 +1 -->
+    <update id="updateViewCount" parameterType="long">
+        UPDATE community_posts
+        SET view_count = view_count + 1
+        WHERE post_id = #{postId}
+    </update>
+
+</mapper>
