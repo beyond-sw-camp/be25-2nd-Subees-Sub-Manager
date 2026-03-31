@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.subees.subscription.subscription.model.mapper.SubscriptionMapper">
+
+    <resultMap id="subscriptionResultMap" type="com.subees.subscription.subscription.model.vo.Subscription">
+        <id property="subscriptionId" column="subscription_id"/>
+        <result property="itemId" column="item_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="paymentId" column="payment_id"/>
+        <result property="subscriptionName" column="subscription_name"/>
+        <result property="price" column="price"/>
+        <result property="billingCycle" column="billing_cycle"/>
+        <result property="paymentDate" column="payment_date"/>
+        <result property="useYn" column="use_yn"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <sql id="subscriptionColumns">
+        subscription_id,
+        item_id,
+        user_id,
+        payment_id,
+        subscription_name,
+        price,
+        billing_cycle,
+        payment_date,
+        use_yn,
+        created_at,
+        updated_at
+    </sql>
+
+    <select id="selectAll" resultMap="subscriptionResultMap">
+        SELECT
+            <include refid="subscriptionColumns"/>
+        FROM add_subscription
+    </select>
+
+</mapper>

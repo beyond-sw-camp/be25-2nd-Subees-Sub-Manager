@@ -1,15 +1,20 @@
 package com.subees.subscription.subscription.controller;
 
-import com.subees.subscription.subscription.model.dto.CreateSubscriptionRequest;
-import com.subees.subscription.subscription.model.dto.UpdateSubscriptionRequest;
-import com.subees.subscription.subscription.model.dto.UpdateSubscriptionStatusRequest;
+import com.subees.subscription.subscription.model.dto.CreateSubscriptionRequestdto;
+import com.subees.subscription.subscription.model.dto.CreateSubscriptionResponsedto;
 import com.subees.subscription.subscription.model.vo.Subscription;
 import com.subees.subscription.subscription.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/v1/subscriptions")
@@ -18,36 +23,17 @@ public class SubscriptionController {
 
     private final SubscriptionService subscriptionService;
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createSubscription(@RequestBody CreateSubscriptionRequest request) {
-        subscriptionService.createSubscription(request);
-    }
-
     @GetMapping
-    public List<Subscription> getSubscriptions() {
-        return subscriptionService.getSubscriptions();
+    public ResponseEntity<List<Subscription>> getSubscriptions() {
+        List<Subscription> subscriptions = subscriptionService.getSubscriptions();
+        return ResponseEntity.ok(subscriptions);
     }
 
-    @GetMapping("/{id}")
-    public Subscription getSubscription(@PathVariable("id") Long subscriptionId) {
-        return subscriptionService.getSubscription(subscriptionId);
-    }
-
-    @PutMapping("/{id}")
-    public void updateSubscription(@PathVariable("id") Long subscriptionId,
-                                   @RequestBody UpdateSubscriptionRequest request) {
-        subscriptionService.updateSubscription(subscriptionId, request);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteSubscription(@PathVariable("id") Long subscriptionId) {
-        subscriptionService.deleteSubscription(subscriptionId);
-    }
-
-    @PatchMapping("/{id}/status")
-    public void updateSubscriptionStatus(@PathVariable("id") Long subscriptionId,
-                                         @RequestBody UpdateSubscriptionStatusRequest request) {
-        subscriptionService.updateSubscriptionStatus(subscriptionId, request);
+    @PostMapping
+    public ResponseEntity<CreateSubscriptionResponsedto> createSubscription(
+            @RequestBody CreateSubscriptionRequestdto request
+    ) {
+        CreateSubscriptionResponsedto response = subscriptionService.createSubscription(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
