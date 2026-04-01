@@ -1,0 +1,40 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://127.0.0.1:3306/subees
+    username: minsu
+    password: 135246
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  # 아직은 유지: 기존 JPA 코드가 남아 있어서 지금 지우면 실행 깨질 수 있음
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    # database-platform: org.hibernate.dialect.MariaDBDialect
+    properties:
+      hibernate:
+        format_sql: true
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+mybatis:
+  mapper-locations: classpath:/mapper/**/*.xml
+  type-aliases-package: com.subees.backend.user.entity
+  configuration:
+    map-underscore-to-camel-case: true
+
+server:
+  port: 8080
+
+jwt:
+  secret: subees1234subees1234subees1234subees1234
+  access-token-expiration: 86400000
+
+app:
+  upload:
+    dir: uploads/profile-images
+  profile:
+    default-image-url: https://example.com/images/default-profile.png
