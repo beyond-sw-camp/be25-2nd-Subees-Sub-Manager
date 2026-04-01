@@ -35,13 +35,6 @@
     </properties>
 
     <dependencies>
-        <!-- 아직은 유지: 기존 JPA 코드가 살아있어서 당장 제거하면 컴파일 깨짐 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-
-        <!-- 추가 -->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
@@ -82,12 +75,6 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- 아직은 유지 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa-test</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security-test</artifactId>
