@@ -1,8 +1,9 @@
 package com.subees.subscription.community.model.mapper;
 
+import com.subees.subscription.community.model.dto.CommunityPostCreateDto;
 import com.subees.subscription.community.model.dto.CommunityPostDetailResponseDto;
 import com.subees.subscription.community.model.dto.CommunityPostListResponseDto;
-import com.subees.subscription.community.model.dto.PageRequestDto;
+import com.subees.subscription.community.model.dto.CommunityPostPageRequestDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -12,11 +13,13 @@ import java.util.List;
 @Mapper
 public interface CommunityMapper {
 
-    List<CommunityPostListResponseDto> selectCommunityPostList(PageRequestDto pageRequestDto); // 게시글 목록 조회 (페이징)
+    List<CommunityPostListResponseDto> selectCommunityPostList(CommunityPostPageRequestDto communityPostPageRequestDto); // 게시글 목록 조회 (페이징)
 
     int selectCommunityPostCount(); // 전체 게시글 수 조회
 
-    CommunityPostDetailResponseDto selectCommunityPostDetail(@Param("postId") long postId); // 게시글 상세 조회
+    CommunityPostDetailResponseDto selectCommunityPostDetail(@Param("postId") Long postId); // 게시글 상세 조회
 
-    void updateViewCount(@Param("postId") long postId); // 조회수 +1
+    void updateViewCount(@Param("postId") Long postId); // 조회수 +1
+
+    int insertCommunityPost(CommunityPostCreateDto communityPostCreateDto); //글 작성
 }

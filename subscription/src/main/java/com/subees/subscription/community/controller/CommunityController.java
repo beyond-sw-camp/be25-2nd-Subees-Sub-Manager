@@ -1,20 +1,22 @@
 package com.subees.subscription.community.controller;
 
+import com.subees.subscription.community.model.dto.CommunityPostCreateDto;
 import com.subees.subscription.community.model.dto.CommunityPostDetailResponseDto;
 import com.subees.subscription.community.model.dto.CommunityPostListResponseDto;
-import com.subees.subscription.community.model.dto.PageRequestDto;
+import com.subees.subscription.community.model.dto.CommunityPostPageRequestDto;
+import com.subees.subscription.community.model.dto.CommunityPostPageResponseDto;
 import com.subees.subscription.community.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController //json 반환
 //@Controller // html 반환
@@ -26,26 +28,28 @@ public class CommunityController {
 
     // 게시글 목록 조회 - JSON 반환
     @GetMapping("/community/posts")
-    // 타입이 여러 개여서 <Map<String, Object>> 로 적용
-    public ResponseEntity<Map<String, Object>> getCommunityPostList(@RequestParam(defaultValue = "1") int page) {
+    public ResponseEntity<CommunityPostPageResponseDto> getCommunityPostList(@RequestParam(defaultValue = "1") int page) {
+
         int size = 10; //한 페이지당 글 수 10개
-        PageRequestDto pageRequestDto = new PageRequestDto(page, size);
+
+        CommunityPostPageRequestDto communityPostPageRequestDto = new CommunityPostPageRequestDto(page, size);
+
+        List<CommunityPostListResponseDto> posts = communityService.getCommunityPostList(communityPostPageRequestDto);
 
         //db에서 게시글 조회
-        //match.ceil 페이징 올림 처리 (25개 / 10 = 2.5 ->3 페이지)
-        List<CommunityPostListResponseDto> posts = communityService.getCommunityPostList(pageRequestDto);
+        //math.ceil 페이징 올림 처리 (25개 / 10 = 2.5 ->3 페이지)
         int totalCount = communityService.getCommunityPostCount();
+        //totalPages = 몇 페이지로 나눌지
         int totalPages = (int) Math.ceil((double) totalCount / size);
 
-        //타입이 여러 개라 Map 묶어서 반환
-        Map<String, Object> response = new HashMap<>();
-        response.put("posts", posts); //list type
-        response.put("page", page); //int type
-        response.put("size", size); //int type
-        response.put("totalCount", totalCount);
-        response.put("totalPages", totalPages);
-
-        return ResponseEntity.ok(response);
+        CommunityPostPageResponseDto responseDto = new CommunityPostPageResponseDto(
+                posts,
+                communityPostPageRequestDto.getPage(),
+                communityPostPageRequestDto.getSize(),
+                totalCount,
+                totalPages
+        );
+        return ResponseEntity.ok(responseDto);
     }
 
     // 게시글 상세 조회 - JSON 반환
@@ -54,6 +58,16 @@ public class CommunityController {
         CommunityPostDetailResponseDto post = communityService.getCommunityPostDetail(postId);
         return ResponseEntity.ok(post);
     }
+
+    //게시글 작성
+    @PostMapping("/community/posts")
+    public ResponseEntity<Void> postCommunityCreate(@RequestBody CommunityPostCreateDto communityPostCreateDto) {
+        communityService.save(communityPostCreateDto);
+        return ResponseEntity.status(201).build();
+    }
+
+
+
     // 화면용
 //    @GetMapping("/community/posts")
 //    public ModelAndView getCommunityPostList(@RequestParam(defaultValue = "1") int page) {

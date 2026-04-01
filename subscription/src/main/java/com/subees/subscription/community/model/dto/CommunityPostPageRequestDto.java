@@ -5,17 +5,17 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PageRequestDto {
+public class CommunityPostPageRequestDto {
 
     private int page;
     private int size;
 
-    public PageRequestDto() {
+    public CommunityPostPageRequestDto() {
         this.page = 1;
         this.size = 10;
     }
 
-    public PageRequestDto(int page, int size) {
+    public CommunityPostPageRequestDto(int page, int size) {
         this.page = (page < 1) ? 1 : page;
         this.size = size;
     }
