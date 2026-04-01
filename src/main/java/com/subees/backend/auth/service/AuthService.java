@@ -6,7 +6,7 @@ import com.subees.backend.auth.dto.LogoutResponse;
 import com.subees.backend.auth.jwt.JwtTokenProvider;
 import com.subees.backend.user.entity.User;
 import com.subees.backend.user.entity.UserState;
-import com.subees.backend.user.repository.UserRepository;
+import com.subees.backend.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,13 +17,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class AuthService {
 
-    private final UserRepository userRepository;
+    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
     public LoginResponse login(LoginRequest request) {
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 이메일입니다."));
+        User user = userMapper.findByEmail(request.getEmail());
+
+        if (user == null) {
+            throw new IllegalArgumentException("가입되지 않은 이메일입니다.");
+        }
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
@@ -46,6 +49,7 @@ public class AuthService {
                 user.getNickname()
         );
     }
+
     public LogoutResponse logout(Long tokenUserId) {
         return new LogoutResponse(tokenUserId, "로그아웃이 완료되었습니다.");
     }

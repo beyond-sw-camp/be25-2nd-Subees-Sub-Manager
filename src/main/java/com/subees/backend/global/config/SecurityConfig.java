@@ -47,7 +47,8 @@ public class SecurityConfig {
                                 "/api/v1/system/health",
                                 "/api/v1/system/info",
                                 "/api/v1/system/time",
-                                "/uploads/**"
+                                "/uploads/**",
+                                "/error"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

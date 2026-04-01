@@ -20,6 +20,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponse>> login(@RequestBody @Valid LoginRequest request) {
+        System.out.println("=== login controller entered ===");
         return ResponseEntity.ok(ApiResponse.success(authService.login(request), "로그인 성공"));
     }
 

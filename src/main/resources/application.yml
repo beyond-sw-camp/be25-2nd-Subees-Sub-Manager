@@ -38,3 +38,7 @@ app:
     dir: uploads/profile-images
   profile:
     default-image-url: https://example.com/images/default-profile.png
+
+logging:
+  level:
+    org.springframework.security: DEBUG
