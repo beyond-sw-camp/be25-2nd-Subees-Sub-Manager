@@ -1,5 +1,7 @@
 package com.subees.subscription.community.controller;
 
+import com.subees.subscription.common.exception.UniversityException;
+import com.subees.subscription.common.exception.message.ExceptionMessage;
 import com.subees.subscription.community.model.dto.CommunityPostCreateDto;
 import com.subees.subscription.community.model.dto.CommunityPostDetailResponseDto;
 import com.subees.subscription.community.model.dto.CommunityPostListResponseDto;
@@ -41,6 +43,11 @@ public class CommunityController {
         int totalCount = communityService.getCommunityPostCount();
         //totalPages = 몇 페이지로 나눌지
         int totalPages = (int) Math.ceil((double) totalCount / size);
+
+        //page 예외처리 (1 미만 또는 존재하지 않는 페이지)
+        if (page < 1 || (totalPages > 0 && page > totalPages)) {
+            throw new UniversityException(ExceptionMessage.INVALID_PAGE);
+        }
 
         CommunityPostPageResponseDto responseDto = new CommunityPostPageResponseDto(
                 posts,
