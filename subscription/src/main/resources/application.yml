@@ -10,9 +10,9 @@ spring:
     password: beyond
 logging:
   level:
-    com.subees.subscription: debug
+    com.subees.submanager: debug
 mybatis:
-  type-aliases-package: com.subees.subscription.*.model.vo
+  type-aliases-package: com.subees.submanager.*.model.vo
   mapper-locations:
     - classpath:mapper/**/*.xml
   configuration:

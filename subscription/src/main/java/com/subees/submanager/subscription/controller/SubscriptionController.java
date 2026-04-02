@@ -1,10 +1,9 @@
 package com.subees.submanager.subscription.controller;
 
 import com.subees.submanager.common.model.dto.BaseResponseDto;
-import com.subees.submanager.common.model.dto.ItemsResponseDto;
 import com.subees.submanager.subscription.model.dto.CreateSubscriptionRequest;
 import com.subees.submanager.subscription.model.dto.CreateSubscriptionResponse;
-import com.subees.submanager.subscription.model.vo.Subscription;
+import com.subees.submanager.subscription.model.dto.SubscriptionResponse;
 import com.subees.submanager.subscription.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,22 +18,22 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/v1/subscriptions")
 @RequiredArgsConstructor
 public class SubscriptionController {
 
     private final SubscriptionService subscriptionService;
 
+    // 조회 api
+    @RequestMapping("/subscriptions")
     @GetMapping
-    public ResponseEntity<ItemsResponseDto<Subscription>> getSubscriptions() {
-        List<Subscription> subscriptions = subscriptionService.getSubscriptions();
-
-        return ResponseEntity.ok(
-                new ItemsResponseDto<>(HttpStatus.OK, subscriptions, 1, subscriptions.size())
-        );
+    public ResponseEntity<List<SubscriptionResponse>> getSubscriptions() {
+        return ResponseEntity.ok(subscriptionService.getSubscriptions());
     }
 
+
+    // 등록 api
     @PostMapping
+    @RequestMapping("/api/v1/subscriptions")
     public ResponseEntity<BaseResponseDto<CreateSubscriptionResponse>> createSubscription(
             @RequestBody CreateSubscriptionRequest request
     ) {

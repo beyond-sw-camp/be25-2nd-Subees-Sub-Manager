@@ -2,13 +2,12 @@ package com.subees.submanager.subscription.service;
 
 import com.subees.submanager.subscription.model.dto.CreateSubscriptionRequest;
 import com.subees.submanager.subscription.model.dto.CreateSubscriptionResponse;
-import com.subees.submanager.subscription.model.vo.Subscription;
+import com.subees.submanager.subscription.model.dto.SubscriptionResponse;
 
 import java.util.List;
 
 public interface SubscriptionService {
-    List<Subscription> getSubscriptions();
+    List<SubscriptionResponse> getSubscriptions();
 
     CreateSubscriptionResponse createSubscription(CreateSubscriptionRequest request);
-
 }
