@@ -10,10 +10,9 @@
         <result property="itemId" column="item_id"/>
         <result property="userId" column="user_id"/>
         <result property="paymentId" column="payment_id"/>
-        <result property="subscriptionName" column="subscription_name"/>
         <result property="price" column="price"/>
         <result property="billingCycle" column="billing_cycle"/>
-        <result property="paymentDate" column="payment_date"/>
+        <result property="paymentDate" column="start_date"/>
         <result property="useYn" column="use_yn"/>
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
@@ -24,10 +23,9 @@
         item_id,
         user_id,
         payment_id,
-        subscription_name,
         price,
         billing_cycle,
-        payment_date,
+        start_date,
         use_yn,
         created_at,
         updated_at
@@ -44,32 +42,34 @@
         FROM add_subscription
         WHERE item_id = #{itemId}
           AND payment_id = #{paymentId}
-          AND payment_date = #{paymentDate}
+          AND start_date = #{paymentDate}
           AND use_yn = 'Y'
     </select>
 
     <insert id="insertSubscription" parameterType="com.subees.submanager.subscription.model.dto.CreateSubscriptionRequest">
         INSERT INTO add_subscription
         (
+            user_id,
             item_id,
             payment_id,
             price,
             billing_cycle,
-            payment_date,
+            start_date,
             use_yn,
             created_at,
             updated_at
         )
         VALUES
             (
-                #{itemId},
-                #{paymentId},
-                #{price},
-                #{billingCycle},
-                #{paymentDate},
-                'Y',
-                NOW(),
-                NOW()
+            1,
+            #{itemId},
+            #{paymentId},
+            #{price},
+            #{billingCycle},
+            #{paymentDate},
+            'Y',
+            NOW(),
+            NOW()
             )
     </insert>
 

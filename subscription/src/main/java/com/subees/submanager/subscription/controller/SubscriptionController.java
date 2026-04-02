@@ -1,7 +1,9 @@
 package com.subees.submanager.subscription.controller;
 
-import com.subees.submanager.subscription.model.dto.CreateSubscriptionRequestdto;
-import com.subees.submanager.subscription.model.dto.CreateSubscriptionResponsedto;
+import com.subees.submanager.common.model.dto.BaseResponseDto;
+import com.subees.submanager.common.model.dto.ItemsResponseDto;
+import com.subees.submanager.subscription.model.dto.CreateSubscriptionRequest;
+import com.subees.submanager.subscription.model.dto.CreateSubscriptionResponse;
 import com.subees.submanager.subscription.model.vo.Subscription;
 import com.subees.submanager.subscription.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
@@ -24,16 +26,21 @@ public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
     @GetMapping
-    public ResponseEntity<List<Subscription>> getSubscriptions() {
+    public ResponseEntity<ItemsResponseDto<Subscription>> getSubscriptions() {
         List<Subscription> subscriptions = subscriptionService.getSubscriptions();
-        return ResponseEntity.ok(subscriptions);
+
+        return ResponseEntity.ok(
+                new ItemsResponseDto<>(HttpStatus.OK, subscriptions, 1, subscriptions.size())
+        );
     }
 
     @PostMapping
-    public ResponseEntity<CreateSubscriptionResponsedto> createSubscription(
-            @RequestBody CreateSubscriptionRequestdto request
+    public ResponseEntity<BaseResponseDto<CreateSubscriptionResponse>> createSubscription(
+            @RequestBody CreateSubscriptionRequest request
     ) {
-        CreateSubscriptionResponsedto response = subscriptionService.createSubscription(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        CreateSubscriptionResponse response = subscriptionService.createSubscription(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new BaseResponseDto<>(HttpStatus.CREATED, response));
     }
 }

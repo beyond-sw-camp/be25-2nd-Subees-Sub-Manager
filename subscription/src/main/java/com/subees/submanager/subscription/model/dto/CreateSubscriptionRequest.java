@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CreateSubscriptionRequestdto {
+public class CreateSubscriptionRequest {
 
     private Long categoryId;
 

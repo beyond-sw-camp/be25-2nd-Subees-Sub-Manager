@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 @Builder
-public class CreateSubscriptionResponsedto {
+public class CreateSubscriptionResponse {
 
     private String status;
     private Data data;

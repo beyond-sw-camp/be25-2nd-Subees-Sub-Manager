@@ -1,7 +1,7 @@
 package com.subees.submanager.subscription.service;
 
-import com.subees.submanager.subscription.model.dto.CreateSubscriptionRequestdto;
-import com.subees.submanager.subscription.model.dto.CreateSubscriptionResponsedto;
+import com.subees.submanager.subscription.model.dto.CreateSubscriptionRequest;
+import com.subees.submanager.subscription.model.dto.CreateSubscriptionResponse;
 import com.subees.submanager.subscription.model.mapper.SubscriptionMapper;
 import com.subees.submanager.subscription.model.vo.Subscription;
 import lombok.RequiredArgsConstructor;
@@ -21,26 +21,32 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public CreateSubscriptionResponsedto createsubscriptiondto(CreateSubscriptionRequestdto requestdto) {
-        if (requestdto.getPrice() == null || requestdto.getPrice() < 0) {
+    public CreateSubscriptionResponse createSubscription(CreateSubscriptionRequest request) {
+
+        // 1. 유효성 검사
+        if (request.getPrice() == null || request.getPrice() < 0) {
             throw new IllegalArgumentException("결제금액이 0원 이상이어야 합니다.");
         }
 
-        if (requestdto.getItemId() == null) {
+        if (request.getItemId() == null) {
             throw new IllegalArgumentException("항목을 선택하거나 직접 입력해 주세요.");
         }
 
-        int duplicateCount = subscriptionMapper.countDuplicateSubscription(requestdto);
+        // 2. 중복 검사
+        int duplicateCount = subscriptionMapper.countDuplicateSubscription(request);
         if (duplicateCount > 0) {
             throw new IllegalStateException("이미 등록된 구독항목 입니다.");
         }
 
-        subscriptionMapper.insertSubscription(requestdto);
+        // 3. insert
+        subscriptionMapper.insertSubscription(request);
+
         Long subscriptionId = subscriptionMapper.selectLastInsertedId();
 
-        return CreateSubscriptionResponsedto.builder()
+        // 4. 응답
+        return CreateSubscriptionResponse.builder()
                 .status("success")
-                .data(CreateSubscriptionResponsedto.Data.builder()
+                .data(CreateSubscriptionResponse.Data.builder()
                         .subscriptionId(subscriptionId)
                         .message("구독 항목이 성공적으로 등록되었습니다.")
                         .createdAt(LocalDate.now())
@@ -48,8 +54,4 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .build();
     }
 
-    @Override
-    public CreateSubscriptionResponsedto createSubscription(CreateSubscriptionRequestdto request) {
-        return null;
-    }
 }

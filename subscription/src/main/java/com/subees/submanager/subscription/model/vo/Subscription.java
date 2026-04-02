@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -19,10 +20,9 @@ public class Subscription {
     private Long itemId;
     private Long userId;
     private Long paymentId;
-    private String subscriptionName;
     private Integer price;
     private String billingCycle;
-    private LocalDateTime paymentDate;
+    private LocalDate paymentDate;
     private String useYn;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
