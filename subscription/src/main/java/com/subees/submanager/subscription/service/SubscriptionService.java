@@ -1,8 +1,8 @@
-package com.subees.subscription.subscription.service;
+package com.subees.submanager.subscription.service;
 
-import com.subees.subscription.subscription.model.dto.CreateSubscriptionRequestdto;
-import com.subees.subscription.subscription.model.dto.CreateSubscriptionResponsedto;
-import com.subees.subscription.subscription.model.vo.Subscription;
+import com.subees.submanager.subscription.model.dto.CreateSubscriptionRequestdto;
+import com.subees.submanager.subscription.model.dto.CreateSubscriptionResponsedto;
+import com.subees.submanager.subscription.model.vo.Subscription;
 
 import java.util.List;
 

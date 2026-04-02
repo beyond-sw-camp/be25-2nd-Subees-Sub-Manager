@@ -1,4 +1,4 @@
-package com.subees.subscription.subscription.model.dto;
+package com.subees.submanager.subscription.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

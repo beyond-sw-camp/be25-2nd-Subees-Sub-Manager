@@ -1,4 +1,4 @@
-package com.subees.subscription.common.exception.dto;
+package com.subees.submanager.common.exception.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

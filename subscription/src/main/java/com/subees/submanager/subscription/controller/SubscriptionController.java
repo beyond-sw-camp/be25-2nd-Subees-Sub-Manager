@@ -1,9 +1,9 @@
-package com.subees.subscription.subscription.controller;
+package com.subees.submanager.subscription.controller;
 
-import com.subees.subscription.subscription.model.dto.CreateSubscriptionRequestdto;
-import com.subees.subscription.subscription.model.dto.CreateSubscriptionResponsedto;
-import com.subees.subscription.subscription.model.vo.Subscription;
-import com.subees.subscription.subscription.service.SubscriptionService;
+import com.subees.submanager.subscription.model.dto.CreateSubscriptionRequestdto;
+import com.subees.submanager.subscription.model.dto.CreateSubscriptionResponsedto;
+import com.subees.submanager.subscription.model.vo.Subscription;
+import com.subees.submanager.subscription.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

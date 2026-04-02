@@ -1,4 +1,4 @@
-package com.subees.subscription.subscription.model.vo;
+package com.subees.submanager.subscription.model.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
