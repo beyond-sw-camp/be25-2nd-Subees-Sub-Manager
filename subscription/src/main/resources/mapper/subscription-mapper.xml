@@ -5,39 +5,78 @@
 
 <mapper namespace="com.subees.submanager.subscription.model.mapper.SubscriptionMapper">
 
-    <resultMap id="subscriptionResultMap" type="com.subees.submanager.subscription.model.vo.Subscription">
-        <id property="subscriptionId" column="subscription_id"/>
-        <result property="itemId" column="item_id"/>
-        <result property="userId" column="user_id"/>
-        <result property="paymentId" column="payment_id"/>
+    <!-- 상세조회 resultMap -->
+    <resultMap id="subscriptionDetailResultMap"
+               type="com.subees.submanager.subscription.model.dto.SubscriptionResponse">
+        <id property="subscriptionId" column="subscriptionId"/>
+        <result property="categoryName" column="categoryName"/>
+        <result property="itemName" column="itemName"/>
         <result property="price" column="price"/>
-        <result property="billingCycle" column="billing_cycle"/>
-        <result property="paymentDate" column="start_date"/>
-        <result property="useYn" column="use_yn"/>
-        <result property="createdAt" column="created_at"/>
-        <result property="updatedAt" column="updated_at"/>
+        <result property="billingCycle" column="billingCycle"/>
+        <result property="paymentDate" column="paymentDate"/>
+        <result property="useYn" column="useYn"/>
+        <result property="createdAt" column="createdAt"/>
+
+        <association property="paymentMethod"
+                     javaType="com.subees.submanager.subscription.model.dto.SubscriptionResponse$PaymentMethod">
+            <id property="id" column="payment_method_id"/>
+            <result property="name" column="payment_method_name"/>
+        </association>
     </resultMap>
 
-    <sql id="subscriptionColumns">
-        subscription_id,
-        item_id,
-        user_id,
-        payment_id,
-        price,
-        billing_cycle,
-        start_date,
-        use_yn,
-        created_at,
-        updated_at
-    </sql>
-
-    <select id="selectAll" resultMap="subscriptionResultMap">
+    <!-- 구독 목록 조회 -->
+    <select id="selectAll"
+            resultType="com.subees.submanager.subscription.model.dto.SubscriptionListResponse">
         SELECT
-        <include refid="subscriptionColumns"/>
-        FROM add_subscription
+            s.subscription_id AS subscriptionId,
+            c.category_name AS categoryName,
+            i.item_name AS itemName,
+            s.price AS price,
+            s.use_yn AS useYn
+        FROM add_subscription s
+                 JOIN subscription_item i
+                      ON s.item_id = i.item_id
+                 JOIN subscription_category c
+                      ON i.category_id = c.category_id
+        WHERE s.use_yn = 'Y'
+        ORDER BY s.created_at DESC
     </select>
 
-    <select id="countDuplicateSubscription" parameterType="com.subees.submanager.subscription.model.dto.CreateSubscriptionRequest" resultType="int">
+    <!-- 구독 상세 조회 -->
+    <select id="selectById"
+            parameterType="long"
+            resultMap="subscriptionDetailResultMap">
+        SELECT
+            s.subscription_id AS subscriptionId,
+            sc.category_name AS categoryName,
+            si.item_name AS itemName,
+            s.price AS price,
+            s.billing_cycle AS billingCycle,
+            DATE(s.start_date) AS paymentDate,
+            s.use_yn AS useYn,
+            s.created_at AS createdAt,
+            pm.payment_id AS payment_method_id,
+            CASE
+            WHEN pm.card_id IS NOT NULL THEN CONCAT(c.card_company, '(', pm.card_name, ')')
+            ELSE pm.custom_card_company
+        END AS payment_method_name
+        FROM add_subscription s
+        JOIN subscription_item si
+            ON s.item_id = si.item_id
+        JOIN subscription_category sc
+            ON si.category_id = sc.category_id
+        LEFT JOIN payment_method pm
+            ON s.payment_id = pm.payment_id
+        LEFT JOIN card c
+            ON pm.card_id = c.card_id
+        WHERE s.subscription_id = #{subscriptionId}
+        AND s.use_yn = 'Y'
+    </select>
+
+    <!-- 중복 구독 검사 -->
+    <select id="countDuplicateSubscription"
+            parameterType="com.subees.submanager.subscription.model.dto.CreateSubscriptionRequest"
+            resultType="int">
         SELECT COUNT(*)
         FROM add_subscription
         WHERE item_id = #{itemId}
@@ -46,7 +85,9 @@
           AND use_yn = 'Y'
     </select>
 
-    <insert id="insertSubscription" parameterType="com.subees.submanager.subscription.model.dto.CreateSubscriptionRequest">
+    <!-- 구독 등록 -->
+    <insert id="insertSubscription"
+            parameterType="com.subees.submanager.subscription.model.dto.CreateSubscriptionRequest">
         INSERT INTO add_subscription
         (
             user_id,
@@ -61,18 +102,19 @@
         )
         VALUES
             (
-            1,
-            #{itemId},
-            #{paymentId},
-            #{price},
-            #{billingCycle},
-            #{paymentDate},
-            'Y',
-            NOW(),
-            NOW()
+                1,
+                #{itemId},
+                #{paymentId},
+                #{price},
+                #{billingCycle},
+                #{paymentDate},
+                'Y',
+                NOW(),
+                NOW()
             )
     </insert>
 
+    <!-- 마지막 등록 id 조회 -->
     <select id="selectLastInsertedId" resultType="long">
         SELECT LAST_INSERT_ID()
     </select>

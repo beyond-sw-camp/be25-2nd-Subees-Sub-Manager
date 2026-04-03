@@ -2,6 +2,7 @@ package com.subees.submanager.subscription.service;
 
 import com.subees.submanager.subscription.model.dto.CreateSubscriptionRequest;
 import com.subees.submanager.subscription.model.dto.CreateSubscriptionResponse;
+import com.subees.submanager.subscription.model.dto.SubscriptionListResponse;
 import com.subees.submanager.subscription.model.dto.SubscriptionResponse;
 import com.subees.submanager.subscription.model.mapper.SubscriptionMapper;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private final SubscriptionMapper subscriptionMapper;
 
     @Override
-    public List<SubscriptionResponse> getSubscriptions() {
+    public List<SubscriptionListResponse> getSubscriptions() {
         return subscriptionMapper.selectAll();
     }
 
@@ -56,5 +57,16 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                         .createdAt(LocalDate.now())
                         .build())
                 .build();
+    }
+
+    @Override
+    public SubscriptionResponse getSubscriptionById(Long subscriptionId) {
+        SubscriptionResponse response = subscriptionMapper.selectById(subscriptionId);
+
+        if (response == null) {
+            throw new IllegalArgumentException("해당 구독 항목이 존재하지 않습니다.");
+        }
+
+        return response;
     }
 }
