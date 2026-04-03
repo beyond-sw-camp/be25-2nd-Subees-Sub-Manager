@@ -1,7 +1,7 @@
-package com.subees.subscription.consumption.mapper;
+package com.subees.subscription.consumption.model.mapper;
 
-import com.subees.subscription.consumption.dto.DateDetailListResponseDto;
-import com.subees.subscription.consumption.dto.CalendarSummaryResponseDto;
+import com.subees.subscription.consumption.model.dto.DateDetailListResponseDto;
+import com.subees.subscription.consumption.model.dto.CalendarSummaryResponseDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

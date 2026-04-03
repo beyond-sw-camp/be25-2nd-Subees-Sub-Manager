@@ -1,4 +1,4 @@
-package com.subees.subscription.consumption.dto;
+package com.subees.subscription.consumption.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

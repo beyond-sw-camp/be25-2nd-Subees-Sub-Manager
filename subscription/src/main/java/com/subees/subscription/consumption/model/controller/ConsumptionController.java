@@ -1,8 +1,8 @@
-package com.subees.subscription.consumption.controller;
+package com.subees.subscription.consumption.model.controller;
 
-import com.subees.subscription.consumption.dto.DateDetailListResponseDto;
-import com.subees.subscription.consumption.dto.CalendarSummaryResultDto;
-import com.subees.subscription.consumption.service.ConsumptionService;
+import com.subees.subscription.consumption.model.dto.DateDetailListResponseDto;
+import com.subees.subscription.consumption.model.dto.CalendarSummaryResultDto;
+import com.subees.subscription.consumption.model.service.ConsumptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

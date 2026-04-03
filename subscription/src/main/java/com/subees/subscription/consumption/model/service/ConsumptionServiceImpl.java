@@ -1,9 +1,9 @@
-package com.subees.subscription.consumption.service;
+package com.subees.subscription.consumption.model.service;
 
-import com.subees.subscription.consumption.dto.CalendarSummaryResultDto;
-import com.subees.subscription.consumption.dto.DateDetailListResponseDto;
-import com.subees.subscription.consumption.dto.CalendarSummaryResponseDto;
-import com.subees.subscription.consumption.mapper.ConsumptionMapper;
+import com.subees.subscription.consumption.model.dto.CalendarSummaryResultDto;
+import com.subees.subscription.consumption.model.dto.DateDetailListResponseDto;
+import com.subees.subscription.consumption.model.dto.CalendarSummaryResponseDto;
+import com.subees.subscription.consumption.model.mapper.ConsumptionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

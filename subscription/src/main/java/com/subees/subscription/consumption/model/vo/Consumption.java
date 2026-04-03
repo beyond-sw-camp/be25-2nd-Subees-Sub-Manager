@@ -1,4 +1,4 @@
-package com.subees.subscription.consumption.model;
+package com.subees.subscription.consumption.model.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
