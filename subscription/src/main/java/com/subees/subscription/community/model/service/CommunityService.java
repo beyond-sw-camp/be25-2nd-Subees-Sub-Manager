@@ -1,9 +1,12 @@
-package com.subees.subscription.community.service;
+package com.subees.subscription.community.model.service;
 
 import com.subees.subscription.community.model.dto.CommunityPostCreateDto;
 import com.subees.subscription.community.model.dto.CommunityPostDetailResponseDto;
 import com.subees.subscription.community.model.dto.CommunityPostListResponseDto;
 import com.subees.subscription.community.model.dto.CommunityPostPageRequestDto;
+import com.subees.subscription.community.model.dto.CommunityPostUpdateDto;
+import com.subees.subscription.community.model.dto.CommunityPostUpdateResponseDto;
+
 import java.util.List;
 
 public interface CommunityService {
@@ -20,4 +23,8 @@ public interface CommunityService {
 
     //글 작성
     int save(CommunityPostCreateDto communityPostCreateDto);
+
+    //글 수정
+    //int update
+    CommunityPostUpdateResponseDto update(CommunityPostUpdateDto communityPostUpdateDto);
 }

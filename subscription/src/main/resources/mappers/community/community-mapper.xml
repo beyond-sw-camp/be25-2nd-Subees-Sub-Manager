@@ -3,6 +3,8 @@
 
 <mapper namespace="com.subees.subscription.community.model.mapper.CommunityMapper">
 
+<!-- resultMap = 조회 결과를 어떻게 Java 객체에 담을지 정의하는 설정. 조회된 결과가 담기면 resultMap 규칙대로 dto에 담음 -->
+
     <!-- 스크링 부트 실행 버튼 실행 안 돼서  type에 경로 추가해주니까 실행됨.  -->
     <resultMap id="communityListResultMap" type="com.subees.subscription.community.model.dto.CommunityPostListResponseDto">
         <id     property="postId"     column="post_id"/>
@@ -68,5 +70,33 @@
         VALUES
         (#{userId}, #{title}, #{content})
     </insert>
+
+    <!-- 게시글 작성자 userId 조회 -->
+    <!-- 403 체크에 필요한 데이터를 조회 -->
+    <select id="selectPostOwnerUserId" parameterType="long" resultType="long">
+        SELECT user_id FROM community_posts WHERE post_id = #{postId}
+    </select>
+
+    <!-- 글 수정 -->
+    <update id="updateCommunityPost" parameterType="com.subees.subscription.community.model.dto.CommunityPostUpdateDto">
+        UPDATE community_posts SET
+        title = #{title},
+        content = #{content}
+        WHERE post_id = #{postId}
+    </update>
+
+    <!-- 수정된 글 조회 -->
+    <resultMap id="communityUpdateResultMap" type="com.subees.subscription.community.model.dto.CommunityPostUpdateResponseDto">
+        <id     property="postId"    column="post_id"/>
+        <result property="title"     column="title"/>
+        <result property="content"   column="content"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <select id="selectUpdatedPost" parameterType="long" resultMap="communityUpdateResultMap">
+        SELECT post_id, title, content, updated_at
+        FROM community_posts
+        WHERE post_id = #{postId}
+    </select>
 
 </mapper>

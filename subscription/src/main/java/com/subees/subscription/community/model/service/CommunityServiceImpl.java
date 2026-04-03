@@ -1,4 +1,4 @@
-package com.subees.subscription.community.service;
+package com.subees.subscription.community.model.service;
 
 import com.subees.subscription.common.exception.UniversityException;
 import com.subees.subscription.common.exception.message.ExceptionMessage;
@@ -6,6 +6,8 @@ import com.subees.subscription.community.model.dto.CommunityPostCreateDto;
 import com.subees.subscription.community.model.dto.CommunityPostDetailResponseDto;
 import com.subees.subscription.community.model.dto.CommunityPostListResponseDto;
 import com.subees.subscription.community.model.dto.CommunityPostPageRequestDto;
+import com.subees.subscription.community.model.dto.CommunityPostUpdateDto;
+import com.subees.subscription.community.model.dto.CommunityPostUpdateResponseDto;
 import com.subees.subscription.community.model.mapper.CommunityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -55,5 +57,27 @@ public class CommunityServiceImpl implements CommunityService {
             throw new UniversityException(ExceptionMessage.INVALID_REQUEST);
         }
         return communityMapper.insertCommunityPost(communityPostCreateDto);
+    }
+
+
+    //글 수정
+    @Transactional
+    @Override
+    public CommunityPostUpdateResponseDto update(CommunityPostUpdateDto communityPostUpdateDto) {
+        // 미로그인 체크
+        if (communityPostUpdateDto.getUserId() == null) {
+            throw new UniversityException(ExceptionMessage.UNAUTHORIZED);
+        }
+        // 게시글 존재 여부 및 작성자 조회
+        Long ownerUserId = communityMapper.selectPostOwnerUserId(communityPostUpdateDto.getPostId());
+        if (ownerUserId == null) {
+            throw new UniversityException(ExceptionMessage.POST_NOT_FOUND);
+        }
+        // 권한 체크(작성자와 요청자가 다른지)
+        if (!ownerUserId.equals(communityPostUpdateDto.getUserId())) {
+            throw new UniversityException(ExceptionMessage.FORBIDDEN);
+        }
+        communityMapper.updateCommunityPost(communityPostUpdateDto); //dto에 담긴 값을 sql에 바인딩 하여 db 업데이트
+        return communityMapper.selectUpdatedPost(communityPostUpdateDto.getPostId()); // 수정한 게시글을 db에서 다시 조회하여 CommunityPostUpdateResponseDto로 반환
     }
 }

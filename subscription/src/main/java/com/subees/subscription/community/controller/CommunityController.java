@@ -1,5 +1,6 @@
 package com.subees.subscription.community.controller;
 
+import com.subees.subscription.common.dto.ApiSuccessResponseDto;
 import com.subees.subscription.common.exception.UniversityException;
 import com.subees.subscription.common.exception.message.ExceptionMessage;
 import com.subees.subscription.community.model.dto.CommunityPostCreateDto;
@@ -7,12 +8,17 @@ import com.subees.subscription.community.model.dto.CommunityPostDetailResponseDt
 import com.subees.subscription.community.model.dto.CommunityPostListResponseDto;
 import com.subees.subscription.community.model.dto.CommunityPostPageRequestDto;
 import com.subees.subscription.community.model.dto.CommunityPostPageResponseDto;
-import com.subees.subscription.community.service.CommunityService;
+import com.subees.subscription.community.model.dto.CommunityPostUpdateDto;
+import com.subees.subscription.community.model.dto.CommunityPostUpdateResponseDto;
+import com.subees.subscription.community.model.service.CommunityService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import jakarta.validation.Valid; //유효성 추가
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,7 +36,7 @@ public class CommunityController {
 
     // 게시글 목록 조회 - JSON 반환
     @GetMapping("/community/posts")
-    public ResponseEntity<CommunityPostPageResponseDto> getCommunityPostList(@RequestParam(defaultValue = "1") int page) {
+    public ResponseEntity<ApiSuccessResponseDto<CommunityPostPageResponseDto>> getCommunityPostList(@RequestParam(defaultValue = "1") int page) {
 
         int size = 10; //한 페이지당 글 수 10개
 
@@ -56,24 +62,32 @@ public class CommunityController {
                 totalCount,
                 totalPages
         );
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(new ApiSuccessResponseDto<>(200, "게시글 목록 조회 성공", responseDto));
     }
 
     // 게시글 상세 조회 - JSON 반환
     @GetMapping("/community/posts/{postId}")
-    public ResponseEntity<CommunityPostDetailResponseDto> getCommunityPostDetail(@PathVariable long postId) {
+    public ResponseEntity<ApiSuccessResponseDto<CommunityPostDetailResponseDto>> getCommunityPostDetail(@PathVariable long postId) {
         CommunityPostDetailResponseDto post = communityService.getCommunityPostDetail(postId);
-        return ResponseEntity.ok(post);
+        return ResponseEntity.ok(new ApiSuccessResponseDto<>(200, "게시글 상세 조회 성공", post));
     }
 
     //게시글 작성
     @PostMapping("/community/posts")
-    public ResponseEntity<Void> postCommunityCreate(@RequestBody CommunityPostCreateDto communityPostCreateDto) {
+    public ResponseEntity<ApiSuccessResponseDto<CommunityPostCreateDto>> postCommunityCreate(@RequestBody CommunityPostCreateDto communityPostCreateDto) {
         communityService.save(communityPostCreateDto);
-        return ResponseEntity.status(201).build();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiSuccessResponseDto<>(201, "게시글이 성공적으로 등록되었습니다.", communityPostCreateDto));
     }
 
-
+    //게시글 수정
+    //@Valid가 있어야 dto에 붙인 @NotBlank가 동작함
+    @PutMapping("/community/posts/{postId}")
+    public ResponseEntity<ApiSuccessResponseDto<CommunityPostUpdateResponseDto>> postCommunityUpdate(@PathVariable long postId, @Valid @RequestBody CommunityPostUpdateDto communityPostUpdateDto) {
+        communityPostUpdateDto.setPostId(postId); // URL의 postId를 DTO에 세팅
+        CommunityPostUpdateResponseDto updatedPost = communityService.update(communityPostUpdateDto);
+        return ResponseEntity.ok(new ApiSuccessResponseDto<>(200, "게시글이 수정되었습니다.", updatedPost));
+    }
 
     // 화면용
 //    @GetMapping("/community/posts")

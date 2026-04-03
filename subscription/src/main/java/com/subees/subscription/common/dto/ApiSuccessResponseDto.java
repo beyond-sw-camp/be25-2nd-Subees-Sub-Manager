@@ -1,0 +1,12 @@
+package com.subees.subscription.common.dto;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
+public class ApiSuccessResponseDto<T> {
+    private final int statusCode;
+    private final String message;
+    private final T data;
+}
