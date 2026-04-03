@@ -20,7 +20,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/subscriptions")
+@RequestMapping("/api/v1/subscriptions")
 @RequiredArgsConstructor
 public class SubscriptionController {
 
@@ -41,7 +41,7 @@ public class SubscriptionController {
 
     // 등록 api
     @PostMapping
-    @RequestMapping("/api/v1/subscriptions")
+    @RequestMapping
     public ResponseEntity<BaseResponseDto<CreateSubscriptionResponse>> createSubscription(
             @RequestBody CreateSubscriptionRequest request
     ) {

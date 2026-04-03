@@ -13,7 +13,7 @@
         <result property="itemName" column="itemName"/>
         <result property="price" column="price"/>
         <result property="billingCycle" column="billingCycle"/>
-        <result property="paymentDate" column="paymentDate"/>
+        <result property="startDate" column="starDate"/>
         <result property="useYn" column="useYn"/>
         <result property="createdAt" column="createdAt"/>
 
@@ -81,7 +81,7 @@
         FROM add_subscription
         WHERE item_id = #{itemId}
           AND payment_id = #{paymentId}
-          AND start_date = #{paymentDate}
+          AND start_date = #{startDate}
           AND use_yn = 'Y'
     </select>
 
@@ -107,7 +107,7 @@
                 #{paymentId},
                 #{price},
                 #{billingCycle},
-                #{paymentDate},
+                #{startDate},
                 'Y',
                 NOW(),
                 NOW()

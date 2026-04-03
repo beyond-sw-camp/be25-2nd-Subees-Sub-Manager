@@ -33,7 +33,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new IllegalArgumentException("항목을 선택하거나 직접 입력해 주세요.");
         }
 
-        if (request.getPaymentDate() == null) {
+        if (request.getStartDate() == null) {
             throw new IllegalArgumentException("결제 시작일은 필수입니다.");
         }
 

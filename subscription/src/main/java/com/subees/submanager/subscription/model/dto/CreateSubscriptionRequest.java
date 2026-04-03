@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 public class CreateSubscriptionRequest {
-
     private Long categoryId;
 
     @JsonProperty("item_id")
@@ -25,5 +24,5 @@ public class CreateSubscriptionRequest {
     @JsonProperty("billing_cycle")
     private String billingCycle;
 
-    private LocalDate paymentDate;
+    private LocalDate startDate;
 }
