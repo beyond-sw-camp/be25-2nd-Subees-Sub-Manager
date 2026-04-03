@@ -14,7 +14,7 @@
         <result property="emailVerified" column="email_verified"/>
         <result property="emailVerifiedAt" column="email_verified_at"/>
         <result property="createdAt" column="created_at"/>
-        <result property="profileImageUrl" column="profile_image_url"/>
+        <result property="profileImageUrl" column="profile_image"/>
     </resultMap>
 
     <select id="countByEmail" resultType="int">
@@ -39,7 +39,7 @@
             email_verified,
             email_verified_at,
             created_at,
-            profile_image_url
+            profile_image
         FROM `user`
         WHERE email = #{email}
     </select>
@@ -54,7 +54,7 @@
             email_verified,
             email_verified_at,
             created_at,
-            profile_image_url
+            profile_image
         FROM `user`
         WHERE user_id = #{userId}
     </select>
@@ -71,7 +71,7 @@
             email_verified,
             email_verified_at,
             created_at,
-            profile_image_url
+            profile_image
         ) VALUES (
                      #{email},
                      #{password},
@@ -104,7 +104,7 @@
 
     <update id="updateProfileImageUrl">
         UPDATE `user`
-        SET profile_image_url = #{profileImageUrl}
+        SET profile_image = #{profileImageUrl}
         WHERE user_id = #{userId}
     </update>
 
