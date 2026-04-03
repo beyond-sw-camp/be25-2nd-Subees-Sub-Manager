@@ -11,11 +11,7 @@ public interface NotificationService {
 
     List<NotificationResponseDTO> getNotificationsByUserId(Long userId);
 
-    NotificationResponseDTO getNotificationById(Long notificationId);
-
     void markAsRead(Long notificationId);
 
     void closeNotification(Long notificationId);
-
-    void deleteNotification(Long notificationId);
 }
