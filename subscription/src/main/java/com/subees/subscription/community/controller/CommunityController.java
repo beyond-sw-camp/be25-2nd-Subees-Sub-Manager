@@ -1,8 +1,8 @@
 package com.subees.subscription.community.controller;
 
-import com.subees.subscription.common.dto.ApiSuccessResponseDto;
 import com.subees.subscription.common.exception.UniversityException;
 import com.subees.subscription.common.exception.message.ExceptionMessage;
+import com.subees.subscription.common.model.dto.BaseResponseDto;
 import com.subees.subscription.community.model.dto.CommunityPostCreateDto;
 import com.subees.subscription.community.model.dto.CommunityPostDetailResponseDto;
 import com.subees.subscription.community.model.dto.CommunityPostListResponseDto;
@@ -11,6 +11,7 @@ import com.subees.subscription.community.model.dto.CommunityPostPageResponseDto;
 import com.subees.subscription.community.model.dto.CommunityPostUpdateDto;
 import com.subees.subscription.community.model.dto.CommunityPostUpdateResponseDto;
 import com.subees.subscription.community.model.service.CommunityService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import jakarta.validation.Valid; //유효성 추가
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,7 +36,7 @@ public class CommunityController {
 
     // 게시글 목록 조회 - JSON 반환
     @GetMapping("/community/posts")
-    public ResponseEntity<ApiSuccessResponseDto<CommunityPostPageResponseDto>> getCommunityPostList(@RequestParam(defaultValue = "1") int page) {
+    public ResponseEntity<BaseResponseDto<CommunityPostPageResponseDto>> getCommunityPostList(@RequestParam(defaultValue = "1") int page) {
 
         int size = 10; //한 페이지당 글 수 10개
 
@@ -62,31 +62,31 @@ public class CommunityController {
                 totalCount,
                 totalPages
         );
-        return ResponseEntity.ok(new ApiSuccessResponseDto<>(200, "게시글 목록 조회 성공", responseDto));
+        return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, responseDto));
     }
 
     // 게시글 상세 조회 - JSON 반환
     @GetMapping("/community/posts/{postId}")
-    public ResponseEntity<ApiSuccessResponseDto<CommunityPostDetailResponseDto>> getCommunityPostDetail(@PathVariable long postId) {
+    public ResponseEntity<BaseResponseDto<CommunityPostDetailResponseDto>> getCommunityPostDetail(@PathVariable long postId) {
         CommunityPostDetailResponseDto post = communityService.getCommunityPostDetail(postId);
-        return ResponseEntity.ok(new ApiSuccessResponseDto<>(200, "게시글 상세 조회 성공", post));
+        return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, post));
     }
 
     //게시글 작성
     @PostMapping("/community/posts")
-    public ResponseEntity<ApiSuccessResponseDto<CommunityPostCreateDto>> postCommunityCreate(@RequestBody CommunityPostCreateDto communityPostCreateDto) {
+    public ResponseEntity<BaseResponseDto<CommunityPostCreateDto>> postCommunityCreate(@RequestBody CommunityPostCreateDto communityPostCreateDto) {
         communityService.save(communityPostCreateDto);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ApiSuccessResponseDto<>(201, "게시글이 성공적으로 등록되었습니다.", communityPostCreateDto));
+                .body(new BaseResponseDto<>(HttpStatus.CREATED, communityPostCreateDto));
     }
 
     //게시글 수정
     //@Valid가 있어야 dto에 붙인 @NotBlank가 동작함
     @PutMapping("/community/posts/{postId}")
-    public ResponseEntity<ApiSuccessResponseDto<CommunityPostUpdateResponseDto>> postCommunityUpdate(@PathVariable long postId, @Valid @RequestBody CommunityPostUpdateDto communityPostUpdateDto) {
+    public ResponseEntity<BaseResponseDto<CommunityPostUpdateResponseDto>> postCommunityUpdate(@PathVariable long postId, @Valid @RequestBody CommunityPostUpdateDto communityPostUpdateDto) {
         communityPostUpdateDto.setPostId(postId); // URL의 postId를 DTO에 세팅
         CommunityPostUpdateResponseDto updatedPost = communityService.update(communityPostUpdateDto);
-        return ResponseEntity.ok(new ApiSuccessResponseDto<>(200, "게시글이 수정되었습니다.", updatedPost));
+        return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, updatedPost));
     }
 
     // 화면용
