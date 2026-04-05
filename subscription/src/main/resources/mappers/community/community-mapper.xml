@@ -99,4 +99,8 @@
         WHERE post_id = #{postId}
     </select>
 
+    <!-- 게시글 삭제 -->
+    <delete id="deleteCommunityPost" parameterType="long">
+        DELETE FROM community_posts WHERE post_id = #{postId}
+    </delete>
 </mapper>

@@ -80,4 +80,25 @@ public class CommunityServiceImpl implements CommunityService {
         communityMapper.updateCommunityPost(communityPostUpdateDto); //dto에 담긴 값을 sql에 바인딩 하여 db 업데이트
         return communityMapper.selectUpdatedPost(communityPostUpdateDto.getPostId()); // 수정한 게시글을 db에서 다시 조회하여 CommunityPostUpdateResponseDto로 반환
     }
+
+    //글 삭제
+    @Override
+    @Transactional
+    public int delete(long postId, Long userId) {
+        // 미로그인 체크
+        if (userId == null) {
+            throw new UniversityException(ExceptionMessage.UNAUTHORIZED);
+        }
+        // 게시글 존재 여부 및 작성자 조회
+        Long ownerUserId = communityMapper.selectPostOwnerUserId(postId);
+        if (ownerUserId == null) {
+            throw new UniversityException(ExceptionMessage.POST_NOT_FOUND);
+        }
+        // 권한 체크 (작성자와 요청자가 다른지)
+        if (!ownerUserId.equals(userId)) {
+            throw new UniversityException(ExceptionMessage.FORBIDDEN);
+        }
+        return communityMapper.deleteCommunityPost(postId);
+    }
+
 }

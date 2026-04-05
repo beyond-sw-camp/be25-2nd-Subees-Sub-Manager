@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -87,6 +88,18 @@ public class CommunityController {
         communityPostUpdateDto.setPostId(postId); // URL의 postId를 DTO에 세팅
         CommunityPostUpdateResponseDto updatedPost = communityService.update(communityPostUpdateDto);
         return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, updatedPost));
+    }
+
+
+    //게시글 삭제
+    //primitive 타입은 null이 불가능해서
+    //userId 없이 요청하면 오류남. Long으로 변경
+    //RequestParam(required = true) spring 500 error
+    //@RequestParam(required = false)  userId = null → 서비스에서 401 UNAUTHORIZED 반환
+    @DeleteMapping("/community/posts/{postId}")
+    public ResponseEntity<BaseResponseDto<Long>> postCommunityDelete(@PathVariable long postId, @RequestParam(required = false) Long userId) {
+        communityService.delete(postId, userId);
+        return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, postId));
     }
 
     // 화면용

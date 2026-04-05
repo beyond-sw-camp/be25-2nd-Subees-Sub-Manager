@@ -31,4 +31,6 @@ public interface CommunityMapper {
 
     //수정 요청이 들어왔을 때, 해당 게시글의 작성자 user_id를 DB에서 가져오기 위해 추가
     Long selectPostOwnerUserId(@Param("postId") Long postId); //게시글 작성자 userId 조회
+
+    int deleteCommunityPost(@Param("postId") Long postId); //게시글 삭제
 }

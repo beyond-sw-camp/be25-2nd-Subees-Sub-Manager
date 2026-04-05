@@ -27,4 +27,7 @@ public interface CommunityService {
     //글 수정
     //int update
     CommunityPostUpdateResponseDto update(CommunityPostUpdateDto communityPostUpdateDto);
+
+    //글 삭제
+    int delete(long postId, Long userId);
 }

@@ -10,6 +10,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
+
+//수정 요청
 public class CommunityPostUpdateDto {
 
     private Long postId;
