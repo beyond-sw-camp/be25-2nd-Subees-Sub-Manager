@@ -1,6 +1,5 @@
 package com.subees.subscription.payment.model.service;
 
-import com.subees.subscription.consumption.model.dto.CalendarSummaryResponseDto;
 import com.subees.subscription.payment.model.dto.CardCreateRequestDto;
 import com.subees.subscription.payment.model.dto.CardUpdateRequestDto;
 import com.subees.subscription.payment.model.mapper.CardMapper;
