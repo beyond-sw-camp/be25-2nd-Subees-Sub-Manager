@@ -3,6 +3,7 @@
 
 <mapper namespace="com.subees.subscription.consumption.model.mapper.ConsumptionMapper">
 
+    <!-- 월 총 소비 금액 -->
     <select id="selectMonthlyTotalAmount" resultType="Integer">
         SELECT COALESCE(SUM(
             CASE
@@ -15,6 +16,8 @@
             AND (end_date IS NULL OR end_date &gt;= #{monthStart})
     </select>
 
+
+    <!-- 달력 조회(구독명, 가격, 구독 일) -->
     <select id="selectCalendarSummary" resultType="com.subees.subscription.consumption.model.dto.CalendarSummaryResponseDto">
         SELECT
             a.subscription_id AS subscriptionId,
@@ -31,6 +34,7 @@
             AND (a.end_date IS NULL OR a.end_date &gt;= #{monthStart});
     </select>
 
+    <!-- 선택 일 구독 조회(구독명, 가격, 선택일)-->
     <select id="selectDateDetailList" resultType="com.subees.subscription.consumption.model.dto.DateDetailListResponseDto">
         SELECT s.item_name AS itemName,
             CASE

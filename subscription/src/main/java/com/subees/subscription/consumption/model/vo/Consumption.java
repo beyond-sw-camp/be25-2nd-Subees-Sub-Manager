@@ -33,4 +33,6 @@ public class Consumption {
     private String endDate;
 
     private int price;
+
+
 }
