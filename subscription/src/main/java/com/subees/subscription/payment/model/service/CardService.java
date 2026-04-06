@@ -8,4 +8,6 @@ public interface CardService {
 
     void updateCard(CardUpdateRequestDto cardUpdateRequestDto);
 
+    void deleteCard(Long paymentId, Long userId);
+
     }

@@ -25,26 +25,45 @@
                )
     </insert>
 
-    <!-- 기본제공 카드 중복 등록 방지 카운드 -->
-    <select id="countDuplicateByCardId" resultType="int">
+    <!-- 기본제공 카드 중복 등록 방지 -->
+    <select id="countCardId" resultType="int">
         SELECT COUNT(*)
         FROM payment_method
         WHERE user_id = #{userId}
           AND card_id = #{cardId}
+          And card_name = #{cardName}
           AND is_active = 1
     </select>
 
     <!-- 직접입력 카드 중복 등록 방지 카운드 -->
-    <select id="countDuplicateByCustomCardCompany" resultType="int">
+    <select id="countCardCustom" resultType="int">
         SELECT COUNT(*)
         FROM payment_method
         WHERE user_id = #{userId}
           AND custom_card_company = #{customCardCompany}
+          AND is_active = 1
     </select>
 
+    <!-- 카드 수정-->
     <update id="updateCard" parameterType="Payment">
         UPDATE payment_method
         SET card_name = #{cardName}
+        WHERE payment_id = #{paymentId}
+          AND user_id = #{userId}
+    </update>
+
+    <!-- 논리 삭제 조건(구독 비활성화 시) -->
+    <select id="activeCardByPayment" resultType="int">
+        SELECT COUNT(*)
+        FROM add_subscription
+        WHERE payment_id = #{paymentId}
+          AND use_yn = 'Y'
+    </select>
+
+    <!-- 논리 삭제 ( is_active = 0) -->
+    <update id="deleteCard">
+        UPDATE payment_method
+        SET is_active = 0
         WHERE payment_id = #{paymentId}
           AND user_id = #{userId}
     </update>

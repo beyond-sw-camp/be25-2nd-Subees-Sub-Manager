@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 /*
  * 카드 등록 로직
- * - userId 필수 여부 검증
+ * - userId 필수 검증
  * - 카드 선택(cardId) 또는 직접 입력(customCardCompany) 중 하나 입력 검증
  * - 선택 카드 / 직접 입력 카드 각각 중복 등록 여부 확인
  * - 사용하지 않는 값은 null 처리 후 payment_method 테이블에 저장
@@ -38,9 +38,10 @@ public class CardServiceImpl implements CardService {
         }
 
         if (hasCardId) {
-            int duplicateCount = cardMapper.countDuplicateByCardId(
+            int duplicateCount = cardMapper.countCardId(
                     cardCreateRequestDto.getUserId(),
-                    cardCreateRequestDto.getCardId()
+                    cardCreateRequestDto.getCardId(),
+                    cardCreateRequestDto.getCardName()
             );
             if (duplicateCount > 0) {
                 throw new IllegalArgumentException("이미 등록된 카드입니다.");
@@ -48,9 +49,10 @@ public class CardServiceImpl implements CardService {
         }
 
         if (hasCustomCardCompany) {
-            int duplicateCount = cardMapper.countDuplicateByCustomCardCompany(
+            int duplicateCount = cardMapper.countCardCustom(
                     cardCreateRequestDto.getUserId(),
-                    cardCreateRequestDto.getCustomCardCompany()
+                    cardCreateRequestDto.getCustomCardCompany(),
+                    cardCreateRequestDto.getIsActive()
             );
             if (duplicateCount > 0) {
                 throw new IllegalArgumentException("이미 등록된 카드입니다.");
@@ -90,10 +92,35 @@ public class CardServiceImpl implements CardService {
         payment.setUserId(cardUpdateRequestDto.getUserId());
         payment.setCardName(cardUpdateRequestDto.getCardName());
 
-        int result = cardMapper.updateCard(payment);
+        int updateCount = cardMapper.updateCard(payment);
 
-        if (result != 1) {
-            throw new RuntimeException("카드 수정 실패");
+        if (updateCount == 0) {
+            throw new IllegalArgumentException("해당 결제수단이 존재하지 않거나 수정 권한이 없습니다.");
+        }
+    }
+
+    @Override
+    public void deleteCard(Long paymentId, Long userId) {
+
+        if (userId == null) {
+            throw new IllegalArgumentException("사용자 아이디는 필수입니다.");
+        }
+
+        if (paymentId == null) {
+            throw new IllegalArgumentException("결제수단 아이디는 필수입니다.");
+        }
+
+
+        int usingCount = cardMapper.activeCardByPayment(paymentId);
+
+        if (usingCount > 0) {
+            throw new IllegalStateException("현재 사용 중인 카드라 삭제할 수 없습니다.");
+        }
+
+        int result = cardMapper.deleteCard(userId, paymentId);
+
+        if (result == 0) {
+            throw new IllegalArgumentException("삭제할 카드가 없거나 이미 비활성화된 카드입니다.");
         }
     }
 }

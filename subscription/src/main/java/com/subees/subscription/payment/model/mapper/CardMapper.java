@@ -8,9 +8,13 @@ import org.apache.ibatis.annotations.Param;
 public interface CardMapper {
     int insertPaymentMethod(Payment payment);
 
-    int countDuplicateByCustomCardCompany(@Param("userId") Long userId, @Param("customCardCompany") String customCardCompany);
+    int countCardCustom(@Param("userId") Long userId, @Param("customCardCompany") String customCardCompany, @Param("is_active") char isActive);
 
-    int countDuplicateByCardId(@Param("userId") Long userId, @Param("cardId") Long cardId);
+    int countCardId(@Param("userId") Long userId, @Param("cardId") Long cardId, @Param("cardName") String cardName);
 
     int updateCard(Payment payment);
+
+    int activeCardByPayment(@Param("paymentId") Long paymentId);
+
+    int deleteCard(@Param("userId") Long userId, @Param("paymentId") Long paymentId);
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class CardUpdateResponseDto {
-    private String message; // 카드 수정 성공 여부 메시지
+public class CardDeleteResponseDto {
+
+    private String message; // 카드 등록 성공 여부 메시지
 }

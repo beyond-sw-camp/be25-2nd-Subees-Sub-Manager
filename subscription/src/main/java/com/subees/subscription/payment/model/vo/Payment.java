@@ -7,19 +7,19 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class Payment {
-    private Long cardId;
+    private Long cardId; // 카드 아이디
 
-    public String cardName;
+    private long userId; // 유저 아아디
 
-    private String cardCompany;
+    public String cardName; // 카드 별칭
 
-    private Long paymentId;
+    private String cardCompany; // 카드사 이름
 
-    private long userId;
+    private Long paymentId; // paymentMethod pk
 
-    private char isActive;
+    private char isActive; // 카드 활성화 여부
 
-    private LocalDate created_at;
+    private LocalDate created_at; // 카드 등록 시간
 
-    private String customCardCompany;
+    private String customCardCompany; // 유저가 직접입력한 카드 이름
 }
