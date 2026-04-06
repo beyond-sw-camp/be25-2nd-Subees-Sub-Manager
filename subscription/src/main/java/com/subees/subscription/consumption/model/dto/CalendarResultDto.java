@@ -5,14 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DateDetailListResponseDto {
-    private String itemName;
-
-    private int billingDay;
-
-    private int price;
+public class CalendarResultDto {
+    private Integer year;
+    private Integer month;
+    private Integer monthTotalAmount;
+    private List<CalendarResponseDto> items;
 }

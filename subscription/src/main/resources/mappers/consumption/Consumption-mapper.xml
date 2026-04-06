@@ -18,24 +18,30 @@
 
 
     <!-- 달력 조회(구독명, 가격, 구독 일) -->
-    <select id="selectCalendarSummary" resultType="com.subees.subscription.consumption.model.dto.CalendarSummaryResponseDto">
+    <select id="selectCalendar" resultType="com.subees.subscription.consumption.model.dto.CalendarResponseDto">
         SELECT
-            a.subscription_id AS subscriptionId,
-            s.item_name AS itemName,
+            DAY(a.start_date) AS payDay,
+            COUNT(*) AS totalCount,
+            COALESCE(SUM(
             CASE
-                WHEN a.billing_cycle = '1M' THEN a.price
-                WHEN a.billing_cycle = '1Y' THEN FLOOR(a.price / 12) ELSE 0 END
-            AS price,
-            DAY(a.start_date) AS payDay
+            WHEN a.billing_cycle = '1M' THEN a.price
+            WHEN a.billing_cycle = '1Y' THEN FLOOR(a.price / 12)
+            ELSE 0
+            END
+            ), 0) AS totalAmount,
+            GROUP_CONCAT(s.item_name ORDER BY s.item_name SEPARATOR ', ') AS itemNames
         FROM add_subscription a
-        JOIN subscription_item s ON a.item_id = s.item_id
-        WHERE a.user_id = ${userId}
-            AND a.start_date &lt; #{nextMonthStart}
-            AND (a.end_date IS NULL OR a.end_date &gt;= #{monthStart});
+            JOIN subscription_item s
+        ON a.item_id = s.item_id
+        WHERE a.user_id = #{userId}
+          AND a.start_date &lt; #{nextMonthStart}
+          AND (a.end_date IS NULL OR a.end_date &gt;= #{monthStart})
+        GROUP BY DAY(a.start_date)
+        ORDER BY payDay
     </select>
 
     <!-- 선택 일 구독 조회(구독명, 가격, 선택일)-->
-    <select id="selectDateDetailList" resultType="com.subees.subscription.consumption.model.dto.DateDetailListResponseDto">
+    <select id="selectDateDetailList" resultType="com.subees.subscription.consumption.model.dto.DateDetailResponseDto">
         SELECT s.item_name AS itemName,
             CASE
                 WHEN a.billing_cycle = '1M' THEN a.price
@@ -49,7 +55,75 @@
             AND DAY(a.start_date) = #{startDate}
     </select>
 
+    <select id="selectCategory"
+            resultType="CategorySummary">
+        SELECT
+            c.category_name AS categoryName,
+            COALESCE(SUM(
+                             CASE
+                                 WHEN a.billing_cycle = '1M' THEN a.price
+                                 WHEN a.billing_cycle = '1Y' THEN FLOOR(a.price / 12)
+                                 ELSE 0
+                                 END
+                     ), 0) AS totalAmount,
+            GROUP_CONCAT(s.item_name ORDER BY s.item_name SEPARATOR ', ') AS itemNames
+        FROM add_subscription a
+                 JOIN subscription_item s ON a.item_id = s.item_id
+                 JOIN subscription_category c ON s.category_id = c.category_id
+        WHERE a.user_id = #{userId}
+          AND a.start_date &lt; #{nextMonthStart}
+          AND (a.end_date IS NULL OR a.end_date &gt;= #{monthStart})
+        GROUP BY c.category_id, c.category_name
+        ORDER BY totalAmount DESC
+    </select>
 
+    <select id="selectMonthlyCategoryAnalysis"
+            resultType="com.subees.subscription.consumption.model.dto.CategoryAnalysisResponseDto">
+        SELECT
+        c.category_name AS categoryName,
+        COALESCE(SUM(
+        CASE
+        WHEN a.billing_cycle = '1M' THEN a.price
+        WHEN a.billing_cycle = '1Y' THEN FLOOR(a.price / 12)
+        ELSE 0
+        END
+        ), 0) AS totalAmount,
+        COUNT(*) AS subscriptionCount
+        FROM add_subscription a
+        JOIN subscription_item s
+        ON a.item_id = s.item_id
+        JOIN subscription_category c
+        ON s.category_id = c.category_id
+        WHERE a.user_id = #{userId}
+        AND a.start_date &lt; #{nextMonthStart}
+        AND (a.end_date IS NULL OR a.end_date &gt;= #{monthStart})
+        GROUP BY c.category_name
+        ORDER BY totalAmount DESC
+    </select>
+
+    <select id="selectYearlyCategoryAnalysis"
+            resultType="com.subees.subscription.consumption.model.dto.CategoryAnalysisResponseDto">
+        SELECT
+        c.category_name AS categoryName,
+        COALESCE(SUM(
+        CASE
+        WHEN a.billing_cycle = '1M' THEN a.price * 12
+        WHEN a.billing_cycle = '1Y' THEN a.price
+        ELSE 0
+        END
+        ), 0) AS totalAmount,
+        COUNT(*) AS subscriptionCount
+        FROM add_subscription a
+        JOIN subscription_item s
+        ON a.item_id = s.item_id
+        JOIN subscription_category c
+        ON s.category_id = c.category_id
+        WHERE a.user_id = #{userId}
+        AND a.start_date &lt; #{nextYearStart}
+        AND (a.end_date IS NULL OR a.end_date &gt;= #{yearStart})
+        GROUP BY c.category_name
+        ORDER BY totalAmount DESC
+    </select>
 
 
 

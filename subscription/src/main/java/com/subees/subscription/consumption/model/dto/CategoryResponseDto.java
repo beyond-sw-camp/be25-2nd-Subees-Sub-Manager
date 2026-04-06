@@ -9,13 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CalendarSummaryResponseDto {
-    private int subscriptionId;
-
-    private String itemName;
-
-    private int price;
-
-    private int payDay;
-
+public class CategoryResponseDto {
+    private Integer year;
+    private Integer month;
+    private String categoryName;
+    private Integer totalAmount;
+    private String itemNames;
 }

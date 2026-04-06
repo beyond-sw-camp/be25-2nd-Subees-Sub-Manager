@@ -71,7 +71,6 @@ public class CardServiceImpl implements CardService {
     /*
     * 카드 수정
     */
-
     @Override
     public void updateCard(CardUpdateRequestDto cardUpdateRequestDto) {
 
