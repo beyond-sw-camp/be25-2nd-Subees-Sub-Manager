@@ -17,4 +17,7 @@ public interface SubscriptionService {
     SubscriptionResponse getSubscriptionById(Long subscriptionId);
 
     UpdateSubscriptionResponse updateSubscription(Long subscriptionId, UpdateSubscriptionRequest request);
+
+    void deleteSubscription(Long subscriptionId);
+
 }

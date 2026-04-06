@@ -143,6 +143,14 @@
         SELECT LAST_INSERT_ID()
     </select>
 
+    <!--구독항목 삭제-->
+    <update id="softDeleteSubscription" parameterType="long">
+        UPDATE add_subscription
+        SET use_yn = 'N',
+            updated_at = NOW()
+        WHERE subscription_id = #{subscriptionId}
+          AND use_yn = 'Y'
+    </update>
 
     <update id="updateSubscription">
         UPDATE add_subscription

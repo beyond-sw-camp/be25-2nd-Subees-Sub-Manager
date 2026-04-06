@@ -29,4 +29,5 @@ public interface SubscriptionMapper {
 
     int existsPaymentMethod(Long paymentId);
 
+    int softDeleteSubscription(Long subscriptionId);
 }

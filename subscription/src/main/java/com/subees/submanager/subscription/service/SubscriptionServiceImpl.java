@@ -129,4 +129,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .updatedAt(LocalDate.now())
                 .build();
     }
+
+    @Override
+    public void deleteSubscription(Long subscriptionId) {
+
+        int result = subscriptionMapper.softDeleteSubscription(subscriptionId);
+
+        if (result == 0) {
+            throw new IllegalArgumentException("해당 구독이 존재하지 않거나 이미 삭제되었습니다.");
+        }
+    }
 }
