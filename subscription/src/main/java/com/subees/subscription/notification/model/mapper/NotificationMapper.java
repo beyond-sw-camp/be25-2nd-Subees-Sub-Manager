@@ -1,6 +1,6 @@
-package com.example.notification.mapper;
+package com.subees.subscription.notification.model.mapper;
 
-import com.example.notification.vo.NotificationVO;
+import com.subees.subscription.notification.model.vo.NotificationVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -11,9 +11,13 @@ public interface NotificationMapper {
 
     int insertNotification(NotificationVO notificationVO);
 
+    NotificationVO selectNotificationById(@Param("notificationId") Long notificationId);
+
     List<NotificationVO> selectNotificationsByUserId(@Param("userId") Long userId);
 
-    int updateNotificationAsRead(@Param("notificationId") Long notificationId);
+    List<NotificationVO> selectUnreadNotificationsByUserId(@Param("userId") Long userId);
 
-    int updateNotificationAsClosed(@Param("notificationId") Long notificationId);
+    int updateReadStatus(@Param("notificationId") Long notificationId);
+
+    int updateClosedStatus(@Param("notificationId") Long notificationId);
 }

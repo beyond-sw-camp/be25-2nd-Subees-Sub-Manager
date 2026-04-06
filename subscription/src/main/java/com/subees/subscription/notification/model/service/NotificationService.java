@@ -1,17 +1,21 @@
-package com.example.notification.service;
+package com.subees.subscription.notification.model.service;
 
-import com.example.notification.dto.NotificationRequestDTO;
+import com.example.notification.dto.NotificationCreateRequestDTO;
 import com.example.notification.dto.NotificationResponseDTO;
 
 import java.util.List;
 
 public interface NotificationService {
 
-    NotificationResponseDTO createNotification(NotificationRequestDTO requestDTO);
+    NotificationResponseDTO createNotification(NotificationCreateRequestDTO requestDTO);
+
+    NotificationResponseDTO getNotificationById(Long notificationId);
 
     List<NotificationResponseDTO> getNotificationsByUserId(Long userId);
 
+    List<NotificationResponseDTO> getUnreadNotificationsByUserId(Long userId);
+
     void markAsRead(Long notificationId);
 
-    void closeNotification(Long notificationId);
+    void markAsClosed(Long notificationId);
 }

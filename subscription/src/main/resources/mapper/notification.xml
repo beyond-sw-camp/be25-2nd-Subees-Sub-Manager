@@ -8,59 +8,97 @@
     <resultMap id="notificationResultMap" type="com.example.notification.vo.NotificationVO">
         <id property="notificationId" column="notification_id"/>
         <result property="userId" column="user_id"/>
-        <result property="content" column="content"/>
+        <result property="subscriptionId" column="subscription_id"/>
         <result property="isRead" column="is_read"/>
         <result property="isClosed" column="is_closed"/>
+        <result property="notifyType" column="notify_type"/>
         <result property="createdAt" column="created_at"/>
+        <result property="alarm" column="alarm"/>
     </resultMap>
 
-    <!-- 알림 생성 -->
     <insert id="insertNotification"
             parameterType="com.example.notification.vo.NotificationVO"
             useGeneratedKeys="true"
             keyProperty="notificationId">
-        INSERT INTO notification (
+        INSERT INTO notifications (
             user_id,
-            content,
+            subscription_id,
             is_read,
             is_closed,
-            created_at
-        ) VALUES (
-                     #{userId},
-                     #{content},
-                     #{isRead},
-                     #{isClosed},
-                     NOW()
-                 )
+            notify_type,
+            alarm
+        )
+        VALUES (
+                   #{userId},
+                   #{subscriptionId},
+                   #{isRead},
+                   #{isClosed},
+                   #{notifyType},
+                   #{alarm}
+               )
     </insert>
 
-    <!-- 특정 유저 알림 목록 조회 -->
+    <select id="selectNotificationById"
+            parameterType="long"
+            resultMap="notificationResultMap">
+        SELECT
+            notification_id,
+            user_id,
+            subscription_id,
+            is_read,
+            is_closed,
+            notify_type,
+            created_at,
+            alarm
+        FROM notifications
+        WHERE notification_id = #{notificationId}
+    </select>
+
     <select id="selectNotificationsByUserId"
             parameterType="long"
             resultMap="notificationResultMap">
         SELECT
             notification_id,
             user_id,
-            content,
+            subscription_id,
             is_read,
             is_closed,
-            created_at
-        FROM notification
+            notify_type,
+            created_at,
+            alarm
+        FROM notifications
         WHERE user_id = #{userId}
         ORDER BY created_at DESC
     </select>
 
-    <!-- 읽음 처리 -->
-    <update id="updateNotificationAsRead" parameterType="long">
-        UPDATE notification
-        SET is_read = true
+    <select id="selectUnreadNotificationsByUserId"
+            parameterType="long"
+            resultMap="notificationResultMap">
+        SELECT
+            notification_id,
+            user_id,
+            subscription_id,
+            is_read,
+            is_closed,
+            notify_type,
+            created_at,
+            alarm
+        FROM notifications
+        WHERE user_id = #{userId}
+          AND is_read = 0
+          AND is_closed = 0
+        ORDER BY created_at DESC
+    </select>
+
+    <update id="updateReadStatus" parameterType="long">
+        UPDATE notifications
+        SET is_read = 1
         WHERE notification_id = #{notificationId}
     </update>
 
-    <!-- 닫기 처리 -->
-    <update id="updateNotificationAsClosed" parameterType="long">
-        UPDATE notification
-        SET is_closed = true
+    <update id="updateClosedStatus" parameterType="long">
+        UPDATE notifications
+        SET is_closed = 1
         WHERE notification_id = #{notificationId}
     </update>
 
