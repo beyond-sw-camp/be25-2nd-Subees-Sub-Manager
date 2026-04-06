@@ -3,13 +3,16 @@ package com.subees.subscription.community.controller;
 import com.subees.subscription.common.exception.UniversityException;
 import com.subees.subscription.common.exception.message.ExceptionMessage;
 import com.subees.subscription.common.model.dto.BaseResponseDto;
-import com.subees.subscription.community.model.dto.CommunityPostCreateDto;
-import com.subees.subscription.community.model.dto.CommunityPostDetailResponseDto;
-import com.subees.subscription.community.model.dto.CommunityPostListResponseDto;
-import com.subees.subscription.community.model.dto.CommunityPostPageRequestDto;
-import com.subees.subscription.community.model.dto.CommunityPostPageResponseDto;
-import com.subees.subscription.community.model.dto.CommunityPostUpdateDto;
-import com.subees.subscription.community.model.dto.CommunityPostUpdateResponseDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostCreateDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostDetailResponseDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostListResponseDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostPageRequestDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostPageResponseDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostUpdateDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostUpdateResponseDto;
+import com.subees.subscription.community.model.dto.scrap.CommunityScrapCreateDto;
+import com.subees.subscription.community.model.dto.scrap.CommunityScrapPageResponseDto;
+import com.subees.subscription.community.model.dto.scrap.CommunityScrapResponseDto;
 import com.subees.subscription.community.model.service.CommunityService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,11 +44,6 @@ public class CommunityController {
 
         int size = 10; //한 페이지당 글 수 10개
 
-        CommunityPostPageRequestDto communityPostPageRequestDto = new CommunityPostPageRequestDto(page, size);
-
-        List<CommunityPostListResponseDto> posts = communityService.getCommunityPostList(communityPostPageRequestDto);
-
-        //db에서 게시글 조회
         //math.ceil 페이징 올림 처리 (25개 / 10 = 2.5 ->3 페이지)
         int totalCount = communityService.getCommunityPostCount();
         //totalPages = 몇 페이지로 나눌지
@@ -55,6 +53,9 @@ public class CommunityController {
         if (page < 1 || (totalPages > 0 && page > totalPages)) {
             throw new UniversityException(ExceptionMessage.INVALID_PAGE);
         }
+
+        CommunityPostPageRequestDto communityPostPageRequestDto = new CommunityPostPageRequestDto(page, size);
+        List<CommunityPostListResponseDto> posts = communityService.getCommunityPostList(communityPostPageRequestDto);
 
         CommunityPostPageResponseDto responseDto = new CommunityPostPageResponseDto(
                 posts,
@@ -99,6 +100,28 @@ public class CommunityController {
     @DeleteMapping("/community/posts/{postId}")
     public ResponseEntity<BaseResponseDto<Long>> postCommunityDelete(@PathVariable long postId, @RequestParam(required = false) Long userId) {
         communityService.delete(postId, userId);
+        return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, postId));
+    }
+
+    // 게시글 스크랩
+    @PostMapping("/community/posts/{postId}/scraps")
+    public ResponseEntity<BaseResponseDto<CommunityScrapResponseDto>> postCommunityScrap(@PathVariable long postId, @RequestBody CommunityScrapCreateDto communityScrapCreateDto) {
+        CommunityScrapResponseDto scrap = communityService.scrap(postId, communityScrapCreateDto);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new BaseResponseDto<>(HttpStatus.CREATED, scrap));
+    }
+
+    // 스크랩 목록 조회
+    @GetMapping("/community/scraps")
+    public ResponseEntity<BaseResponseDto<CommunityScrapPageResponseDto>> getScrapList(@RequestParam(required = false) Long userId, @RequestParam(defaultValue = "1") int page) {
+        CommunityScrapPageResponseDto response = communityService.getScrapList(userId, page);
+        return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, response));
+    }
+
+    // 스크랩 취소
+    @DeleteMapping("/community/posts/{postId}/scraps")
+    public ResponseEntity<BaseResponseDto<Long>> cancelScrap(@PathVariable long postId, @RequestParam(required = false) Long userId) {
+        communityService.cancelScrap(postId, userId);
         return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, postId));
     }
 

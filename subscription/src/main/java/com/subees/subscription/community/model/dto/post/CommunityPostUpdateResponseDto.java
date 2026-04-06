@@ -1,4 +1,4 @@
-package com.subees.subscription.community.model.dto;
+package com.subees.subscription.community.model.dto.post;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

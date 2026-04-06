@@ -1,4 +1,4 @@
-package com.subees.subscription.community.model.dto;
+package com.subees.subscription.community.model.dto.post;
 //페이징 응답용
 
 import lombok.AllArgsConstructor;

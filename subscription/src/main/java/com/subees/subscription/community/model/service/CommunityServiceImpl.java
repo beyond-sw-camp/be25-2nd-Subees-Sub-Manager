@@ -2,12 +2,17 @@ package com.subees.subscription.community.model.service;
 
 import com.subees.subscription.common.exception.UniversityException;
 import com.subees.subscription.common.exception.message.ExceptionMessage;
-import com.subees.subscription.community.model.dto.CommunityPostCreateDto;
-import com.subees.subscription.community.model.dto.CommunityPostDetailResponseDto;
-import com.subees.subscription.community.model.dto.CommunityPostListResponseDto;
-import com.subees.subscription.community.model.dto.CommunityPostPageRequestDto;
-import com.subees.subscription.community.model.dto.CommunityPostUpdateDto;
-import com.subees.subscription.community.model.dto.CommunityPostUpdateResponseDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostCreateDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostDetailResponseDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostListResponseDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostPageRequestDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostUpdateDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostUpdateResponseDto;
+import com.subees.subscription.community.model.dto.scrap.CommunityScrapCreateDto;
+import com.subees.subscription.community.model.dto.scrap.CommunityScrapListResponseDto;
+import com.subees.subscription.community.model.dto.scrap.CommunityScrapPageRequestDto;
+import com.subees.subscription.community.model.dto.scrap.CommunityScrapPageResponseDto;
+import com.subees.subscription.community.model.dto.scrap.CommunityScrapResponseDto;
 import com.subees.subscription.community.model.mapper.CommunityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -99,6 +104,77 @@ public class CommunityServiceImpl implements CommunityService {
             throw new UniversityException(ExceptionMessage.FORBIDDEN);
         }
         return communityMapper.deleteCommunityPost(postId);
+    }
+
+    // 스크랩 저장
+    @Transactional
+    @Override
+    public CommunityScrapResponseDto scrap(long postId, CommunityScrapCreateDto communityScrapCreateDto) {
+        // 미로그인 체크
+        if (communityScrapCreateDto.getUserId() == null) {
+            throw new UniversityException(ExceptionMessage.UNAUTHORIZED);
+        }
+        // 게시글 존재 여부 체크
+        Long ownerUserId = communityMapper.selectPostOwnerUserId(postId);
+        if (ownerUserId == null) {
+            throw new UniversityException(ExceptionMessage.POST_NOT_FOUND);
+        }
+        // 자신의 글 스크랩 방지
+        if (ownerUserId.equals(communityScrapCreateDto.getUserId())) {
+            throw new UniversityException(ExceptionMessage.INVALID_SCRAP_REQUEST);
+        }
+        // 중복 스크랩 체크
+        int duplicateCount = communityMapper.selectScrapDuplicateCount(postId, communityScrapCreateDto.getUserId());
+        if (duplicateCount > 0) {
+            throw new UniversityException(ExceptionMessage.ALREADY_SCRAPPED);
+        }
+        // postId 세팅 후 스크랩 저장
+        communityScrapCreateDto.setPostId(postId);
+        communityMapper.insertCommunityScrap(communityScrapCreateDto);
+        // 게시글 scrap_count +1
+        communityMapper.updateScrapCount(postId);
+        // 저장된 스크랩 조회 후 반환
+        return communityMapper.selectScrapById(communityScrapCreateDto.getScrapId());
+    }
+
+    // 스크랩 목록 조회 (페이징)
+    @Override
+    public CommunityScrapPageResponseDto getScrapList(Long userId, int page) {
+        // 미로그인 체크
+        if (userId == null) {
+            throw new UniversityException(ExceptionMessage.UNAUTHORIZED);
+        }
+        int size = 10;
+        int totalCount = communityMapper.selectScrapTotalCount(userId);
+        int totalPages = (int) Math.ceil((double) totalCount / size);
+
+        //페이징 예외처리
+        if (page < 1 || (totalPages > 0 && page > totalPages)) {
+            throw new UniversityException(ExceptionMessage.INVALID_PAGE);
+        }
+
+        CommunityScrapPageRequestDto requestDto = new CommunityScrapPageRequestDto(userId, page, size);
+        List<CommunityScrapListResponseDto> scraps = communityMapper.selectScrapList(requestDto);
+
+        return new CommunityScrapPageResponseDto(scraps, page, size, totalCount, totalPages);
+    }
+
+    // 스크랩 취소
+    @Transactional
+    @Override
+    public void cancelScrap(long postId, Long userId) {
+        // 미로그인 체크
+        if (userId == null) {
+            throw new UniversityException(ExceptionMessage.UNAUTHORIZED);
+        }
+        // 스크랩 내역 존재 여부 체크
+        int scrapCount = communityMapper.selectScrapDuplicateCount(postId, userId);
+        if (scrapCount == 0) {
+            throw new UniversityException(ExceptionMessage.SCRAP_NOT_FOUND);
+        }
+        // 스크랩 삭제 + scrap_count -1 (트랜잭션으로 묶임)
+        communityMapper.deleteScrap(postId, userId);
+        communityMapper.updateScrapCountDecrement(postId);
     }
 
 }

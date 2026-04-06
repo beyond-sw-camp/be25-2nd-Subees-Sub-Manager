@@ -1,4 +1,4 @@
-package com.subees.subscription.community.model.dto;
+package com.subees.subscription.community.model.dto.post;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

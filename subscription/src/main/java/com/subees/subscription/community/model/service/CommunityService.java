@@ -1,11 +1,14 @@
 package com.subees.subscription.community.model.service;
 
-import com.subees.subscription.community.model.dto.CommunityPostCreateDto;
-import com.subees.subscription.community.model.dto.CommunityPostDetailResponseDto;
-import com.subees.subscription.community.model.dto.CommunityPostListResponseDto;
-import com.subees.subscription.community.model.dto.CommunityPostPageRequestDto;
-import com.subees.subscription.community.model.dto.CommunityPostUpdateDto;
-import com.subees.subscription.community.model.dto.CommunityPostUpdateResponseDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostCreateDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostDetailResponseDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostListResponseDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostPageRequestDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostUpdateDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostUpdateResponseDto;
+import com.subees.subscription.community.model.dto.scrap.CommunityScrapCreateDto;
+import com.subees.subscription.community.model.dto.scrap.CommunityScrapPageResponseDto;
+import com.subees.subscription.community.model.dto.scrap.CommunityScrapResponseDto;
 
 import java.util.List;
 
@@ -30,4 +33,13 @@ public interface CommunityService {
 
     //글 삭제
     int delete(long postId, Long userId);
+
+    // 스크랩 저장
+    CommunityScrapResponseDto scrap(long postId, CommunityScrapCreateDto communityScrapCreateDto);
+
+    // 스크랩 목록 조회 (페이징)
+    CommunityScrapPageResponseDto getScrapList(Long userId, int page);
+
+    // 스크랩 취소
+    void cancelScrap(long postId, Long userId);
 }

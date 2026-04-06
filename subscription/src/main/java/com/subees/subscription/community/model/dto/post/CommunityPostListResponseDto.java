@@ -1,4 +1,4 @@
-package com.subees.subscription.community.model.dto;
+package com.subees.subscription.community.model.dto.post;
 //화면에 필요한 데이터 전달용. userId 대신 nickname으로 가져와볼것
 //글 목록 Dto
 

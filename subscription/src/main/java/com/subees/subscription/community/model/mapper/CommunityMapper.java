@@ -1,11 +1,15 @@
 package com.subees.subscription.community.model.mapper;
 
-import com.subees.subscription.community.model.dto.CommunityPostCreateDto;
-import com.subees.subscription.community.model.dto.CommunityPostDetailResponseDto;
-import com.subees.subscription.community.model.dto.CommunityPostListResponseDto;
-import com.subees.subscription.community.model.dto.CommunityPostPageRequestDto;
-import com.subees.subscription.community.model.dto.CommunityPostUpdateDto;
-import com.subees.subscription.community.model.dto.CommunityPostUpdateResponseDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostCreateDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostDetailResponseDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostListResponseDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostPageRequestDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostUpdateDto;
+import com.subees.subscription.community.model.dto.post.CommunityPostUpdateResponseDto;
+import com.subees.subscription.community.model.dto.scrap.CommunityScrapCreateDto;
+import com.subees.subscription.community.model.dto.scrap.CommunityScrapListResponseDto;
+import com.subees.subscription.community.model.dto.scrap.CommunityScrapPageRequestDto;
+import com.subees.subscription.community.model.dto.scrap.CommunityScrapResponseDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -33,4 +37,18 @@ public interface CommunityMapper {
     Long selectPostOwnerUserId(@Param("postId") Long postId); //게시글 작성자 userId 조회
 
     int deleteCommunityPost(@Param("postId") Long postId); //게시글 삭제
+
+    // 스크랩
+    int insertCommunityScrap(CommunityScrapCreateDto communityScrapCreateDto); // 스크랩 저장
+    CommunityScrapResponseDto selectScrapById(@Param("scrapId") Long scrapId); // 저장된 스크랩 조회
+    int selectScrapDuplicateCount(@Param("postId") Long postId, @Param("userId") Long userId); // 중복 스크랩 체크
+    void updateScrapCount(@Param("postId") Long postId); // 게시글 scrap_count +1
+
+    // 스크랩 목록
+    List<CommunityScrapListResponseDto> selectScrapList(CommunityScrapPageRequestDto communityScrapPageRequestDto); // 스크랩 목록 (페이징)
+    int selectScrapTotalCount(@Param("userId") Long userId); // 스크랩 총 개수
+
+    // 스크랩 취소
+    int deleteScrap(@Param("postId") Long postId, @Param("userId") Long userId); // 스크랩 삭제
+    void updateScrapCountDecrement(@Param("postId") Long postId); // scrap_count -1 (0 아래로 안 내려감)
 }
