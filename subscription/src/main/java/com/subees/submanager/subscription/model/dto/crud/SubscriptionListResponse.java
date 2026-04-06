@@ -1,4 +1,4 @@
-package com.subees.submanager.subscription.model.dto;
+package com.subees.submanager.subscription.model.dto.crud;
 
 import lombok.Getter;
 import lombok.Setter;

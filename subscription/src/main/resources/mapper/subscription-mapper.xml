@@ -7,18 +7,18 @@
 
     <!-- 상세조회 resultMap -->
     <resultMap id="subscriptionDetailResultMap"
-               type="com.subees.submanager.subscription.model.dto.SubscriptionResponse">
+               type="com.subees.submanager.subscription.model.dto.crud.SubscriptionResponse">
         <id property="subscriptionId" column="subscriptionId"/>
         <result property="categoryName" column="categoryName"/>
         <result property="itemName" column="itemName"/>
         <result property="price" column="price"/>
         <result property="billingCycle" column="billingCycle"/>
-        <result property="startDate" column="starDate"/>
+        <result property="startDate" column="startDate"/>
         <result property="useYn" column="useYn"/>
         <result property="createdAt" column="createdAt"/>
 
         <association property="paymentMethod"
-                     javaType="com.subees.submanager.subscription.model.dto.SubscriptionResponse$PaymentMethod">
+                     javaType="com.subees.submanager.subscription.model.dto.crud.SubscriptionResponse$PaymentMethod">
             <id property="id" column="payment_method_id"/>
             <result property="name" column="payment_method_name"/>
         </association>
@@ -26,7 +26,7 @@
 
     <!-- 구독 목록 조회 -->
     <select id="selectAll"
-            resultType="com.subees.submanager.subscription.model.dto.SubscriptionListResponse">
+            resultType="com.subees.submanager.subscription.model.dto.crud.SubscriptionListResponse">
         SELECT
             s.subscription_id AS subscriptionId,
             c.category_name AS categoryName,
@@ -42,6 +42,23 @@
         ORDER BY s.created_at DESC
     </select>
 
+    <!-- 구독 상세 수정ㅇ -->
+
+    <select id="selectSubscriptionById" parameterType="long"
+            resultType="com.subees.submanager.subscription.model.vo.Subscription">
+        SELECT
+            s.subscription_id,
+            i.category_id,
+            s.item_id,
+            s.price,
+            s.billing_cycle,
+            s.start_date,
+            s.payment_id
+        FROM add_subscription s
+                 JOIN subscription_item i ON s.item_id = i.item_id
+        WHERE s.subscription_id = #{subscriptionId}
+    </select>
+
     <!-- 구독 상세 조회 -->
     <select id="selectById"
             parameterType="long"
@@ -52,7 +69,7 @@
             si.item_name AS itemName,
             s.price AS price,
             s.billing_cycle AS billingCycle,
-            DATE(s.start_date) AS paymentDate,
+            DATE(s.start_date) AS startDate,
             s.use_yn AS useYn,
             s.created_at AS createdAt,
             pm.payment_id AS payment_method_id,
@@ -75,7 +92,7 @@
 
     <!-- 중복 구독 검사 -->
     <select id="countDuplicateSubscription"
-            parameterType="com.subees.submanager.subscription.model.dto.CreateSubscriptionRequest"
+            parameterType="com.subees.submanager.subscription.model.dto.crud.CreateSubscriptionRequest"
             resultType="int">
         SELECT COUNT(*)
         FROM add_subscription
@@ -87,7 +104,7 @@
 
     <!-- 구독 등록 -->
     <insert id="insertSubscription"
-            parameterType="com.subees.submanager.subscription.model.dto.CreateSubscriptionRequest">
+            parameterType="com.subees.submanager.subscription.model.dto.crud.CreateSubscriptionRequest">
         INSERT INTO add_subscription
         (
             user_id,
@@ -114,9 +131,31 @@
             )
     </insert>
 
+    <!--결제수단 없을시확인-->
+    <select id="existsPaymentMethod" resultType="int">
+        SELECT COUNT(*)
+        FROM payment_method
+        WHERE payment_id = #{paymentId}
+    </select>
+
     <!-- 마지막 등록 id 조회 -->
     <select id="selectLastInsertedId" resultType="long">
         SELECT LAST_INSERT_ID()
     </select>
+
+
+    <update id="updateSubscription">
+        UPDATE add_subscription
+        SET
+            item_id = #{request.itemId},
+            payment_id = #{request.paymentId},
+            price = #{request.price},
+            billing_cycle = #{request.billingCycle},
+            start_date = #{request.startDate},
+            updated_at = NOW()
+        WHERE subscription_id = #{subscriptionId}
+    </update>
+
+
 
 </mapper>

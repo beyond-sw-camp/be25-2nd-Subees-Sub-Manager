@@ -22,7 +22,8 @@ public class Subscription {
     private Long paymentId;
     private Integer price;
     private String billingCycle;
-    private LocalDate paymentDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String useYn;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

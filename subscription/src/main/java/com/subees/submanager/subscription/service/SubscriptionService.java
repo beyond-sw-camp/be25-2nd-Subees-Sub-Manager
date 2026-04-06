@@ -1,9 +1,11 @@
 package com.subees.submanager.subscription.service;
 
-import com.subees.submanager.subscription.model.dto.CreateSubscriptionRequest;
-import com.subees.submanager.subscription.model.dto.CreateSubscriptionResponse;
-import com.subees.submanager.subscription.model.dto.SubscriptionListResponse;
-import com.subees.submanager.subscription.model.dto.SubscriptionResponse;
+import com.subees.submanager.subscription.model.dto.crud.CreateSubscriptionRequest;
+import com.subees.submanager.subscription.model.dto.crud.CreateSubscriptionResponse;
+import com.subees.submanager.subscription.model.dto.crud.SubscriptionListResponse;
+import com.subees.submanager.subscription.model.dto.crud.SubscriptionResponse;
+import com.subees.submanager.subscription.model.dto.crud.UpdateSubscriptionRequest;
+import com.subees.submanager.subscription.model.dto.crud.UpdateSubscriptionResponse;
 
 import java.util.List;
 
@@ -13,4 +15,6 @@ public interface SubscriptionService {
     CreateSubscriptionResponse createSubscription(CreateSubscriptionRequest request);
 
     SubscriptionResponse getSubscriptionById(Long subscriptionId);
+
+    UpdateSubscriptionResponse updateSubscription(Long subscriptionId, UpdateSubscriptionRequest request);
 }

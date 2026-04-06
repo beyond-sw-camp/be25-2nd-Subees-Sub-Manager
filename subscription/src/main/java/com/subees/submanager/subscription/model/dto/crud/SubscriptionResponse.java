@@ -1,4 +1,4 @@
-package com.subees.submanager.subscription.model.dto;
+package com.subees.submanager.subscription.model.dto.crud;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +15,7 @@ public class SubscriptionResponse {
     private String itemName;
     private Integer price;
     private String billingCycle;
-    private LocalDate paymentDate;
+    private LocalDate startDate;
     private String useYn;
     private LocalDateTime createdAt;
 
