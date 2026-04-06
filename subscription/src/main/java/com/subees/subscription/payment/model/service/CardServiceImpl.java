@@ -1,5 +1,7 @@
 package com.subees.subscription.payment.model.service;
 
+import com.subees.subscription.common.exception.UniversityException;
+import com.subees.subscription.common.exception.message.ExceptionMessage;
 import com.subees.subscription.payment.model.dto.CardCreateRequestDto;
 import com.subees.subscription.payment.model.dto.CardUpdateRequestDto;
 import com.subees.subscription.payment.model.mapper.CardMapper;
@@ -8,14 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /*
- * 카드 등록 로직
- * - userId 필수 검증
- * - 카드 선택(cardId) 또는 직접 입력(customCardCompany) 중 하나 입력 검증
- * - 선택 카드 / 직접 입력 카드 각각 중복 등록 여부 확인
- * - 사용하지 않는 값은 null 처리 후 payment_method 테이블에 저장
- * - insert 결과가 1이 아니면 등록 실패 예외 발생
+ * 카드 등록
  */
-
 @Service
 @RequiredArgsConstructor
 public class CardServiceImpl implements CardService {
@@ -26,7 +22,7 @@ public class CardServiceImpl implements CardService {
     public void createCard(CardCreateRequestDto cardCreateRequestDto) {
 
         if (cardCreateRequestDto.getUserId() == null) {
-            throw new IllegalArgumentException("사용자 아이디는 필수입니다.");
+            throw new IllegalArgumentException("로그인이 필요합니다.");
         }
 
         boolean hasCardId = cardCreateRequestDto.getCardId() != null;
@@ -34,7 +30,7 @@ public class CardServiceImpl implements CardService {
                 && !cardCreateRequestDto.getCustomCardCompany().trim().isEmpty();
 
         if ((!hasCardId && !hasCustomCardCompany) || (hasCardId && hasCustomCardCompany)) {
-            throw new IllegalArgumentException("카드 선택 또는 직접 입력 중 하나만 입력해야 합니다.");
+            throw new UniversityException(ExceptionMessage.CARD_INPUT_INVALID);
         }
 
         if (hasCardId) {
@@ -44,7 +40,7 @@ public class CardServiceImpl implements CardService {
                     cardCreateRequestDto.getCardName()
             );
             if (duplicateCount > 0) {
-                throw new IllegalArgumentException("이미 등록된 카드입니다.");
+                throw new UniversityException(ExceptionMessage.DUPLICATE_CARD);
             }
         }
 
@@ -55,7 +51,7 @@ public class CardServiceImpl implements CardService {
                     cardCreateRequestDto.getIsActive()
             );
             if (duplicateCount > 0) {
-                throw new IllegalArgumentException("이미 등록된 카드입니다.");
+                throw new UniversityException(ExceptionMessage.DUPLICATE_CARD);
             }
         }
 
@@ -72,19 +68,26 @@ public class CardServiceImpl implements CardService {
         }
     }
 
+    /*
+    * 카드 수정
+    */
+
     @Override
     public void updateCard(CardUpdateRequestDto cardUpdateRequestDto) {
 
+       // 결제수단 ID가 없으면 어떤 카드를 수정 불가일 시 예외처리
         if (cardUpdateRequestDto.getPaymentId() == null) {
-            throw new IllegalArgumentException("결제수단 아이디는 필수입니다.");
+            throw new UniversityException(ExceptionMessage.PAYMENT_ID_REQUIRED);
         }
 
+        // 사용자 ID가 없으면 본인인지 확인 불가일 시 예외처리
         if (cardUpdateRequestDto.getUserId() == null) {
             throw new IllegalArgumentException("사용자 아이디는 필수입니다.");
         }
 
+        // 카드 수정 시 별칭 수정 필수 -> 공백일 시 예외처리
         if (cardUpdateRequestDto.getCardName() == null || cardUpdateRequestDto.getCardName().trim().isEmpty()) {
-            throw new IllegalArgumentException("카드 별칭은 필수입니다.");
+            throw new UniversityException(ExceptionMessage.CARD_NAME_REQUIRED);
         }
 
         Payment payment = new Payment();
@@ -92,35 +95,52 @@ public class CardServiceImpl implements CardService {
         payment.setUserId(cardUpdateRequestDto.getUserId());
         payment.setCardName(cardUpdateRequestDto.getCardName());
 
+        // 결제수단 Id, 사용자 Id 일치 시 수정
         int updateCount = cardMapper.updateCard(payment);
 
+        // 수정된 행이 없으면 존재하지 않는 카드 혹은 수정 권한이 없는 경우 예외 처리
         if (updateCount == 0) {
-            throw new IllegalArgumentException("해당 결제수단이 존재하지 않거나 수정 권한이 없습니다.");
+            throw new UniversityException(ExceptionMessage.PAYMENT_METHOD_NOT_FOUND);
         }
     }
 
+    /*
+    * 카드 삭제
+     */
     @Override
     public void deleteCard(Long paymentId, Long userId) {
 
         if (userId == null) {
-            throw new IllegalArgumentException("사용자 아이디는 필수입니다.");
+            throw new UniversityException(ExceptionMessage.PAYMENT_METHOD_NOT_FOUND);
         }
 
         if (paymentId == null) {
-            throw new IllegalArgumentException("결제수단 아이디는 필수입니다.");
+            throw new UniversityException(ExceptionMessage.PAYMENT_ID_REQUIRED);
         }
 
+        Payment payment = cardMapper.selectPaymentById(paymentId);
+
+        if (payment == null) {
+            throw new UniversityException(ExceptionMessage.PAYMENT_METHOD_NOT_FOUND);
+        }
+
+        if (payment.getUserId() != userId) {
+            throw new UniversityException(ExceptionMessage.CARD_ACCESS_DENIED);
+        }
+
+        if (payment.getIsActive() == '0') {
+            throw new UniversityException(ExceptionMessage.CARD_ALREADY_DELETED);
+        }
 
         int usingCount = cardMapper.activeCardByPayment(paymentId);
-
         if (usingCount > 0) {
-            throw new IllegalStateException("현재 사용 중인 카드라 삭제할 수 없습니다.");
+            throw new UniversityException(ExceptionMessage.CARD_IN_USE);
         }
 
         int result = cardMapper.deleteCard(userId, paymentId);
 
-        if (result == 0) {
-            throw new IllegalArgumentException("삭제할 카드가 없거나 이미 비활성화된 카드입니다.");
+        if (result != 1) {
+            throw new UniversityException(ExceptionMessage.CARD_DELETE_FAILED);
         }
     }
 }

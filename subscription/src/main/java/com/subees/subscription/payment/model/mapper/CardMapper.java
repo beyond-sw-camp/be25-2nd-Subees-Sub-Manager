@@ -14,6 +14,8 @@ public interface CardMapper {
 
     int updateCard(Payment payment);
 
+    Payment selectPaymentById(Long paymentId);
+
     int activeCardByPayment(@Param("paymentId") Long paymentId);
 
     int deleteCard(@Param("userId") Long userId, @Param("paymentId") Long paymentId);

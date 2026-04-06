@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/api/v1/subscriptions/cards")
+@RequestMapping("/api/v1/cards")
 @RequiredArgsConstructor
 public class PaymentController {
     private final CardService cardService;
@@ -26,7 +26,7 @@ public class PaymentController {
     @PostMapping
     public CardCreateResponseDto getCardService(@RequestBody CardCreateRequestDto cardCreateRequestDto) {
         cardService.createCard(cardCreateRequestDto);
-        return new CardCreateResponseDto("카드 등록 성공");
+        return new CardCreateResponseDto("카드 등록을 완료하였습니다.");
     }
 
     @PatchMapping("/{paymentId}")
@@ -36,7 +36,7 @@ public class PaymentController {
     ) {
         cardUpdateRequestDto.setPaymentId(paymentId);
         cardService.updateCard(cardUpdateRequestDto);
-        return new CardUpdateResponseDto("카드 별칭 수정 성공");
+        return new CardUpdateResponseDto("카드 별칭 수정을 완료하였습니다.");
     }
     @DeleteMapping("/{paymentId}")
     public CardDeleteResponseDto deleteCard(
@@ -44,6 +44,6 @@ public class PaymentController {
             @RequestParam Long userId
     ) {
         cardService.deleteCard(paymentId, userId);
-        return new CardDeleteResponseDto("카드 삭제 성공");
+        return new CardDeleteResponseDto("카드를 삭제하였습니다.");
     }
 }

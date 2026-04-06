@@ -8,6 +8,8 @@
         <result property="cardId" column="card_id"/>
         <result property="cardCompany" column="custom_card_company"/>
         <result property="cardName" column="card_name"/>
+        <result property="isActive" column="is_active"/>
+        <result property="paymentId" column="payment_id"/>
     </resultMap>
 
     <!-- 카드 등록 -->
@@ -44,13 +46,26 @@
           AND is_active = 1
     </select>
 
-    <!-- 카드 수정-->
+    <!-- 카드 수정 -->
     <update id="updateCard" parameterType="Payment">
         UPDATE payment_method
         SET card_name = #{cardName}
         WHERE payment_id = #{paymentId}
           AND user_id = #{userId}
     </update>
+
+    <!-- 카드 단건 조회 -->
+    <select id="selectPaymentById" resultMap="paymentResultMap">
+        SELECT
+            payment_id,
+            user_id,
+            card_id,
+            custom_card_company,
+            card_name,
+            is_active
+        FROM payment_method
+        WHERE payment_id = #{paymentId}
+    </select>
 
     <!-- 논리 삭제 조건(구독 비활성화 시) -->
     <select id="activeCardByPayment" resultType="int">

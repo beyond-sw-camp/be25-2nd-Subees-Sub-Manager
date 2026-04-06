@@ -7,5 +7,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CardDeleteResponseDto {
 
-    private String message; // 카드 등록 성공 여부 메시지
+    private String message; // 카드 삭제 성공 여부 메시지
 }
