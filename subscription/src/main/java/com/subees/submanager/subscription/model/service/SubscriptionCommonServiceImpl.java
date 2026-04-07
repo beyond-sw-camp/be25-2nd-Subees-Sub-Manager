@@ -1,4 +1,4 @@
-package com.subees.submanager.subscription.service;
+package com.subees.submanager.subscription.model.service;
 
 import com.subees.submanager.subscription.model.dto.common.BillingCycleResponse;
 import com.subees.submanager.subscription.model.dto.common.CategoryResponse;

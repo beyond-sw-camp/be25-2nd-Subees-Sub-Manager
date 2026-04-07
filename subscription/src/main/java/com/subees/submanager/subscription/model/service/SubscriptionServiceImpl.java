@@ -1,4 +1,4 @@
-package com.subees.submanager.subscription.service;
+package com.subees.submanager.subscription.model.service;
 
 import com.subees.submanager.subscription.model.dto.crud.CreateSubscriptionRequest;
 import com.subees.submanager.subscription.model.dto.crud.CreateSubscriptionResponse;

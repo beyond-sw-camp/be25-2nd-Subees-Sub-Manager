@@ -3,7 +3,7 @@ package com.subees.submanager.subscription.controller;
 import com.subees.submanager.subscription.model.dto.common.BillingCycleResponse;
 import com.subees.submanager.subscription.model.dto.common.CategoryResponse;
 import com.subees.submanager.subscription.model.dto.common.ItemResponse;
-import com.subees.submanager.subscription.service.SubscriptionCommonService;
+import com.subees.submanager.subscription.model.service.SubscriptionCommonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

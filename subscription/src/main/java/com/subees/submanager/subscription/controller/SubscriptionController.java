@@ -7,7 +7,7 @@ import com.subees.submanager.subscription.model.dto.crud.SubscriptionListRespons
 import com.subees.submanager.subscription.model.dto.crud.SubscriptionResponse;
 import com.subees.submanager.subscription.model.dto.crud.UpdateSubscriptionRequest;
 import com.subees.submanager.subscription.model.dto.crud.UpdateSubscriptionResponse;
-import com.subees.submanager.subscription.service.SubscriptionService;
+import com.subees.submanager.subscription.model.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
