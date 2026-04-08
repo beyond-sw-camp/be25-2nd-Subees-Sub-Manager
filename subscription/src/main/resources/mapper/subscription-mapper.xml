@@ -40,6 +40,7 @@
                       ON i.category_id = c.category_id
         WHERE s.use_yn = 'Y'
         ORDER BY s.created_at DESC
+        <!--    ORDER BY s.subscription_id DESC -->
     </select>
 
     <!-- 구독 상세 수정ㅇ -->
