@@ -20,7 +20,7 @@ public class BaseResponseDto<T> {
         this.items = Collections.singletonList(item);
     }
 
-    protected BaseResponseDto(HttpStatus httpStatus, List<T> items) {
+    public BaseResponseDto(HttpStatus httpStatus, List<T> items) {
         this.code = httpStatus.value();
         this.message = httpStatus.getReasonPhrase();
         this.items = items;

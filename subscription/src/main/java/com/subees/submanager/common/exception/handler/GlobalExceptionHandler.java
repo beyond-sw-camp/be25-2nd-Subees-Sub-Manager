@@ -6,6 +6,7 @@ import com.subees.submanager.common.exception.message.ExceptionMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,8 +37,7 @@ public class GlobalExceptionHandler {
         log.error("MethodArgumentNotValidException : {}", e.getMessage());
 
         for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
-            errors
-                    .append(fieldError.getField())
+            errors.append(fieldError.getField())
                     .append("(")
                     .append(fieldError.getDefaultMessage())
                     .append("), ");
@@ -57,7 +57,18 @@ public class GlobalExceptionHandler {
         );
     }
 
-
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiErrorResponseDto> handleException(HttpMessageNotReadableException e) {
+        log.error("HttpMessageNotReadableException : {}", e.getMessage());
+        return new ResponseEntity<>(
+                new ApiErrorResponseDto(
+                        HttpStatus.BAD_REQUEST.value(),
+                        HttpStatus.BAD_REQUEST.name(),
+                        ExceptionMessage.INVALID_REQUEST.getMessage()
+                ),
+                HttpStatus.BAD_REQUEST
+        );
+    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiErrorResponseDto> handleException(IllegalArgumentException e) {
