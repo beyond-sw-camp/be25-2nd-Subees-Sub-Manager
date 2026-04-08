@@ -52,7 +52,7 @@ INSERT INTO user (user_id, email, `password`, nickname, user_state, email_verifi
 (50,'sunnyarchive50@naver.com','sunnyArchive50@Xx0','주리','ACTIVE','Y','2026-02-24 13:18:00','2026-02-24 12:52:00');
 
 
-# 구독_카테고리 테이블(subscription_category)
+# 구독 카테고리 테이블(subscription_category)
 INSERT INTO subscription_category (category_name)
 VALUES 
 ('OTT'),
