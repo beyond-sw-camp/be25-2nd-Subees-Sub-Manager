@@ -12,7 +12,7 @@ logging:
   level:
     com.subees.subscription: debug
 mybatis:
-  type-aliases-package: com.subees.subscription.*.model.vo
+  type-aliases-package: com.subees.submanager.*.model.vo
   mapper-locations:
     - classpath:mappers/**/*.xml
   configuration:

@@ -55,7 +55,7 @@
     </select>
 
     <select id="selectCategory"
-            resultType="CategorySummary">
+            resultType="com.subees.submanager.consumption.model.vo.CategorySummary">
         SELECT
             c.category_name AS categoryName,
             COALESCE(SUM(
