@@ -70,51 +70,136 @@
                       ON s.payment_id = pm.payment_id
                  JOIN card c
                       ON pm.card_id = c.card_id
-
                  JOIN (
             SELECT
                 sub.subscription_id,
                 CASE
                     WHEN sub.billing_cycle = '1M' THEN
                         CASE
-                            WHEN DATE_ADD(
-                                         sub.start_date,
-                                         INTERVAL TIMESTAMPDIFF(MONTH, sub.start_date, CURDATE()) MONTH
-                            ) &lt;= sub.start_date
-                                THEN DATE_ADD(sub.start_date, INTERVAL 1 MONTH)
-                            WHEN DATE_ADD(
-                                         sub.start_date,
-                                         INTERVAL TIMESTAMPDIFF(MONTH, sub.start_date, CURDATE()) MONTH
-                            ) &gt;= CURDATE()
-                                THEN DATE_ADD(
-                                    sub.start_date,
-                                    INTERVAL TIMESTAMPDIFF(MONTH, sub.start_date, CURDATE()) MONTH
-                                )
-                            ELSE DATE_ADD(
-                                    sub.start_date,
-                                    INTERVAL (TIMESTAMPDIFF(MONTH, sub.start_date, CURDATE()) + 1) MONTH
-                            )
+                            WHEN STR_TO_DATE(
+                                         CONCAT(
+                                             YEAR(CURDATE()), '-',
+                                                              LPAD(MONTH(CURDATE()), 2, '0'), '-',
+                                                              LPAD(
+                                                                      LEAST(
+                                                                          DAY(sub.start_date),
+                                                                          DAY(LAST_DAY(CURDATE()))
+                                        ),
+                                                                      2,
+                                                                      '0'
+                                                              )
+                                         ),
+                                         '%Y-%m-%d'
+                                 ) &gt;= CURDATE()
+                                THEN STR_TO_DATE(
+                                    CONCAT(
+                                        YEAR(CURDATE()), '-',
+                                                         LPAD(MONTH(CURDATE()), 2, '0'), '-',
+                                                         LPAD(
+                                                                 LEAST(
+                                                                     DAY(sub.start_date),
+                                                                     DAY(LAST_DAY(CURDATE()))
+                                        ),
+                                                                 2,
+                                                                 '0'
+                                                         )
+                                    ),
+                                    '%Y-%m-%d'
+                                     )
+                            ELSE STR_TO_DATE(
+                                    CONCAT(
+                                        YEAR(DATE_ADD(CURDATE(), INTERVAL 1 MONTH)), '-',
+                                                                                     LPAD(MONTH(DATE_ADD(CURDATE(), INTERVAL 1 MONTH)), 2, '0'), '-',
+                                                                                     LPAD(
+                                                                                             LEAST(
+                                                                                                 DAY(sub.start_date),
+                                                                                                 DAY(LAST_DAY(DATE_ADD(CURDATE(), INTERVAL 1 MONTH)))
+                                        ),
+                                                                                             2,
+                                                                                             '0'
+                                                                                     )
+                                    ),
+                                    '%Y-%m-%d'
+                                 )
                             END
 
                     WHEN sub.billing_cycle = '1Y' THEN
                         CASE
-                            WHEN DATE_ADD(
-                                         sub.start_date,
-                                         INTERVAL TIMESTAMPDIFF(YEAR, sub.start_date, CURDATE()) YEAR
-                            ) &lt;= sub.start_date
-                                THEN DATE_ADD(sub.start_date, INTERVAL 1 YEAR)
-                            WHEN DATE_ADD(
-                                         sub.start_date,
-                                         INTERVAL TIMESTAMPDIFF(YEAR, sub.start_date, CURDATE()) YEAR
-                            ) &gt;= CURDATE()
-                                THEN DATE_ADD(
-                                    sub.start_date,
-                                    INTERVAL TIMESTAMPDIFF(YEAR, sub.start_date, CURDATE()) YEAR
-                                )
-                            ELSE DATE_ADD(
-                                    sub.start_date,
-                                    INTERVAL (TIMESTAMPDIFF(YEAR, sub.start_date, CURDATE()) + 1) YEAR
-                            )
+                            WHEN STR_TO_DATE(
+                                         CONCAT(
+                                             YEAR(CURDATE()), '-',
+                                                              LPAD(MONTH(sub.start_date), 2, '0'), '-',
+                                                              LPAD(
+                                                                      LEAST(
+                                                                          DAY(sub.start_date),
+                                                                          DAY(
+                                                LAST_DAY(
+                                                    STR_TO_DATE(
+                                                        CONCAT(
+                                                            YEAR(CURDATE()), '-',
+                                                            LPAD(MONTH(sub.start_date), 2, '0'), '-01'
+                                                        ),
+                                                        '%Y-%m-%d'
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                                                      2,
+                                                                      '0'
+                                                              )
+                                         ),
+                                         '%Y-%m-%d'
+                                 ) &gt;= CURDATE()
+                                THEN STR_TO_DATE(
+                                    CONCAT(
+                                        YEAR(CURDATE()), '-',
+                                                         LPAD(MONTH(sub.start_date), 2, '0'), '-',
+                                                         LPAD(
+                                                                 LEAST(
+                                                                     DAY(sub.start_date),
+                                                                     DAY(
+                                                LAST_DAY(
+                                                    STR_TO_DATE(
+                                                        CONCAT(
+                                                            YEAR(CURDATE()), '-',
+                                                            LPAD(MONTH(sub.start_date), 2, '0'), '-01'
+                                                        ),
+                                                        '%Y-%m-%d'
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                                                 2,
+                                                                 '0'
+                                                         )
+                                    ),
+                                    '%Y-%m-%d'
+                                     )
+                            ELSE STR_TO_DATE(
+                                    CONCAT(
+                                        YEAR(CURDATE()) + 1, '-',
+                                                             LPAD(MONTH(sub.start_date), 2, '0'), '-',
+                                                             LPAD(
+                                                                     LEAST(
+                                                                         DAY(sub.start_date),
+                                                                         DAY(
+                                                LAST_DAY(
+                                                    STR_TO_DATE(
+                                                        CONCAT(
+                                                            YEAR(CURDATE()) + 1, '-',
+                                                            LPAD(MONTH(sub.start_date), 2, '0'), '-01'
+                                                        ),
+                                                        '%Y-%m-%d'
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                                                     2,
+                                                                     '0'
+                                                             )
+                                    ),
+                                    '%Y-%m-%d'
+                                 )
                             END
                     END AS target_date
             FROM add_subscription sub
@@ -124,6 +209,7 @@
 
         WHERE s.user_id = #{userId}
           AND s.use_yn = 'Y'
+          AND s.start_date &lt;&gt; CURDATE()
           AND DATEDIFF(calc.target_date, CURDATE()) IN (3, 0)
           AND NOT EXISTS (
             SELECT 1
@@ -138,7 +224,6 @@
         )
     </insert>
 
-    <!--읽음 여부 변경 0 과 1-->
     <update id="updateNotificationRead">
         UPDATE notifications
         SET is_read = 1
@@ -146,7 +231,6 @@
           AND is_closed = 0
     </update>
 
-    <!--닫음 여부 변경 0 과 1-->
     <update id="updateNotificationClose">
         UPDATE notifications
         SET is_closed = 1
@@ -154,7 +238,6 @@
           AND is_closed = 0
     </update>
 
-    <!--이거아래 두개는 한 번읽은 알림이랑 닫힌 알림에 대해 다시 읽거나 닫았을때 에러방지용-->
     <select id="existsReadableNotification" resultType="int">
         SELECT COUNT(*)
         FROM notifications
