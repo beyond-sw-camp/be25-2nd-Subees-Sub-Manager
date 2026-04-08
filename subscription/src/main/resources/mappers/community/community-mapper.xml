@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.subees.subscription.community.model.mapper.CommunityMapper">
+<mapper namespace="com.subees.submanager.community.model.mapper.CommunityMapper">
 
 <!-- resultMap = 조회 결과를 어떻게 Java 객체에 담을지 정의하는 설정. 조회된 결과가 담기면 resultMap 규칙대로 dto에 담음 -->
 
     <!-- 스크링 부트 실행 버튼 실행 안 돼서  type에 경로 추가해주니까 실행됨.  -->
-    <resultMap id="communityListResultMap" type="com.subees.subscription.community.model.dto.post.CommunityPostListResponseDto">
+    <resultMap id="communityListResultMap" type="com.subees.submanager.community.model.dto.post.CommunityPostListResponseDto">
         <id     property="postId"     column="post_id"/>
         <result property="title"      column="title"/>
         <result property="nickname"   column="nickname"/>
@@ -15,7 +15,7 @@
     </resultMap>
 
     <!-- 페이징 게시글 조회 -->
-    <select id="selectCommunityPostList" parameterType="com.subees.subscription.community.model.dto.post.CommunityPostPageRequestDto" resultMap="communityListResultMap">
+    <select id="selectCommunityPostList" parameterType="com.subees.submanager.community.model.dto.post.CommunityPostPageRequestDto" resultMap="communityListResultMap">
         SELECT cp.post_id,
                cp.title,
                u.nickname,
@@ -33,7 +33,7 @@
     </select>
 
     <!-- 게시글 상세 조회 -->
-    <resultMap id="communityDetailResultMap" type="com.subees.subscription.community.model.dto.post.CommunityPostDetailResponseDto">
+    <resultMap id="communityDetailResultMap" type="com.subees.submanager.community.model.dto.post.CommunityPostDetailResponseDto">
         <id     property="postId"     column="post_id"/>
         <result property="title"      column="title"/>
         <result property="content"    column="content"/>
@@ -64,7 +64,7 @@
     </update>
 
     <!-- 글 작성 -->
-    <insert id="insertCommunityPost" parameterType="com.subees.subscription.community.model.dto.post.CommunityPostCreateDto" useGeneratedKeys="true" keyProperty="postId">
+    <insert id="insertCommunityPost" parameterType="com.subees.submanager.community.model.dto.post.CommunityPostCreateDto" useGeneratedKeys="true" keyProperty="postId">
         INSERT INTO community_posts
         (user_id, title, content)
         VALUES
@@ -78,7 +78,7 @@
     </select>
 
     <!-- 글 수정 -->
-    <update id="updateCommunityPost" parameterType="com.subees.subscription.community.model.dto.post.CommunityPostUpdateDto">
+    <update id="updateCommunityPost" parameterType="com.subees.submanager.community.model.dto.post.CommunityPostUpdateDto">
         UPDATE community_posts SET
         title = #{title},
         content = #{content}
@@ -86,7 +86,7 @@
     </update>
 
     <!-- 수정된 글 조회 -->
-    <resultMap id="communityUpdateResultMap" type="com.subees.subscription.community.model.dto.post.CommunityPostUpdateResponseDto">
+    <resultMap id="communityUpdateResultMap" type="com.subees.submanager.community.model.dto.post.CommunityPostUpdateResponseDto">
         <id     property="postId"    column="post_id"/>
         <result property="title"     column="title"/>
         <result property="content"   column="content"/>
@@ -106,14 +106,14 @@
 
     <!-- 스크랩 저장 -->
     <!-- useGeneratedKeys: DB가 자동으로 생성한 PK 값을 자바 객체에 다시 채워줌-->
-    <insert id="insertCommunityScrap" parameterType="com.subees.subscription.community.model.dto.scrap.CommunityScrapCreateDto"
+    <insert id="insertCommunityScrap" parameterType="com.subees.submanager.community.model.dto.scrap.CommunityScrapCreateDto"
             useGeneratedKeys="true" keyProperty="scrapId">
         INSERT INTO community_scrap (post_id, user_id)
         VALUES (#{postId}, #{userId})
     </insert>
 
     <!-- 저장된 스크랩 조회 (생성 응답용) -->
-    <resultMap id="scrapResponseResultMap" type="com.subees.subscription.community.model.dto.scrap.CommunityScrapResponseDto">
+    <resultMap id="scrapResponseResultMap" type="com.subees.submanager.community.model.dto.scrap.CommunityScrapResponseDto">
         <id     property="scrapId"   column="scrap_id"/>
         <result property="postId"    column="post_id"/>
         <result property="userId"    column="user_id"/>
@@ -141,7 +141,7 @@
     </update>
 
     <!-- 스크랩 목록 (페이징) -->
-    <resultMap id="scrapListResultMap" type="com.subees.subscription.community.model.dto.scrap.CommunityScrapListResponseDto">
+    <resultMap id="scrapListResultMap" type="com.subees.submanager.community.model.dto.scrap.CommunityScrapListResponseDto">
         <id     property="scrapId"   column="scrap_id"/>
         <result property="postId"    column="post_id"/>
         <result property="title"     column="title"/>
@@ -149,7 +149,7 @@
         <result property="createdAt" column="created_at"/>
     </resultMap>
 
-    <select id="selectScrapList" parameterType="com.subees.subscription.community.model.dto.scrap.CommunityScrapPageRequestDto" resultMap="scrapListResultMap">
+    <select id="selectScrapList" parameterType="com.subees.submanager.community.model.dto.scrap.CommunityScrapPageRequestDto" resultMap="scrapListResultMap">
         SELECT cs.scrap_id,
                cs.post_id,
                cp.title,
