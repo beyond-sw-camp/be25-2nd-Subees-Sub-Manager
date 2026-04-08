@@ -10,9 +10,7 @@ import java.util.List;
 @ToString
 public class ItemsResponseDto<T> extends BaseResponseDto<T> {
     private final int page;
-
     private final int numOfRows;
-
     private final int totalCount;
 
     public ItemsResponseDto(HttpStatus httpStatus, List<T> items, int page, int totalCount) {

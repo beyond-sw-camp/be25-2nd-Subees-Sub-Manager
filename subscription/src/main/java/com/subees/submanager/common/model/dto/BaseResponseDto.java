@@ -11,9 +11,7 @@ import java.util.List;
 @ToString
 public class BaseResponseDto<T> {
     protected final int code;
-
     protected final String message;
-
     protected final List<T> items;
 
     public BaseResponseDto(HttpStatus httpStatus, T item) {
@@ -22,7 +20,7 @@ public class BaseResponseDto<T> {
         this.items = Collections.singletonList(item);
     }
 
-    protected BaseResponseDto(HttpStatus httpStatus, List<T> items) {
+    public BaseResponseDto(HttpStatus httpStatus, List<T> items) {
         this.code = httpStatus.value();
         this.message = httpStatus.getReasonPhrase();
         this.items = items;
