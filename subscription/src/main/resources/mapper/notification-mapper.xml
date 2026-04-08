@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.subees.submanager.notification.model.mapper.NotificationMapper">
+
+    <select id="selectNotificationsByUserId"
+            resultType="com.subees.submanager.notification.model.dto.NotificationResponse">
+        SELECT
+            notification_id AS notificationId,
+            title,
+            content,
+            CASE
+                WHEN notify_type = 'D3' THEN 'D-3'
+                WHEN notify_type = 'D0' THEN 'D-DAY'
+                END AS dday,
+            is_read AS isRead
+        FROM notifications
+        WHERE user_id = #{userId}
+          AND is_closed = 0
+          AND target_date &gt;= CURDATE()
+        ORDER BY is_read ASC, target_date ASC, created_at DESC
+    </select>
+
+    <insert id="insertNotifications">
+        INSERT INTO notifications (
+            user_id,
+            subscription_id,
+            notify_type,
+            title,
+            content,
+            target_date,
+            is_read,
+            is_closed,
+            created_at
+        )
+        SELECT
+            s.user_id,
+            s.subscription_id,
+
+            CASE
+                WHEN DATEDIFF(calc.target_date, CURDATE()) = 3 THEN 'D3'
+                WHEN DATEDIFF(calc.target_date, CURDATE()) = 0 THEN 'D0'
+                END AS notify_type,
+
+            CASE
+                WHEN DATEDIFF(calc.target_date, CURDATE()) = 3
+                    THEN CONCAT(i.item_name, '의 구독이 곧 갱신돼요')
+                WHEN DATEDIFF(calc.target_date, CURDATE()) = 0
+                    THEN CONCAT(i.item_name, ' 결제일이 오늘이에요')
+                END AS title,
+
+            CASE
+                WHEN DATEDIFF(calc.target_date, CURDATE()) = 3
+                    THEN CONCAT(c.card_company, '로 결제될 예정이에요.')
+                WHEN DATEDIFF(calc.target_date, CURDATE()) = 0
+                    THEN CONCAT(c.card_company, '로 오늘 결제 예정이에요.')
+                END AS content,
+
+            calc.target_date,
+            0,
+            0,
+            NOW()
+
+        FROM add_subscription s
+                 JOIN subscription_item i
+                      ON s.item_id = i.item_id
+                 JOIN payment_method pm
+                      ON s.payment_id = pm.payment_id
+                 JOIN card c
+                      ON pm.card_id = c.card_id
+
+                 JOIN (
+            SELECT
+                sub.subscription_id,
+                CASE
+                    WHEN sub.billing_cycle = '1M' THEN
+                        CASE
+                            WHEN DATE_ADD(
+                                         sub.start_date,
+                                         INTERVAL TIMESTAMPDIFF(MONTH, sub.start_date, CURDATE()) MONTH
+                            ) &lt;= sub.start_date
+                                THEN DATE_ADD(sub.start_date, INTERVAL 1 MONTH)
+                            WHEN DATE_ADD(
+                                         sub.start_date,
+                                         INTERVAL TIMESTAMPDIFF(MONTH, sub.start_date, CURDATE()) MONTH
+                            ) &gt;= CURDATE()
+                                THEN DATE_ADD(
+                                    sub.start_date,
+                                    INTERVAL TIMESTAMPDIFF(MONTH, sub.start_date, CURDATE()) MONTH
+                                )
+                            ELSE DATE_ADD(
+                                    sub.start_date,
+                                    INTERVAL (TIMESTAMPDIFF(MONTH, sub.start_date, CURDATE()) + 1) MONTH
+                            )
+                            END
+
+                    WHEN sub.billing_cycle = '1Y' THEN
+                        CASE
+                            WHEN DATE_ADD(
+                                         sub.start_date,
+                                         INTERVAL TIMESTAMPDIFF(YEAR, sub.start_date, CURDATE()) YEAR
+                            ) &lt;= sub.start_date
+                                THEN DATE_ADD(sub.start_date, INTERVAL 1 YEAR)
+                            WHEN DATE_ADD(
+                                         sub.start_date,
+                                         INTERVAL TIMESTAMPDIFF(YEAR, sub.start_date, CURDATE()) YEAR
+                            ) &gt;= CURDATE()
+                                THEN DATE_ADD(
+                                    sub.start_date,
+                                    INTERVAL TIMESTAMPDIFF(YEAR, sub.start_date, CURDATE()) YEAR
+                                )
+                            ELSE DATE_ADD(
+                                    sub.start_date,
+                                    INTERVAL (TIMESTAMPDIFF(YEAR, sub.start_date, CURDATE()) + 1) YEAR
+                            )
+                            END
+                    END AS target_date
+            FROM add_subscription sub
+            WHERE sub.use_yn = 'Y'
+        ) calc
+                      ON s.subscription_id = calc.subscription_id
+
+        WHERE s.user_id = #{userId}
+          AND s.use_yn = 'Y'
+          AND DATEDIFF(calc.target_date, CURDATE()) IN (3, 0)
+          AND NOT EXISTS (
+            SELECT 1
+            FROM notifications n
+            WHERE n.user_id = s.user_id
+              AND n.subscription_id = s.subscription_id
+              AND n.notify_type = CASE
+                                      WHEN DATEDIFF(calc.target_date, CURDATE()) = 3 THEN 'D3'
+                                      WHEN DATEDIFF(calc.target_date, CURDATE()) = 0 THEN 'D0'
+                END
+              AND n.target_date = calc.target_date
+        )
+    </insert>
+
+    <!--읽음 여부 변경 0 과 1-->
+    <update id="updateNotificationRead">
+        UPDATE notifications
+        SET is_read = 1
+        WHERE notification_id = #{notificationId}
+          AND is_closed = 0
+    </update>
+
+    <!--닫음 여부 변경 0 과 1-->
+    <update id="updateNotificationClose">
+        UPDATE notifications
+        SET is_closed = 1
+        WHERE notification_id = #{notificationId}
+          AND is_closed = 0
+    </update>
+
+    <!--이거아래 두개는 한 번읽은 알림이랑 닫힌 알림에 대해 다시 읽거나 닫았을때 에러방지용-->
+    <select id="existsReadableNotification" resultType="int">
+        SELECT COUNT(*)
+        FROM notifications
+        WHERE notification_id = #{notificationId}
+          AND is_closed = 0
+    </select>
+
+    <select id="existsClosableNotification" resultType="int">
+        SELECT COUNT(*)
+        FROM notifications
+        WHERE notification_id = #{notificationId}
+          AND is_closed = 0
+    </select>
+
+</mapper>
