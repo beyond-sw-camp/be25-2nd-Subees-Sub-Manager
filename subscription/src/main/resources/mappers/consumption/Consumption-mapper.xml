@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.subees.subscription.consumption.model.mapper.ConsumptionMapper">
+<mapper namespace="com.subees.submanager.consumption.model.mapper.ConsumptionMapper">
 
     <!-- 월 총 소비 금액 -->
     <select id="selectMonthlyTotalAmount" resultType="Integer">
@@ -17,8 +17,8 @@
     </select>
 
 
-    <!-- 달력 조회(구독명, 가격, 구독 일) -->
-    <select id="selectCalendar" resultType="com.subees.subscription.consumption.model.dto.CalendarResponseDto">
+    <!-- 달력 전체 조회 (결제일, 해당 일 결제건수, 해당 일 총 결제금액, 시작일 < 다음 달 시작일,    -->
+    <select id="selectCalendar" resultType="com.subees.submanager.consumption.model.dto.CalendarResponseDto">
         SELECT
             DAY(a.start_date) AS payDay,
             COUNT(*) AS totalCount,
@@ -27,8 +27,7 @@
             WHEN a.billing_cycle = '1M' THEN a.price
             WHEN a.billing_cycle = '1Y' THEN FLOOR(a.price / 12)
             ELSE 0
-            END
-            ), 0) AS totalAmount,
+            END), 0) AS totalAmount,
             GROUP_CONCAT(s.item_name ORDER BY s.item_name SEPARATOR ', ') AS itemNames
         FROM add_subscription a
             JOIN subscription_item s
@@ -41,7 +40,7 @@
     </select>
 
     <!-- 선택 일 구독 조회(구독명, 가격, 선택일)-->
-    <select id="selectDateDetailList" resultType="com.subees.subscription.consumption.model.dto.DateDetailResponseDto">
+    <select id="selectDateDetailList" resultType="com.subees.submanager.consumption.model.dto.DateDetailResponseDto">
         SELECT s.item_name AS itemName,
             CASE
                 WHEN a.billing_cycle = '1M' THEN a.price
@@ -78,7 +77,7 @@
     </select>
 
     <select id="selectMonthlyCategoryAnalysis"
-            resultType="com.subees.subscription.consumption.model.dto.CategoryAnalysisResponseDto">
+            resultType="com.subees.submanager.consumption.model.dto.CategoryAnalysisResponseDto">
         SELECT
         c.category_name AS categoryName,
         COALESCE(SUM(
@@ -102,7 +101,7 @@
     </select>
 
     <select id="selectYearlyCategoryAnalysis"
-            resultType="com.subees.subscription.consumption.model.dto.CategoryAnalysisResponseDto">
+            resultType="com.subees.submanager.consumption.model.dto.CategoryAnalysisResponseDto">
         SELECT
         c.category_name AS categoryName,
         COALESCE(SUM(
