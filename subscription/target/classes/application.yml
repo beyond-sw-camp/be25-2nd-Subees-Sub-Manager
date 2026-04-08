@@ -1,6 +1,5 @@
 server:
   port: 8080
-
 spring:
   application:
     name: subscription
@@ -9,7 +8,6 @@ spring:
     url: jdbc:mariadb://localhost:3306/subscription_db
     username: beyond
     password: beyond
-
 logging:
   level:
     com.subees.submanager: debug
