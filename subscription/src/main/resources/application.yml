@@ -1,0 +1,19 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: subscription
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/subscription_db # db명과 맞춰주기
+    username: beyond
+    password: beyond
+logging:
+  level:
+    com.subees.subscription: debug
+mybatis:
+  type-aliases-package: com.subees.subscription.*.model.vo
+  mapper-locations:
+    - classpath:mappers/**/*.xml
+  configuration:
+    jdbc-type-for-null: NULL

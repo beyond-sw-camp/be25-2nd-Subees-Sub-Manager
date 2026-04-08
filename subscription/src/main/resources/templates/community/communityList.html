@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>커뮤니티 게시글 목록</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background-color: #f4f4f4; }
+    </style>
+</head>
+<body>
+    <h2>커뮤니티 게시글 목록</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>조회수</th>
+                <th>작성일</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="post : ${posts}">
+                <td th:text="${post.postId}"></td>
+                <td><a th:href="@{/community/posts/{postId}(postId=${post.postId})}" th:text="${post.title}"></a></td>
+                <td th:text="${post.nickname}"></td>
+                <td th:text="${post.viewCount}"></td>
+                <td th:text="${post.createdAt}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 페이지 네비게이션 -->
+    <div style="margin-top: 20px;">
+        <span th:if="${page > 1}">
+            <a th:href="@{/community/posts(page=${page - 1})}">이전</a>
+        </span>
+        <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+            <a th:href="@{/community/posts(page=${i})}"
+               th:text="${i}"
+               th:style="${i == page} ? 'font-weight:bold; text-decoration:none;' : ''"></a>
+        </span>
+        <span th:if="${page < totalPages}">
+            <a th:href="@{/community/posts(page=${page + 1})}">다음</a>
+        </span>
+        <span style="margin-left: 20px; color: gray;">
+            전체 <span th:text="${totalCount}"></span>개
+        </span>
+    </div>
+</body>
+</html>
