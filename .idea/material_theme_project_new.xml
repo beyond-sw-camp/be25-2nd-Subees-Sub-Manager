@@ -5,7 +5,11 @@
       <MTProjectMetadataState>
         <option name="migrated" value="true" />
         <option name="pristineConfig" value="false" />
+<<<<<<< HEAD
         <option name="userId" value="313f9e0c:19be36f3bf9:-7fe9" />
+=======
+        <option name="userId" value="2929851a:19cc0d6cf2a:-7ff9" />
+>>>>>>> feature_consumption
       </MTProjectMetadataState>
     </option>
   </component>
