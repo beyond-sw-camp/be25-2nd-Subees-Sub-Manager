@@ -9,6 +9,8 @@ import com.subees.submanager.payment.model.vo.Payment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 /*
  * 카드 등록
  */
@@ -123,7 +125,7 @@ public class CardServiceImpl implements CardService {
             throw new UniversityException(ExceptionMessage.PAYMENT_METHOD_NOT_FOUND);
         }
 
-        if (payment.getUserId() != userId) {
+        if (!Objects.equals(payment.getUserId(), userId)) {
             throw new UniversityException(ExceptionMessage.CARD_ACCESS_DENIED);
         }
 

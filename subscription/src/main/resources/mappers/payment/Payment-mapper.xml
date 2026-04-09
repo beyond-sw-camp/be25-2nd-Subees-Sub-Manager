@@ -4,7 +4,7 @@
 <mapper namespace="com.subees.submanager.payment.model.mapper.CardMapper">
 
     <resultMap id="paymentResultMap" type="Payment">
-        <id property="userId" column=" user_id"/>
+        <id property="userId" column="user_id"/>
         <result property="cardId" column="card_id"/>
         <result property="cardCompany" column="custom_card_company"/>
         <result property="cardName" column="card_name"/>
