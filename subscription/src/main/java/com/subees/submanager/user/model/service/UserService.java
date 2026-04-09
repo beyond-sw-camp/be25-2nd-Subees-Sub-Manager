@@ -1,6 +1,5 @@
 package com.subees.submanager.user.model.service;
 
-import com.subees.submanager.user.model.dto.*;
 import com.subees.submanager.user.model.dto.ChangePasswordRequest;
 import com.subees.submanager.user.model.dto.ChangePasswordResponse;
 import com.subees.submanager.user.model.dto.CheckEmailResponse;

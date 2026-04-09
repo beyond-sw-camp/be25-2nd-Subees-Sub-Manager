@@ -2,10 +2,12 @@ package com.subees.submanager.recommend.model.mapper;
 
 import com.subees.submanager.recommend.model.vo.recommend.RecommendReport;
 import com.subees.submanager.recommend.model.vo.recommend.RecommendSubscriptionItem;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+@Mapper
 public interface RecommendMapper {
 
     int insertReport(RecommendReport report);
