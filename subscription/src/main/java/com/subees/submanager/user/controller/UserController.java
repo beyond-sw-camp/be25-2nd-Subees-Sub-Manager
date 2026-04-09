@@ -1,8 +1,21 @@
 package com.subees.submanager.user.controller;
 
 import com.subees.submanager.common.model.dto.BaseResponseDto;
-import com.subees.submanager.user.dto.*;
-import com.subees.submanager.user.service.UserService;
+import com.subees.submanager.user.model.dto.ChangePasswordRequest;
+import com.subees.submanager.user.model.dto.ChangePasswordResponse;
+import com.subees.submanager.user.model.dto.CheckEmailResponse;
+import com.subees.submanager.user.model.dto.CheckNicknameResponse;
+import com.subees.submanager.user.model.dto.DeleteProfileImageResponse;
+import com.subees.submanager.user.model.dto.GetProfileImageResponse;
+import com.subees.submanager.user.model.dto.MyInfoResponse;
+import com.subees.submanager.user.model.dto.SignUpRequest;
+import com.subees.submanager.user.model.dto.UpdateProfileImageRequest;
+import com.subees.submanager.user.model.dto.UpdateProfileImageResponse;
+import com.subees.submanager.user.model.dto.UpdateProfileRequest;
+import com.subees.submanager.user.model.dto.UpdateProfileResponse;
+import com.subees.submanager.user.model.dto.UploadProfileImageResponse;
+import com.subees.submanager.user.model.dto.WithdrawResponse;
+import com.subees.submanager.user.model.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

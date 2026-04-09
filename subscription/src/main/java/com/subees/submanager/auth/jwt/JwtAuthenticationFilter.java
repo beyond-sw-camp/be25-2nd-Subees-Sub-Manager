@@ -1,6 +1,6 @@
 package com.subees.submanager.auth.jwt;
 
-import com.subees.submanager.auth.service.JwtCookieService;
+import com.subees.submanager.auth.model.service.JwtCookieService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;

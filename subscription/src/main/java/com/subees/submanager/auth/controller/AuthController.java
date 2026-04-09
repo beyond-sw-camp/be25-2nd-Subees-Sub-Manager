@@ -1,10 +1,10 @@
 package com.subees.submanager.auth.controller;
 
-import com.subees.submanager.auth.dto.LoginRequest;
-import com.subees.submanager.auth.dto.LoginResponse;
-import com.subees.submanager.auth.dto.LogoutResponse;
-import com.subees.submanager.auth.service.AuthService;
-import com.subees.submanager.auth.service.JwtCookieService;
+import com.subees.submanager.auth.model.dto.LoginRequest;
+import com.subees.submanager.auth.model.dto.LoginResponse;
+import com.subees.submanager.auth.model.dto.LogoutResponse;
+import com.subees.submanager.auth.model.service.AuthService;
+import com.subees.submanager.auth.model.service.JwtCookieService;
 import com.subees.submanager.common.model.dto.BaseResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,16 +1,16 @@
 package com.subees.submanager.recommend.controller;
 
 import com.subees.submanager.common.model.dto.BaseResponseDto;
-import com.subees.submanager.recommend.dto.RecommendDeleteResponse;
-import com.subees.submanager.recommend.dto.RecommendDetailResponse;
-import com.subees.submanager.recommend.dto.RecommendGenerateRequest;
-import com.subees.submanager.recommend.dto.RecommendGenerateResponse;
-import com.subees.submanager.recommend.dto.RecommendListResponse;
-import com.subees.submanager.recommend.dto.RecommendSaveRequest;
-import com.subees.submanager.recommend.dto.RecommendSaveResponse;
-import com.subees.submanager.recommend.dto.RecommendSubmitRequest;
-import com.subees.submanager.recommend.dto.RecommendSubmitResponse;
-import com.subees.submanager.recommend.service.RecommendService;
+import com.subees.submanager.recommend.model.dto.RecommendDeleteResponse;
+import com.subees.submanager.recommend.model.dto.RecommendDetailResponse;
+import com.subees.submanager.recommend.model.dto.RecommendGenerateRequest;
+import com.subees.submanager.recommend.model.dto.RecommendGenerateResponse;
+import com.subees.submanager.recommend.model.dto.RecommendListResponse;
+import com.subees.submanager.recommend.model.dto.RecommendSaveRequest;
+import com.subees.submanager.recommend.model.dto.RecommendSaveResponse;
+import com.subees.submanager.recommend.model.dto.RecommendSubmitRequest;
+import com.subees.submanager.recommend.model.dto.RecommendSubmitResponse;
+import com.subees.submanager.recommend.model.service.RecommendService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
