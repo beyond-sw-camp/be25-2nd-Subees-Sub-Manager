@@ -4,7 +4,7 @@
 <mapper namespace="com.subees.submanager.payment.model.mapper.CardMapper">
 
     <resultMap id="paymentResultMap" type="Payment">
-        <id property="userId" column=" user_id"/>
+        <id property="userId" column="user_id"/>
         <result property="cardId" column="card_id"/>
         <result property="cardCompany" column="custom_card_company"/>
         <result property="cardName" column="card_name"/>
@@ -43,16 +43,42 @@
         FROM payment_method
         WHERE user_id = #{userId}
           AND custom_card_company = #{customCardCompany}
+          AND card_name = #{cardName}
           AND is_active = 1
     </select>
 
     <!-- 카드 수정 -->
-    <update id="updateCard" parameterType="Payment">
+    <update id="updateCard" parameterType="com.subees.submanager.payment.model.vo.Payment">
         UPDATE payment_method
-        SET card_name = #{cardName}
+        SET card_id = #{cardId},
+            custom_card_company = #{customCardCompany},
+            card_name = #{cardName}
         WHERE payment_id = #{paymentId}
           AND user_id = #{userId}
+          AND is_active = '1'
     </update>
+
+    <!-- 이미 수정된 내용 방지 카운트 -->
+
+    <select id="duplicateSelectedCard" resultType="int">
+        SELECT COUNT(*)
+        FROM payment_method
+        WHERE user_id = #{userId}
+          AND card_id = #{cardId}
+          AND card_name = #{cardName}
+          AND payment_id != #{paymentId}
+          AND is_active = '1'
+    </select>
+
+    <select id="duplicateCustomCard" resultType="int">
+        SELECT COUNT(*)
+        FROM payment_method
+        WHERE user_id = #{userId}
+          AND custom_card_company = #{customCardCompany}
+          AND card_name = #{cardName}
+          AND payment_id != #{paymentId}
+          AND is_active = '1'
+    </select>
 
     <!-- 카드 단건 조회 -->
     <select id="selectPaymentById" resultMap="paymentResultMap">

@@ -45,7 +45,8 @@ public enum ExceptionMessage {
     CARD_DELETE_NOT_FOUND("삭제할 카드가 없거나 이미 비활성화된 카드입니다.", HttpStatus.NOT_FOUND),
     NOTIFICATION_NOT_FOUND("존재하지 않거나 처리할 수 없는 알림입니다.", HttpStatus.NOT_FOUND),
     NOTIFICATION_UPDATE_FAILED("알림 상태 변경에 실패했습니다.", HttpStatus.CONFLICT),
-    INTERNAL_SERVER_ERROR("서버 내부 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+    INTERNAL_SERVER_ERROR("서버 내부 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    DUPLICATE_CARD_NAME("이미 수정된 카드입니다.", HttpStatus.CONFLICT);
 
     private final String message;
     private final HttpStatus httpStatus;

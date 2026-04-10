@@ -12,4 +12,8 @@ public class CardUpdateRequestDto {
     private String cardName;
 
     private Long paymentId;
+
+    private Long cardId;
+
+    private String CustomCardCompany;
 }

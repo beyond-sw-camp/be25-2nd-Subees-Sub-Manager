@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaymentController {
     private final CardService cardService;
 
+    // 카드 등록
     @PostMapping
     public ResponseEntity<BaseResponseDto<String>> createCard(@RequestBody CardCreateRequestDto cardCreateRequestDto) {
         cardService.createCard(cardCreateRequestDto);
@@ -31,17 +32,19 @@ public class PaymentController {
                 .body(new BaseResponseDto<>(HttpStatus.CREATED, "카드 등록을 완료하였습니다."));
     }
 
+    // 카드 수정
     @PatchMapping("/{paymentId}")
-    public ResponseEntity<BaseResponseDto<String>> updateCardName(
+    public ResponseEntity<BaseResponseDto<String>> updateCard(
             @PathVariable Long paymentId,
-            @RequestBody CardUpdateRequestDto cardUpdateRequestDto
+            @RequestBody CardUpdateRequestDto requestDto
     ) {
-        cardUpdateRequestDto.setPaymentId(paymentId);
-        cardService.updateCard(cardUpdateRequestDto);
+        requestDto.setPaymentId(paymentId);
+        cardService.updateCard(requestDto);
 
-        return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, "카드 별칭 수정을 완료하였습니다."));
+        return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, "카드 수정 성공"));
     }
 
+    // 카드 삭제
     @DeleteMapping("/{paymentId}")
     public ResponseEntity<BaseResponseDto<String>> deleteCard(
             @PathVariable Long paymentId,

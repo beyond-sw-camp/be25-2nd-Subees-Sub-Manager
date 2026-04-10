@@ -24,6 +24,7 @@ public class ConsumptionController {
 
     private final ConsumptionService consumptionService;
 
+    // 캘린더 전체 조회
     @GetMapping("/calendar-summary")
     public ResponseEntity<BaseResponseDto<CalendarResultDto>> getCalendarSummary(
             @RequestParam Long userId,
@@ -34,6 +35,7 @@ public class ConsumptionController {
         return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, result));
     }
 
+    // 해달 일 상세 조회
     @GetMapping("/date-details")
     public ResponseEntity<ItemsResponseDto<DateDetailResponseDto>> getDateDetails(@RequestParam Long userId, @RequestParam int year,
                                                                                   @RequestParam int month,
@@ -43,6 +45,8 @@ public class ConsumptionController {
 
         return ResponseEntity.ok(new ItemsResponseDto<>(HttpStatus.OK, items, 1, items.size()));
     }
+
+    // 카테코리 전체 조회
     @GetMapping("/category-summary")
     public ResponseEntity<ItemsResponseDto<CategoryResponseDto>> getCategory(@RequestParam Long userId, @RequestParam int year, @RequestParam int month) {
 
@@ -50,6 +54,7 @@ public class ConsumptionController {
         return ResponseEntity.ok(new ItemsResponseDto<>(HttpStatus.OK, items, 1, items.size()));
     }
 
+    // 카테고리 분석
     @GetMapping("/analysis/categories")
     public ResponseEntity<BaseResponseDto<CategoryAnalysisResultDto>> getCategoryAnalysis(
             @RequestParam Long userId,
