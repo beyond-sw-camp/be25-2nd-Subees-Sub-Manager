@@ -13,6 +13,7 @@ import java.util.List;
 public interface SubscriptionCommonMapper {
 
     List<CategoryResponse> selectAllCategories();
+    int existsCategoryById(Long categoryId);
 
     List<ItemResponse> selectItemsByCategoryId(@Param("categoryId") Long categoryId);
 }

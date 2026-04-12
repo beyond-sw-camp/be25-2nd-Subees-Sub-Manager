@@ -11,6 +11,5 @@ import java.time.LocalDate;
 @Builder
 public class CreateSubscriptionResponse {
     private Long subscriptionId;
-    private String message;
     private LocalDate createdAt;
 }

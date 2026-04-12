@@ -12,22 +12,36 @@ import java.util.List;
 
 @Mapper
 public interface SubscriptionMapper {
-    List<SubscriptionListResponse> selectAll();
 
-    int countDuplicateSubscription(CreateSubscriptionRequest request);
+    List<SubscriptionListResponse> selectAll(@Param("userId") Long userId);
 
-    void insertSubscription(CreateSubscriptionRequest request);
+    int countDuplicateSubscription(@Param("userId") Long userId,
+                                   @Param("request") CreateSubscriptionRequest request);
+
+    void insertSubscription(@Param("userId") Long userId,
+                            @Param("request") CreateSubscriptionRequest request);
 
     Long selectLastInsertedId();
 
-    SubscriptionResponse selectById(Long subscriptionId);
+    SubscriptionResponse selectById(@Param("userId") Long userId,
+                                    @Param("subscriptionId") Long subscriptionId);
 
-    Subscription selectSubscriptionById(@Param("subscriptionId") Long subscriptionId);
+    Subscription selectSubscriptionById(@Param("userId") Long userId,
+                                        @Param("subscriptionId") Long subscriptionId);
 
-    int updateSubscription(@Param("subscriptionId") Long subscriptionId,
+    int updateSubscription(@Param("userId") Long userId,
+                           @Param("subscriptionId") Long subscriptionId,
                            @Param("request") UpdateSubscriptionRequest request);
 
-    int existsPaymentMethod(Long paymentId);
+    int existsPaymentMethod(@Param("paymentId") Long paymentId);
 
-    int softDeleteSubscription(Long subscriptionId);
+    int softDeleteSubscription(@Param("userId") Long userId,
+                               @Param("subscriptionId") Long subscriptionId);
+
+    int existsCategory(Long categoryId);
+
+    int existsItem(Long itemId);
+
+    int existsItemInCategory(Long categoryId, Long itemId);
+
 }

@@ -1,5 +1,7 @@
 package com.subees.submanager.subscription.model.service;
 
+import com.subees.submanager.common.exception.UniversityException;
+import com.subees.submanager.common.exception.message.ExceptionMessage;
 import com.subees.submanager.subscription.model.dto.common.BillingCycleResponse;
 import com.subees.submanager.subscription.model.dto.common.CategoryResponse;
 import com.subees.submanager.subscription.model.dto.common.ItemResponse;
@@ -24,9 +26,12 @@ public class SubscriptionCommonServiceImpl implements SubscriptionCommonService 
 
     @Override
     public List<ItemResponse> getItemsByCategoryId(Long categoryId) {
-        if (categoryId == null) {
-            throw new IllegalArgumentException("카테고리 ID는 필수입니다.");
+        int exists = subscriptionCommonMapper.existsCategoryById(categoryId);
+
+        if (exists == 0) {
+            throw new UniversityException(ExceptionMessage.CATEGORY_NOT_FOUND);
         }
+
         return subscriptionCommonMapper.selectItemsByCategoryId(categoryId);
     }
 
@@ -37,4 +42,6 @@ public class SubscriptionCommonServiceImpl implements SubscriptionCommonService 
                 new BillingCycleResponse("1Y", "1년")
         );
     }
+
+
 }

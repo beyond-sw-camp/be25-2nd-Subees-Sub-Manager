@@ -10,14 +10,14 @@ import com.subees.submanager.subscription.model.dto.crud.UpdateSubscriptionRespo
 import java.util.List;
 
 public interface SubscriptionService {
-    List<SubscriptionListResponse> getSubscriptions();
+    List<SubscriptionListResponse> getSubscriptions(Long userId);
 
-    CreateSubscriptionResponse createSubscription(CreateSubscriptionRequest request);
+    CreateSubscriptionResponse createSubscription(Long userId, CreateSubscriptionRequest request);
 
-    SubscriptionResponse getSubscriptionById(Long subscriptionId);
+    SubscriptionResponse getSubscriptionById(Long userId, Long subscriptionId);
 
-    UpdateSubscriptionResponse updateSubscription(Long subscriptionId, UpdateSubscriptionRequest request);
+    UpdateSubscriptionResponse updateSubscription(Long userId, Long subscriptionId, UpdateSubscriptionRequest request);
 
-    void deleteSubscription(Long subscriptionId);
+    void deleteSubscription(Long userId, Long subscriptionId);
 
 }

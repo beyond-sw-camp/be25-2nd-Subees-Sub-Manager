@@ -1,5 +1,7 @@
 package com.subees.submanager.subscription.model.service;
 
+import com.subees.submanager.common.exception.UniversityException;
+import com.subees.submanager.common.exception.message.ExceptionMessage;
 import com.subees.submanager.subscription.model.dto.crud.CreateSubscriptionRequest;
 import com.subees.submanager.subscription.model.dto.crud.CreateSubscriptionResponse;
 import com.subees.submanager.subscription.model.dto.crud.SubscriptionListResponse;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -22,13 +25,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private final SubscriptionMapper subscriptionMapper;
 
     @Override
-    public List<SubscriptionListResponse> getSubscriptions() {
-        return subscriptionMapper.selectAll();
+    public List<SubscriptionListResponse> getSubscriptions(Long userId) {
+        return subscriptionMapper.selectAll(userId);
     }
 
     @Override
-    public CreateSubscriptionResponse createSubscription(CreateSubscriptionRequest request) {
-
+    public CreateSubscriptionResponse createSubscription(Long userId, CreateSubscriptionRequest request) {
         if (request.getPrice() == null || request.getPrice() < 0) {
             throw new IllegalArgumentException("결제금액이 0원 이상이어야 합니다.");
         }
@@ -41,9 +43,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new IllegalArgumentException("결제 시작일은 필수입니다.");
         }
 
-        if (request.getBillingCycle() == null) {
-            throw new IllegalArgumentException("결제 주기를 선택해주세요.");
+        if (!"1M".equals(request.getBillingCycle()) && !"1Y".equals(request.getBillingCycle())) {
+            throw new UniversityException(ExceptionMessage.INVALID_BILLING_CYCLE);
         }
+
         if (request.getCategoryId() == null) {
             throw new IllegalArgumentException("카테고리를 선택해 주세요.");
         }
@@ -52,43 +55,48 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new IllegalArgumentException("결제수단을 선택해 주세요.");
         }
 
-        if (request.getBillingCycle().isBlank()) {
-            throw new IllegalArgumentException("결제 주기를 선택해주세요.");
+        if (subscriptionMapper.existsCategory(request.getCategoryId()) == 0) {
+            throw new UniversityException(ExceptionMessage.CATEGORY_NOT_FOUND);
         }
 
-        int duplicateCount = subscriptionMapper.countDuplicateSubscription(request);
+        if (subscriptionMapper.existsItem(request.getItemId()) == 0) {
+            throw new UniversityException(ExceptionMessage.ITEM_NOT_FOUND);
+        }
+
+        if (subscriptionMapper.existsItemInCategory(request.getCategoryId(), request.getItemId()) == 0) {
+            throw new UniversityException(ExceptionMessage.ITEM_CATEGORY_MISMATCH);
+        }
+
+        int duplicateCount = subscriptionMapper.countDuplicateSubscription(userId, request);
         if (duplicateCount > 0) {
-            throw new IllegalStateException("이미 등록된 구독항목 입니다.");
+            throw new UniversityException(ExceptionMessage.SUBSCRIPTION_DUPLICATE);
         }
 
-        subscriptionMapper.insertSubscription(request);
+        subscriptionMapper.insertSubscription(userId, request);
         Long subscriptionId = subscriptionMapper.selectLastInsertedId();
 
         return CreateSubscriptionResponse.builder()
                 .subscriptionId(subscriptionId)
-                .message("구독 항목이 성공적으로 등록되었습니다.")
                 .createdAt(LocalDate.now())
                 .build();
     }
 
     @Override
-    public SubscriptionResponse getSubscriptionById(Long subscriptionId) {
-        SubscriptionResponse response = subscriptionMapper.selectById(subscriptionId);
+    public SubscriptionResponse getSubscriptionById(Long userId, Long subscriptionId) {
+        SubscriptionResponse response = subscriptionMapper.selectById(userId, subscriptionId);
 
         if (response == null) {
-            throw new NoSuchElementException("해당 구독 항목이 존재하지 않습니다.");
+            throw new UniversityException(ExceptionMessage.SUBSCRIPTION_NOT_FOUND);
         }
 
         return response;
     }
 
-
     @Override
-    public UpdateSubscriptionResponse updateSubscription(Long subscriptionId, UpdateSubscriptionRequest request) {
-
-        Subscription existing = subscriptionMapper.selectSubscriptionById(subscriptionId);
+    public UpdateSubscriptionResponse updateSubscription(Long userId, Long subscriptionId, UpdateSubscriptionRequest request) {
+        Subscription existing = subscriptionMapper.selectSubscriptionById(userId, subscriptionId);
         if (existing == null) {
-            throw new IllegalArgumentException("해당 구독이 존재하지 않습니다.");
+            throw new UniversityException(ExceptionMessage.SUBSCRIPTION_NOT_FOUND);
         }
 
         if (request.getCategoryId() == null) {
@@ -103,8 +111,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new IllegalArgumentException("결제 금액은 0원 이상이어야 합니다.");
         }
 
-        if (request.getBillingCycle() == null || request.getBillingCycle().isBlank()) {
-            throw new IllegalArgumentException("결제 주기를 선택해 주세요.");
+        if (!"1M".equals(request.getBillingCycle()) && !"1Y".equals(request.getBillingCycle())) {
+            throw new UniversityException(ExceptionMessage.INVALID_BILLING_CYCLE);
         }
 
         if (request.getStartDate() == null) {
@@ -115,13 +123,34 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new IllegalArgumentException("결제 수단을 선택해 주세요.");
         }
 
-        int result = subscriptionMapper.updateSubscription(subscriptionId, request);
+        if (subscriptionMapper.existsPaymentMethod(request.getPaymentId()) == 0) {
+            throw new UniversityException(ExceptionMessage.PAYMENT_METHOD_NOT_FOUND);
+        }
+
+        if (subscriptionMapper.existsCategory(request.getCategoryId()) == 0) {
+            throw new UniversityException(ExceptionMessage.CATEGORY_NOT_FOUND);
+        }
+
+        if (subscriptionMapper.existsItem(request.getItemId()) == 0) {
+            throw new UniversityException(ExceptionMessage.ITEM_NOT_FOUND);
+        }
+        boolean noChanges =
+                Objects.equals(existing.getItemId(), request.getItemId()) &&
+                        Objects.equals(existing.getPrice(), request.getPrice()) &&
+                        Objects.equals(existing.getBillingCycle(), request.getBillingCycle()) &&
+                        Objects.equals(existing.getStartDate(), request.getStartDate()) &&
+                        Objects.equals(existing.getPaymentId(), request.getPaymentId());
+
+        if (noChanges) {
+            throw new UniversityException(ExceptionMessage.NO_CHANGES_DETECTED);
+        }
+        if (subscriptionMapper.existsItemInCategory(request.getCategoryId(), request.getItemId()) == 0) {
+            throw new UniversityException(ExceptionMessage.ITEM_CATEGORY_MISMATCH);
+        }
+        int result = subscriptionMapper.updateSubscription(userId, subscriptionId, request);
 
         if (result == 0) {
             throw new IllegalStateException("구독 수정에 실패했습니다.");
-        }
-        if (subscriptionMapper.existsPaymentMethod(request.getPaymentId()) == 0) {
-            throw new IllegalArgumentException("존재하지 않는 결제수단입니다.");
         }
 
         return UpdateSubscriptionResponse.builder()
@@ -131,12 +160,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public void deleteSubscription(Long subscriptionId) {
-
-        int result = subscriptionMapper.softDeleteSubscription(subscriptionId);
+    public void deleteSubscription(Long userId, Long subscriptionId) {
+        int result = subscriptionMapper.softDeleteSubscription(userId, subscriptionId);
 
         if (result == 0) {
-            throw new IllegalArgumentException("해당 구독이 존재하지 않거나 이미 삭제되었습니다.");
+            throw new UniversityException(ExceptionMessage.SUBSCRIPTION_NOT_FOUND);
         }
     }
 }

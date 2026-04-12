@@ -25,4 +25,10 @@
         ORDER BY item_id
     </select>
 
+    <select id="existsCategoryById" parameterType="long" resultType="int">
+        SELECT COUNT(*)
+        FROM subscription_category
+        WHERE category_id = #{categoryId}
+    </select>
+
 </mapper>

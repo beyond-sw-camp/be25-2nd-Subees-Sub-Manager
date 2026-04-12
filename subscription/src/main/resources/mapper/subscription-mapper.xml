@@ -38,7 +38,8 @@
                       ON s.item_id = i.item_id
                  JOIN subscription_category c
                       ON i.category_id = c.category_id
-        WHERE s.use_yn = 'Y'
+        WHERE s.user_id = #{userId}
+        AND s.use_yn = 'Y'
         ORDER BY s.created_at DESC
         <!--    ORDER BY s.subscription_id DESC -->
     </select>
@@ -58,6 +59,7 @@
         FROM add_subscription s
                  JOIN subscription_item i ON s.item_id = i.item_id
         WHERE s.subscription_id = #{subscriptionId}
+          AND s.user_id = #{userId}
     </select>
 
     <!-- 구독 상세 조회 -->
@@ -88,6 +90,7 @@
         LEFT JOIN card c
             ON pm.card_id = c.card_id
         WHERE s.subscription_id = #{subscriptionId}
+        AND s.user_id = #{userId}
         AND s.use_yn = 'Y'
     </select>
 
@@ -97,10 +100,31 @@
             resultType="int">
         SELECT COUNT(*)
         FROM add_subscription
-        WHERE item_id = #{itemId}
-          AND payment_id = #{paymentId}
-          AND start_date = #{startDate}
+        WHERE user_id = #{userId}
+          AND item_id = #{request.itemId}
+          AND payment_id = #{request.paymentId}
+          AND start_date = #{request.startDate}
           AND use_yn = 'Y'
+    </select>
+
+    <!--중복 아이템, 카테고리 그리고 조합 관한거-->
+    <select id="existsCategory" resultType="int">
+        SELECT COUNT(*)
+        FROM subscription_category
+        WHERE category_id = #{categoryId}
+    </select>
+
+    <select id="existsItem" resultType="int">
+        SELECT COUNT(*)
+        FROM subscription_item
+        WHERE item_id = #{itemId}
+    </select>
+
+    <select id="existsItemInCategory" resultType="int">
+        SELECT COUNT(*)
+        FROM subscription_item
+        WHERE category_id = #{categoryId}
+          AND item_id = #{itemId}
     </select>
 
     <!-- 구독 등록 -->
@@ -118,21 +142,20 @@
             created_at,
             updated_at
         )
-        VALUES
-            (
-                1,
-                #{itemId},
-                #{paymentId},
-                #{price},
-                #{billingCycle},
-                #{startDate},
-                'Y',
-                NOW(),
-                NOW()
-            )
+        VALUES (
+           #{userId},
+           #{request.itemId},
+           #{request.paymentId},
+           #{request.price},
+           #{request.billingCycle},
+           #{request.startDate},
+           'Y',
+           NOW(),
+           NOW()
+               )
     </insert>
 
-    <!--결제수단 없을시확인-->
+    <!--결제수단 없을 시 확인-->
     <select id="existsPaymentMethod" resultType="int">
         SELECT COUNT(*)
         FROM payment_method
@@ -150,6 +173,7 @@
         SET use_yn = 'N',
             updated_at = NOW()
         WHERE subscription_id = #{subscriptionId}
+          AND user_id = #{userId}
           AND use_yn = 'Y'
     </update>
 
@@ -163,6 +187,7 @@
             start_date = #{request.startDate},
             updated_at = NOW()
         WHERE subscription_id = #{subscriptionId}
+          AND user_id = #{userId}
     </update>
 
 
