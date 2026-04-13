@@ -21,4 +21,5 @@ public interface NotificationMapper {
 
     int existsClosableNotification(@Param("notificationId") Long notificationId);
 
+    
 }
