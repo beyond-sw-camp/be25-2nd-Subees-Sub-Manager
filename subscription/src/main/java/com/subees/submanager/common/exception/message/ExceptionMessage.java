@@ -49,6 +49,17 @@ public enum ExceptionMessage {
     DUPLICATE_CARD_NAME("이미 수정된 카드입니다.", HttpStatus.CONFLICT),
 
 
+    // 캘린더
+    INVALID_MONTH("월은 1부터 12 사이여야 합니다.", HttpStatus.BAD_REQUEST),
+    INVALID_YEAR("유효한 년도를 입력해주세요.", HttpStatus.BAD_REQUEST),
+    INVALID_DATE("해당 월에 존재하는 날짜를 입력해주세요.", HttpStatus.BAD_REQUEST),
+    RANGE_REQUIRED("조회 범위는 필수입니다.",HttpStatus.BAD_REQUEST ),
+    INVALID_RANGE_TYPE("조회 범위는 MONTH 또는 YEAR만 가능합니다.",HttpStatus.BAD_REQUEST ),
+    MONTH_REQUIRED("월간 조회 시 month는 필수입니다.", HttpStatus.BAD_REQUEST),
+
+
+
+
     //구독
     SUBSCRIPTION_DUPLICATE("이미 등록된 구독 항목입니다.", HttpStatus.CONFLICT),
     CATEGORY_NOT_FOUND("존재하지 않는 카테고리입니다.", HttpStatus.NOT_FOUND),
