@@ -18,6 +18,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,32 +32,47 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController //json 반환
-//@Controller // html 반환
-@RequestMapping("/api/v1") //공통 prefix 적용
-@RequiredArgsConstructor // final 필드가 붙은 필수 파라미터 생성자 생성
+@RestController
+@RequestMapping("/api/v1")
+@RequiredArgsConstructor
 public class CommunityController {
 
     private final CommunityService communityService;
 
-    // 게시글 목록 조회 - JSON 반환
+    // 현재 로그인한 사용자 userId 가져오기
+    private Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || authentication.getPrincipal() == null) {
+            throw new UniversityException(ExceptionMessage.UNAUTHORIZED);
+        }
+
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof Long) {
+            return (Long) principal;
+        }
+
+        throw new UniversityException(ExceptionMessage.UNAUTHORIZED);
+    }
+
+    // 게시글 목록 조회
     @GetMapping("/community/posts")
-    public ResponseEntity<BaseResponseDto<CommunityPostPageResponseDto>> getCommunityPostList(@RequestParam(defaultValue = "1") int page) {
+    public ResponseEntity<BaseResponseDto<CommunityPostPageResponseDto>> getCommunityPostList(
+            @RequestParam(defaultValue = "1") int page) {
 
-        int size = 10; //한 페이지당 글 수 10개
+        int size = 10;
 
-        //math.ceil 페이징 올림 처리 (25개 / 10 = 2.5 ->3 페이지)
         int totalCount = communityService.getCommunityPostCount();
-        //totalPages = 몇 페이지로 나눌지
         int totalPages = (int) Math.ceil((double) totalCount / size);
 
-        //page 예외처리 (1 미만 또는 존재하지 않는 페이지)
         if (page < 1 || (totalPages > 0 && page > totalPages)) {
             throw new UniversityException(ExceptionMessage.INVALID_PAGE);
         }
 
         CommunityPostPageRequestDto communityPostPageRequestDto = new CommunityPostPageRequestDto(page, size);
-        List<CommunityPostListResponseDto> posts = communityService.getCommunityPostList(communityPostPageRequestDto);
+        List<CommunityPostListResponseDto> posts =
+                communityService.getCommunityPostList(communityPostPageRequestDto);
 
         CommunityPostPageResponseDto responseDto = new CommunityPostPageResponseDto(
                 posts,
@@ -64,99 +81,89 @@ public class CommunityController {
                 totalCount,
                 totalPages
         );
+
         return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, responseDto));
     }
 
-    // 게시글 상세 조회 - JSON 반환
+    // 게시글 상세 조회
     @GetMapping("/community/posts/{postId}")
-    public ResponseEntity<BaseResponseDto<CommunityPostDetailResponseDto>> getCommunityPostDetail(@PathVariable long postId) {
+    public ResponseEntity<BaseResponseDto<CommunityPostDetailResponseDto>> getCommunityPostDetail(
+            @PathVariable long postId) {
+
         CommunityPostDetailResponseDto post = communityService.getCommunityPostDetail(postId);
         return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, post));
     }
 
-    //게시글 작성
+    // 게시글 작성
     @PostMapping("/community/posts")
-    public ResponseEntity<BaseResponseDto<CommunityPostCreateDto>> postCommunityCreate(@RequestBody CommunityPostCreateDto communityPostCreateDto) {
+    public ResponseEntity<BaseResponseDto<CommunityPostCreateDto>> postCommunityCreate(
+            @RequestBody CommunityPostCreateDto communityPostCreateDto) {
+
+        Long userId = getCurrentUserId();
+        communityPostCreateDto.setUserId(userId);
+
         communityService.save(communityPostCreateDto);
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new BaseResponseDto<>(HttpStatus.CREATED, communityPostCreateDto));
     }
 
-    //게시글 수정
-    //@Valid가 있어야 dto에 붙인 @NotBlank가 동작함
+    // 게시글 수정
     @PutMapping("/community/posts/{postId}")
-    public ResponseEntity<BaseResponseDto<CommunityPostUpdateResponseDto>> postCommunityUpdate(@PathVariable long postId, @Valid @RequestBody CommunityPostUpdateDto communityPostUpdateDto) {
-        communityPostUpdateDto.setPostId(postId); // URL의 postId를 DTO에 세팅
+    public ResponseEntity<BaseResponseDto<CommunityPostUpdateResponseDto>> postCommunityUpdate(
+            @PathVariable long postId,
+            @Valid @RequestBody CommunityPostUpdateDto communityPostUpdateDto) {
+
+        Long userId = getCurrentUserId();
+
+        communityPostUpdateDto.setPostId(postId);
+        communityPostUpdateDto.setUserId(userId);
+
         CommunityPostUpdateResponseDto updatedPost = communityService.update(communityPostUpdateDto);
+
         return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, updatedPost));
     }
 
-
-    //게시글 삭제
-    //primitive 타입은 null이 불가능해서
-    //userId 없이 요청하면 오류남. Long으로 변경
-    //RequestParam(required = true) spring 500 error
-    //@RequestParam(required = false)  userId = null → 서비스에서 401 UNAUTHORIZED 반환
+    // 게시글 삭제
     @DeleteMapping("/community/posts/{postId}")
-    public ResponseEntity<BaseResponseDto<Long>> postCommunityDelete(@PathVariable long postId, @RequestParam(required = false) Long userId) {
+    public ResponseEntity<BaseResponseDto<Long>> postCommunityDelete(@PathVariable long postId) {
+        Long userId = getCurrentUserId();
         communityService.delete(postId, userId);
         return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, postId));
     }
 
     // 게시글 스크랩
     @PostMapping("/community/posts/{postId}/scraps")
-    public ResponseEntity<BaseResponseDto<CommunityScrapResponseDto>> postCommunityScrap(@PathVariable long postId, @RequestBody CommunityScrapCreateDto communityScrapCreateDto) {
+    public ResponseEntity<BaseResponseDto<CommunityScrapResponseDto>> postCommunityScrap(
+            @PathVariable long postId) {
+
+        Long userId = getCurrentUserId();
+
+        CommunityScrapCreateDto communityScrapCreateDto = new CommunityScrapCreateDto();
+        communityScrapCreateDto.setUserId(userId);
+
         CommunityScrapResponseDto scrap = communityService.scrap(postId, communityScrapCreateDto);
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new BaseResponseDto<>(HttpStatus.CREATED, scrap));
     }
 
     // 스크랩 목록 조회
     @GetMapping("/community/scraps")
-    public ResponseEntity<BaseResponseDto<CommunityScrapPageResponseDto>> getScrapList(@RequestParam(required = false) Long userId, @RequestParam(defaultValue = "1") int page) {
+    public ResponseEntity<BaseResponseDto<CommunityScrapPageResponseDto>> getScrapList(
+            @RequestParam(defaultValue = "1") int page) {
+
+        Long userId = getCurrentUserId();
         CommunityScrapPageResponseDto response = communityService.getScrapList(userId, page);
+
         return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, response));
     }
 
     // 스크랩 취소
     @DeleteMapping("/community/posts/{postId}/scraps")
-    public ResponseEntity<BaseResponseDto<Long>> cancelScrap(@PathVariable long postId, @RequestParam(required = false) Long userId) {
+    public ResponseEntity<BaseResponseDto<Long>> cancelScrap(@PathVariable long postId) {
+        Long userId = getCurrentUserId();
         communityService.cancelScrap(postId, userId);
         return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, postId));
     }
-
-    // 화면용
-//    @GetMapping("/community/posts")
-//    public ModelAndView getCommunityPostList(@RequestParam(defaultValue = "1") int page) {
-//        int size = 10;
-//        PageRequestDto pageRequestDto = new PageRequestDto(page, size);
-//
-//        List<CommunityPostListResponseDto> posts = communityService.getCommunityPostList(pageRequestDto);
-//        int totalCount = communityService.getCommunityPostCount();
-//        int totalPages = (int) Math.ceil((double) totalCount / size);
-//
-//        ModelAndView mav = new ModelAndView();
-//        mav.addObject("posts", posts);
-//        mav.addObject("page", page);
-//        mav.addObject("size", size);
-//        mav.addObject("totalCount", totalCount);
-//        mav.addObject("totalPages", totalPages);
-//        mav.setViewName("community/communityList");
-//        return mav;
-//    }
-
-// 화면용
-//    //글 상세 조회
-//    @GetMapping("/community/posts/{postId}")
-//    public ModelAndView getCommunityPostDetail(@PathVariable long postId) {
-//        CommunityPostDetailResponseDto post = communityService.getCommunityPostDetail(postId);
-//
-//        ModelAndView mav = new ModelAndView();
-//        mav.addObject("post", post);
-//        mav.setViewName("community/communityDetail");
-//        return mav;
-//    }
-
-
-
 }

@@ -51,4 +51,6 @@ public interface CommunityMapper {
     // 스크랩 취소
     int deleteScrap(@Param("postId") Long postId, @Param("userId") Long userId); // 스크랩 삭제
     void updateScrapCountDecrement(@Param("postId") Long postId); // scrap_count -1 (0 아래로 안 내려감)
+
+
 }
