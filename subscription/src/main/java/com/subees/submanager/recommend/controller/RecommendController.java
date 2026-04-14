@@ -70,6 +70,8 @@ public class RecommendController {
     public ResponseEntity<BaseResponseDto<RecommendDeleteResponse>> delete(@PathVariable Long reportId,
                                                                            Authentication authentication) {
         Long tokenUserId = (Long) authentication.getPrincipal();
-        return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, recommendService.delete(tokenUserId, reportId)));
+        return ResponseEntity.ok(
+                new BaseResponseDto<>(HttpStatus.OK, "추천 리포트 삭제 성공", recommendService.delete(tokenUserId, reportId))
+        );
     }
 }

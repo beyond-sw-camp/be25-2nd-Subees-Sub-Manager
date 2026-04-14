@@ -93,6 +93,15 @@ public class ConsumptionServiceImpl implements ConsumptionService {
     // 카테고리 조회
     @Override
     public List<CategoryResponseDto> getCategory(Long userId, int year, int month) {
+
+        if (year <= 0) {
+            throw new UniversityException(ExceptionMessage.INVALID_YEAR);
+        }
+
+        if (month < 1 || month > 12) {
+            throw new UniversityException(ExceptionMessage.INVALID_MONTH);
+        }
+
         LocalDate monthStart = LocalDate.of(year, month, 1);
         LocalDate nextMonthStart = monthStart.plusMonths(1);
 

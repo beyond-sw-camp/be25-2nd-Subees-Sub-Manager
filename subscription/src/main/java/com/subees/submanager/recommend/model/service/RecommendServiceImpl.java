@@ -2,6 +2,8 @@ package com.subees.submanager.recommend.model.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.subees.submanager.common.exception.UniversityException;
+import com.subees.submanager.common.exception.message.ExceptionMessage;
 import com.subees.submanager.recommend.model.vo.ai.GeneratedRecommendation;
 import com.subees.submanager.recommend.model.vo.ai.RecommendationAiClient;
 import com.subees.submanager.recommend.model.dto.PopularSubscriptionStat;
@@ -21,7 +23,7 @@ import com.subees.submanager.recommend.model.vo.recommend.RecommendReport;
 import com.subees.submanager.recommend.model.vo.recommend.RecommendReportStatus;
 import com.subees.submanager.recommend.model.vo.recommend.RecommendSubscriptionItem;
 import com.subees.submanager.recommend.model.mapper.RecommendMapper;
-import com.subees.submanager.recommend.model.mapper.RecommendStatsMapper;
+import com.subees.submanager.recommend.model.mapper.RecommendStatusMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -40,7 +42,7 @@ public class RecommendServiceImpl implements RecommendService {
 
     private final RecommendMapper recommendMapper;
     private final RecommendationAiClient recommendationAiClient;
-    private final RecommendStatsMapper recommendStatsMapper;
+    private final RecommendStatusMapper recommendStatusMapper;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Transactional
@@ -97,7 +99,7 @@ public class RecommendServiceImpl implements RecommendService {
             throw new IllegalArgumentException("추천 생성을 위한 구독 항목이 없습니다.");
         }
 
-        List<PopularSubscriptionStat> topStats = recommendStatsMapper.findTopPopularSubscriptions(5);
+        List<PopularSubscriptionStat> topStats = recommendStatusMapper.findTopPopularSubscriptions(5);
         String statsSummary = topStats.stream()
                 .map(stat -> String.format("- %s (%s), 구독 수: %d, 평균 가격: %d원",
                         stat.getItemName(),
@@ -188,10 +190,16 @@ public class RecommendServiceImpl implements RecommendService {
     }
 
     private RecommendReport findReportOrThrow(Long reportId, Long userId) {
-        RecommendReport report = recommendMapper.findReportByIdAndUserId(reportId, userId);
+        RecommendReport report = recommendMapper.findReportById(reportId);
+
         if (report == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "추천 리포트를 찾을 수 없습니다.");
         }
+
+        if (!report.getUserId().equals(userId)) {
+            throw new UniversityException(ExceptionMessage.RECOMMEND_ACCESS_DENIED);
+        }
+
         return report;
     }
 
