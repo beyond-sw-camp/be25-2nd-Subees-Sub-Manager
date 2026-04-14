@@ -17,6 +17,12 @@ public class BaseResponseDto<T> {
         this.data = data;
     }
 
+    public BaseResponseDto(HttpStatus status, String message) {
+        this.code = status.value();
+        this.message = message;
+        this.data = null;
+    }
+
     public BaseResponseDto(HttpStatus httpStatus, String message, T data) {
         this.code = httpStatus.value();
         this.message = message;

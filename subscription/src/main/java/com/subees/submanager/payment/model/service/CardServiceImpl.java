@@ -3,11 +3,14 @@ package com.subees.submanager.payment.model.service;
 import com.subees.submanager.common.exception.UniversityException;
 import com.subees.submanager.common.exception.message.ExceptionMessage;
 import com.subees.submanager.payment.model.dto.CardCreateRequestDto;
+import com.subees.submanager.payment.model.dto.CardCreateResponseDto;
 import com.subees.submanager.payment.model.dto.CardUpdateRequestDto;
 import com.subees.submanager.payment.model.mapper.CardMapper;
 import com.subees.submanager.payment.model.vo.Payment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 
 @Service
@@ -23,15 +26,15 @@ public class CardServiceImpl implements CardService {
      * - 같은 카드 아이디 or 직접입력 카드, 별칭 등록할 시 예외처리
      */
     @Override
-    public void createCard(CardCreateRequestDto cardCreateRequestDto) {
+    public CardCreateResponseDto createCard(CardCreateRequestDto cardCreateRequestDto) {
 
         if (cardCreateRequestDto.getUserId() == null) {
             throw new IllegalArgumentException("로그인이 필요합니다.");
         }
 
-        boolean hasCardId = cardCreateRequestDto.getCardId() != null; // 카드 선택 여부
+        boolean hasCardId = cardCreateRequestDto.getCardId() != null;
         boolean hasCustomCardCompany = cardCreateRequestDto.getCustomCardCompany() != null
-                && !cardCreateRequestDto.getCustomCardCompany().trim().isEmpty(); // 카드 직접 입력 여부
+                && !cardCreateRequestDto.getCustomCardCompany().trim().isEmpty();
 
         if ((!hasCardId && !hasCustomCardCompany) || (hasCardId && hasCustomCardCompany)) {
             throw new UniversityException(ExceptionMessage.CARD_INPUT_INVALID);
@@ -54,7 +57,6 @@ public class CardServiceImpl implements CardService {
                     cardCreateRequestDto.getCustomCardCompany(),
                     cardCreateRequestDto.getCardName(),
                     cardCreateRequestDto.getIsActive()
-
             );
             if (duplicateCount > 0) {
                 throw new UniversityException(ExceptionMessage.DUPLICATE_CARD);
@@ -70,10 +72,15 @@ public class CardServiceImpl implements CardService {
         int result = cardMapper.insertPaymentMethod(payment);
 
         if (result != 1) {
-            throw new RuntimeException("카드 등록 실패");
+            throw new UniversityException(ExceptionMessage.CARD_CREATE_FAILED);
         }
-    }
 
+        return new CardCreateResponseDto(
+                payment.getPaymentId(),
+                payment.getCardName(),
+                LocalDate.now()
+        );
+    }
     /*
     * 카드 수정
     * - 결제수단 ID,  사용자 ID, 카드 별칭X 예외처리
@@ -213,6 +220,7 @@ public class CardServiceImpl implements CardService {
             throw new UniversityException(ExceptionMessage.CARD_DELETE_FAILED);
         }
     }
+
 }
 
 

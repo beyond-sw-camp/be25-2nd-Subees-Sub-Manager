@@ -13,7 +13,7 @@
     </resultMap>
 
     <!-- 카드 등록 -->
-    <insert id="insertPaymentMethod"  parameterType="Payment">
+    <insert id="insertPaymentMethod"  parameterType="Payment" useGeneratedKeys="true" keyProperty="paymentId">
         INSERT INTO payment_method (
             user_id,
             card_id,
