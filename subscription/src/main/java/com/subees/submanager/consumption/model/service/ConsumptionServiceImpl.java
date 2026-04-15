@@ -1,5 +1,7 @@
 package com.subees.submanager.consumption.model.service;
 
+import com.subees.submanager.common.exception.UniversityException;
+import com.subees.submanager.common.exception.message.ExceptionMessage;
 import com.subees.submanager.consumption.model.dto.CalendarResponseDto;
 import com.subees.submanager.consumption.model.dto.CalendarResultDto;
 import com.subees.submanager.consumption.model.dto.CategoryAnalysisResponseDto;
@@ -21,15 +23,19 @@ public class ConsumptionServiceImpl implements ConsumptionService {
 
     private final ConsumptionMapper consumptionMapper;
 
+    /*
+    * 캘린더 전체 조회
+    * - 연도, 월 조건 외 예외처리
+    */
     @Override
     public CalendarResultDto getCalendarSummary(Long userId, int year, int month) {
 
         if (year <= 0) {
-            throw new IllegalArgumentException("년도는 1 이상이어야 합니다.");
+            throw new UniversityException(ExceptionMessage.INVALID_YEAR);
         }
 
         if (month < 1 || month > 12) {
-            throw new IllegalArgumentException("month는 1부터 12 사이여야 합니다.");
+            throw new UniversityException(ExceptionMessage.INVALID_MONTH);
         }
 
         LocalDate monthStart = LocalDate.of(year, month, 1);
@@ -50,26 +56,27 @@ public class ConsumptionServiceImpl implements ConsumptionService {
         return new CalendarResultDto(year, month, monthTotalAmount, items);
     }
 
+    // 해달 날짜 상세 조회
     @Override
     public List<DateDetailResponseDto> getDetail(Long userId, int year, int month, Integer date) {
 
         if (year <= 0) {
-            throw new IllegalArgumentException("년도는 1 이상이어야 합니다.");
+            throw new UniversityException(ExceptionMessage.INVALID_YEAR);
         }
 
         if (month < 1 || month > 12) {
-            throw new IllegalArgumentException("month는 1부터 12 사이여야 합니다.");
+            throw new UniversityException(ExceptionMessage.INVALID_MONTH);
         }
 
         if (date == null) {
-            throw new IllegalArgumentException("date는 필수입니다.");
+            throw new  UniversityException(ExceptionMessage.INVALID_DATE);
         }
 
         YearMonth yearMonth = YearMonth.of(year, month);
-        int lastDay = yearMonth.lengthOfMonth();
+        int lastDay = yearMonth.lengthOfMonth(); // 그 달의 마지막 수 반환
 
         if (date < 1 || date > lastDay) {
-            throw new IllegalArgumentException("해당 월의 유효한 날짜를 입력해야 합니다.");
+            throw new UniversityException(ExceptionMessage.INVALID_DATE);
         }
 
         LocalDate monthStart = LocalDate.of(year, month, 1);
@@ -83,8 +90,18 @@ public class ConsumptionServiceImpl implements ConsumptionService {
         );
     }
 
+    // 카테고리 조회
     @Override
     public List<CategoryResponseDto> getCategory(Long userId, int year, int month) {
+
+        if (year <= 0) {
+            throw new UniversityException(ExceptionMessage.INVALID_YEAR);
+        }
+
+        if (month < 1 || month > 12) {
+            throw new UniversityException(ExceptionMessage.INVALID_MONTH);
+        }
+
         LocalDate monthStart = LocalDate.of(year, month, 1);
         LocalDate nextMonthStart = monthStart.plusMonths(1);
 
@@ -105,28 +122,29 @@ public class ConsumptionServiceImpl implements ConsumptionService {
                 .toList();
     }
 
+    // 카테고리 분석
     @Override
     public CategoryAnalysisResultDto getCategoryAnalysis(Long userId, int year, Integer month, String rangeType) {
 
         if (year <= 0) {
-            throw new IllegalArgumentException("년도는 1 이상이어야 합니다.");
+            throw new UniversityException(ExceptionMessage.INVALID_YEAR);
         }
 
         if (rangeType == null || rangeType.isBlank()) {
-            throw new IllegalArgumentException("조회 범위는 필수입니다.");
+            throw new UniversityException(ExceptionMessage.RANGE_REQUIRED);
         }
 
         if (!"MONTH".equals(rangeType) && !"YEAR".equals(rangeType)) {
-            throw new IllegalArgumentException("rangeType은 MONTH 또는 YEAR만 가능합니다.");
+            throw new UniversityException(ExceptionMessage.INVALID_RANGE_TYPE);
         }
 
         if ("MONTH".equals(rangeType)) {
             if (month == null) {
-                throw new IllegalArgumentException("월간 조회는 month가 필수입니다.");
+                throw new UniversityException(ExceptionMessage. MONTH_REQUIRED);
             }
 
             if (month < 1 || month > 12) {
-                throw new IllegalArgumentException("month는 1부터 12 사이여야 합니다.");
+                throw new UniversityException(ExceptionMessage.INVALID_MONTH);
             }
         }
 

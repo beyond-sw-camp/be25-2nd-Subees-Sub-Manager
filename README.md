@@ -35,7 +35,7 @@
 <table align="center">
   <tr>
     <td align="center" width="180">
-      <img src="./이미지/깃허브_사진/cat1.jpg" width="160" height="160" style="object-fit:cover; border-radius:14px; display:block; margin:0 auto;" alt="조장: 김가영" />
+      <img src="./이미지/깃허브_사진/가영.png" width="160" height="160" style="object-fit:cover; border-radius:14px; display:block; margin:0 auto;" alt="조장: 김가영" />
       <br />
       <b>조장: 김가영</b>
       <br />
@@ -45,7 +45,7 @@
     </td>
 
   <td align="center" width="180">
-      <img src="./이미지/깃허브_사진/cat2.jpg" width="160" height="160" style="object-fit:cover; border-radius:14px; display:block; margin:0 auto;" alt="김다솜" />
+      <img src="./이미지/깃허브_사진/다솜.png" width="160" height="160" style="object-fit:cover; border-radius:14px; display:block; margin:0 auto;" alt="김다솜" />
       <br />
       <b>김다솜</b>
       <br />
@@ -55,7 +55,7 @@
     </td>
 
   <td align="center" width="180">
-      <img src="./이미지/깃허브_사진/cat3.jpg" width="160" height="160" style="object-fit:cover; border-radius:14px; display:block; margin:0 auto;" alt="김승욱" />
+      <img src="./이미지/깃허브_사진/승욱.png" width="160" height="160" style="object-fit:cover; border-radius:14px; display:block; margin:0 auto;" alt="김승욱" />
       <br />
       <b>김승욱</b>
       <br />
@@ -65,17 +65,7 @@
     </td>
 
   <td align="center" width="180">
-      <img src="./이미지/깃허브_사진/cat4.jpg" width="160" height="160" style="object-fit:cover; border-radius:14px; display:block; margin:0 auto;" alt="김정수" />
-      <br />
-      <b>김정수</b>
-      <br />
-      <a href="https://github.com/krystallinekim">
-        <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
-      </a>
-    </td>
-
-  <td align="center" width="180">
-      <img src="./이미지/깃허브_사진/cat5.jpg" width="160" height="160" style="object-fit:cover; border-radius:14px; display:block; margin:0 auto;" alt="신민수" />
+      <img src="./이미지/깃허브_사진/민수.png" width="160" height="160" style="object-fit:cover; border-radius:14px; display:block; margin:0 auto;" alt="신민수" />
       <br />
       <b>신민수</b>
       <br />
@@ -85,7 +75,7 @@
     </td>
 
   <td align="center" width="180">
-      <img src="./이미지/깃허브_사진/cat6.jpg" width="160" height="160" style="object-fit:cover; border-radius:14px; display:block; margin:0 auto;" alt="이서윤" />
+      <img src="./이미지/깃허브_사진/서윤.png" width="160" height="160" style="object-fit:cover; border-radius:14px; display:block; margin:0 auto;" alt="이서윤" />
       <br />
       <b>이서윤</b>
       <br />
@@ -120,27 +110,40 @@
 <details open>
 <summary><b>📌 프로젝트 개요</b></summary>
 <br>
-
-- **서비스 명칭:** Subees
-- **서비스 소개:**  
-  Subees는 여러 플랫폼에 분산되어 있는 구독 정보를 한곳에서 통합 관리하고, 결제일, 구독 금액, 결제 주기 등을 한눈에 확인할 수 있도록 지원하는 통합 구독 관리 서비스입니다.
-- **프로젝트 목적:**  
-  사용자가 구독 서비스 이용 과정에서 발생할 수 있는 지출 누락, 중복 결제, 무료체험 종료 후 자동 결제 등의 문제를 줄이고, 소비 패턴 분석과 알림 기능을 통해 더욱 합리적인 소비를 할 수 있도록 돕는 것을 목표로 합니다.
-- **주요 제공 가치:**  
-  구독 등록 및 관리, 결제 예정 알림, 월별·카테고리별 소비 분석, 사용자 맞춤형 추천 기능을 통해 구독 피로도를 낮추고 지출을 효율적으로 관리할 수 있도록 지원합니다.
-
-</details>
-
----
-
-<a id="서비스-목표"></a>
-<details>
-<summary><b>🎯 서비스 목표</b></summary>
-<br>
-
-- 사용자 구독 정보와 결제 데이터를 통합 관리할 수 있는 백엔드 시스템을 구축합니다.
-- 결제일, 금액, 주기 등 핵심 데이터를 안정적으로 관리하여 구독 현황 조회와 소비 분석 기능을 지원합니다.
-- 알림, 분석, 추천 기능에 필요한 데이터를 일관성 있게 제공하여 서비스의 확장성과 활용도를 높입니다.
+  
+ ### 프로젝트 배경
+  국내 구독 시장의 성장으로 사용자 1인당 평균 3개 이상의 서비스를 이용하는 것이 일반화되었지만 
+  서비스가 플랫폼별로 분산되어 있어 구독 정보와 결제 내역을 한눈에 파악하기 어려운 문제가 발생하고 있습니다. 
+  이로 인해 무료 체험 종료 후 자동 결제, 사용하지 않는 구독의 지속 결제, 유사 서비스의 중복 구독 등
+  다양한 비효율이 발생하고 있으며, 사용자 피로도 또한 증가하고 있습니다.
+  
+  이러한 문제를 해결하기 위해, 여러 구독 정보를 한곳에서 통합 관리하고 지출을 효율적으로 관리할 수 있는 올인원 구독 관리 서비스의 필요성이 증가하고 있습니다.<br><br>
+  
+  ### 주요 기능
+  
+  💳 구독 자산 관리<br>
+  구독 서비스의 결제일, 금액, 결제 주기 등 핵심 정보를 통합 관리하고, 구독 상태(활성 / 해지)를 기준으로 전체 구독 현황을 한눈에 조회할 수 있도록 설계했습니다.
+  
+  📊 소비 분석 및 알림<br>
+  월별 및 카테고리별 구독 지출을 시각화하고, 소비 패턴 분석과 결제 예정일 알림 기능을 통해 체계적인 지출 관리를 지원하도록 구성했습니다.
+  
+  💬 구독 커뮤니티<br>
+  사용자 간 구독 경험과 정보를 공유할 수 있도록 커뮤니티 기능을 제공하며, 게시글 저장 및 외부 공유가 가능한 구조로 설계했습니다.
+  
+  🤖 맞춤형 추천 및 최적화<br>
+  사용자의 소비 패턴과 구독 데이터를 기반으로 유사 서비스 분석 및 최적의 구독 조합을 제안할 수 있도록 설계했습니다.
+  </details>
+  
+  ---
+  
+  <a id="서비스-목표"></a>
+  <details>
+  <summary><b>🎯 서비스 목표</b></summary>
+  <br>
+  
+  - 사용자 구독 정보와 결제 데이터를 통합 관리할 수 있는 백엔드 시스템을 구축합니다.
+  - 결제일, 금액, 주기 등 핵심 데이터를 안정적으로 관리하여 구독 현황 조회와 소비 분석 기능을 지원합니다.
+  - 알림, 분석, 추천 기능에 필요한 데이터를 일관성 있게 제공하여 서비스의 확장성과 활용도를 높입니다.
 
 </details>
 

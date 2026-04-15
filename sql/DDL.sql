@@ -1,63 +1,71 @@
+-- 1. subscription_category
 CREATE TABLE subscription_category (
     category_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     category_name VARCHAR(255) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- 2. subscription_item
 CREATE TABLE subscription_item (
     item_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    category_id BIGINT NOT NULL,
-    item_name VARCHAR(255) NOT NULL,
-	 FOREIGN KEY (category_id) REFERENCES subscription_category(category_id)
+    category_id BIGINT NOT NULL ,
+    item_name VARCHAR(255) NOT NULL ,
+    FOREIGN KEY (category_id) REFERENCES subscription_category(category_id),
+    UNIQUE (category_id, item_name)
 );
 
-CREATE TABLE user ( 
+-- 3. user
+CREATE TABLE `user` (
     user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
     `password` VARCHAR(255) NOT NULL,
     nickname VARCHAR(255) NOT NULL UNIQUE,
-    user_state ENUM('ACTIVE','INACTIVE','SUSPENDED') NOT NULL,
-    profile_image VARCHAR(255) NULL ,
-    email_verified CHAR(1) NOT NULL DEFAULT 'N' CHECK (email_verified IN ('Y','N')),
+    user_state ENUM('ACTIVE', 'INACTIVE') NOT NULL,
+    profile_image VARCHAR(255) DEFAULT NULL,
+    email_verified ENUM('Y','N') NOT NULL DEFAULT 'N',
     email_verified_at DATETIME NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 4. card
 CREATE TABLE card (
-	 card_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	 card_company VARCHAR(50) NOT NULL UNIQUE 
+    card_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    card_company VARCHAR(50) NOT NULL UNIQUE
 );
 
+-- 5. payment_method
 CREATE TABLE payment_method (
     payment_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    card_id BIGINT NULL ,
+    card_id BIGINT NULL,
     user_id BIGINT NOT NULL,
     card_name VARCHAR(255) NULL,
-	 is_active TINYINT(1) NOT NULL DEFAULT 1,
+    is_active TINYINT(1) NOT NULL DEFAULT 1 CHECK (is_active IN (0,1)),
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    custom_card_company VARCHAR(50) NULL,
     FOREIGN KEY (user_id) REFERENCES `user`(user_id),
     FOREIGN KEY (card_id) REFERENCES `card`(card_id)
 );
 
+-- 6. add_subscription
 CREATE TABLE add_subscription (
     subscription_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
-    item_id BIGINT NULL,
-    category_id BIGINT NOT NULL,
-    payment_id BIGINT NULL,
+    item_id BIGINT NOT NULL,
+    payment_id BIGINT NOT NULL,
     price INT NOT NULL,
     billing_cycle ENUM('1M', '1Y') NOT NULL,
-    start_date DATETIME NULL ,
-    end_date DATETIME NULL ,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    use_yn CHAR(1) DEFAULT 'Y',
+    start_date DATETIME NOT NULL,
+    end_date DATETIME NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    use_yn ENUM('Y','N') NOT NULL DEFAULT 'Y',
     FOREIGN KEY (user_id) REFERENCES `user`(user_id),
     FOREIGN KEY (item_id) REFERENCES subscription_item(item_id),
     FOREIGN KEY (payment_id) REFERENCES payment_method(payment_id)
 );
 
+-- 7. community_posts
 CREATE TABLE community_posts (
     post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
@@ -66,56 +74,67 @@ CREATE TABLE community_posts (
     view_count INT NOT NULL DEFAULT 0,
     scrap_count INT NOT NULL DEFAULT 0,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	 updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES `user`(user_id)
 );
 
+-- 8. community_scrap
 CREATE TABLE community_scrap (
     scrap_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    post_id BIGINT NOT NULL,
-    user_id BIGINT NOT NULL,
+    post_id BIGINT NOT NULL UNIQUE ,
+    user_id BIGINT NOT NULL UNIQUE , 
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	 FOREIGN KEY (post_id) REFERENCES community_posts(post_id),
-	 FOREIGN KEY (user_id) REFERENCES `user`(user_id),
-    UNIQUE (post_id, user_id)
+	 FOREIGN KEY (user_id) REFERENCES `user`(user_id)
 );
 
+-- 9. notifications
 CREATE TABLE notifications (
     notification_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
     subscription_id BIGINT NOT NULL,
-    is_read TINYINT(1) NOT NULL DEFAULT 0,
-    is_closed TINYINT(1) NOT NULL DEFAULT 0,
-    notify_type ENUM('D3','D0') NOT NULL,
+    is_read TINYINT(1) NOT NULL DEFAULT 0 CHECK (is_read IN (0,1)),
+    is_closed TINYINT(1) NOT NULL DEFAULT 0 CHECK (is_closed IN (0,1)),
+    notify_type ENUM('D3', 'D0') NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    alarm TEXT NOT NULL,
-	 FOREIGN KEY (user_id) REFERENCES `user`(user_id),
-	 FOREIGN KEY (subscription_id) REFERENCES add_subscription(subscription_id)
+    content TEXT NOT NULL,
+    target_date DATE NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES `user`(user_id),
+    FOREIGN KEY (subscription_id) REFERENCES add_subscription(subscription_id),
+    UNIQUE (user_id, subscription_id, notify_type, target_date)
 );
 
-ALTER TABLE payment_method 
-    ADD COLUMN custom_card_company VARCHAR(50) NULL;
-    
-ALTER TABLE add_subscription
-MODIFY COLUMN use_yn CHAR(1) NOT NULL DEFAULT 'Y';
+-- 10. recommend_report
+CREATE TABLE recommend_report (
+    report_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    report_title VARCHAR(200) NOT NULL,
+    request_note TEXT DEFAULT NOT NULL,
+    generated_content LONGTEXT DEFAULT NULL,
+    total_monthly_price INT NOT NULL DEFAULT 0,
+    max_monthly_budget INT DEFAULT NOT NULL,
+    mandatory_items_json TEXT DEFAULT NOT NULL,
+    optional_items_json TEXT DEFAULT NULL,
+    report_status VARCHAR(20) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES `user`(user_id)
+);
 
-ALTER TABLE subscription_item
-ADD UNIQUE (category_id, item_name);
-
-ALTER TABLE add_subscription
-DROP COLUMN category_id;
-
-ALTER TABLE add_subscription
-ADD CHECK (use_yn IN ('Y', 'N'));
-
-ALTER TABLE payment_method
-ADD CHECK (is_active IN (0, 1));
-
-ALTER TABLE notifications
-ADD CHECK (is_read IN (0, 1));
-
-ALTER TABLE notifications
-ADD CHECK (is_closed IN (0, 1));
-
-ALTER TABLE add_subscription
-MODIFY COLUMN item_id BIGINT NOT NULL;
+-- 11. recommend_subscription_item
+CREATE TABLE recommend_subscription_item (
+    recommend_item_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    report_id BIGINT NOT NULL,
+    service_name VARCHAR(100) NOT NULL,
+    category VARCHAR(100) DEFAULT NULL,
+    monthly_price INT NOT NULL,
+    `description` VARCHAR(255) DEFAULT NULL,
+    sort_order INT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (report_id) REFERENCES recommend_report(report_id)
+<<<<<<< HEAD
+);
+=======
+);
+>>>>>>> develop

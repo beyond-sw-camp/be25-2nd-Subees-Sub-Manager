@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ExceptionMessage {
     USER_NOT_FOUND("존재하지 않는 사용자입니다.", HttpStatus.NOT_FOUND),
-    DUPLICATE_EMAIL("이미 사용 중인 이메일입니다.", HttpStatus.BAD_REQUEST),
-    DUPLICATE_NICKNAME("이미 사용 중인 닉네임입니다.", HttpStatus.BAD_REQUEST),
+    DUPLICATE_EMAIL("이미 사용 중인 이메일입니다.", HttpStatus.CONFLICT),
+    DUPLICATE_NICKNAME("이미 사용 중인 닉네임입니다.", HttpStatus.CONFLICT),
     INVALID_EMAIL("가입되지 않은 이메일입니다.", HttpStatus.NOT_FOUND),
     INVALID_PASSWORD("비밀번호가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED),
     INVALID_CURRENT_PASSWORD("현재 비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
@@ -45,8 +45,31 @@ public enum ExceptionMessage {
     CARD_DELETE_NOT_FOUND("삭제할 카드가 없거나 이미 비활성화된 카드입니다.", HttpStatus.NOT_FOUND),
     NOTIFICATION_NOT_FOUND("존재하지 않거나 처리할 수 없는 알림입니다.", HttpStatus.NOT_FOUND),
     NOTIFICATION_UPDATE_FAILED("알림 상태 변경에 실패했습니다.", HttpStatus.CONFLICT),
-    INTERNAL_SERVER_ERROR("서버 내부 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+    INTERNAL_SERVER_ERROR("서버 내부 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    DUPLICATE_CARD_NAME("이미 수정된 카드입니다.", HttpStatus.CONFLICT),
+    RECOMMEND_ACCESS_DENIED("해당 추천 리포트에 대한 접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
+    NO_PROFILE_CHANGES("변경된 프로필 정보가 없습니다.", HttpStatus.BAD_REQUEST),
 
+    // 캘린더
+    INVALID_MONTH("월은 1부터 12 사이여야 합니다.", HttpStatus.BAD_REQUEST),
+    INVALID_YEAR("유효한 년도를 입력해주세요.", HttpStatus.BAD_REQUEST),
+    INVALID_DATE("해당 월에 존재하는 날짜를 입력해주세요.", HttpStatus.BAD_REQUEST),
+    RANGE_REQUIRED("조회 범위는 필수입니다.",HttpStatus.BAD_REQUEST ),
+    INVALID_RANGE_TYPE("조회 범위는 MONTH 또는 YEAR만 가능합니다.",HttpStatus.BAD_REQUEST ),
+    MONTH_REQUIRED("월간 조회 시 month는 필수입니다.", HttpStatus.BAD_REQUEST),
+
+
+
+
+    //구독
+    SUBSCRIPTION_DUPLICATE("이미 등록된 구독 항목입니다.", HttpStatus.CONFLICT),
+    CATEGORY_NOT_FOUND("존재하지 않는 카테고리입니다.", HttpStatus.NOT_FOUND),
+    ITEM_NOT_FOUND("존재하지 않는 구독 항목입니다.", HttpStatus.NOT_FOUND),
+    ITEM_CATEGORY_MISMATCH("선택한 카테고리에 해당하지 않는 구독 항목입니다.", HttpStatus.BAD_REQUEST),
+    INVALID_BILLING_CYCLE("올바르지 않은 결제 주기입니다.", HttpStatus.BAD_REQUEST),
+    INVALID_START_DATE("시작일은 오늘 이후일 수 없습니다.", HttpStatus.BAD_REQUEST),
+    NO_CHANGES_DETECTED("수정된 내용이 없습니다.", HttpStatus.BAD_REQUEST),
+    SUBSCRIPTION_ACCESS_DENIED("해당 구독에 대한 접근 권한이 없습니다.", HttpStatus.FORBIDDEN);
     private final String message;
     private final HttpStatus httpStatus;
 }
