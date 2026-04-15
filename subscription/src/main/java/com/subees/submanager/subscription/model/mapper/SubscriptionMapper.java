@@ -44,4 +44,10 @@ public interface SubscriptionMapper {
 
     int existsItemInCategory(Long categoryId, Long itemId);
 
+    Long findItemIdByCategoryAndName(@Param("categoryId") Long categoryId,
+                                     @Param("itemName") String itemName);
+
+    int insertSubscriptionItem(@Param("categoryId") Long categoryId,
+                               @Param("itemName") String itemName);
+
 }
