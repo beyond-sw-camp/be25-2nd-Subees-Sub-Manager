@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class CommunityPostDetailResponseDto {
 
     private Long postId;
+    private Long userId;
     private String title;
     private String content;
     private String nickname;

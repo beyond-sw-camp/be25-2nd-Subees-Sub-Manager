@@ -35,6 +35,7 @@
     <!-- 게시글 상세 조회 -->
     <resultMap id="communityDetailResultMap" type="com.subees.submanager.community.model.dto.post.CommunityPostDetailResponseDto">
         <id     property="postId"     column="post_id"/>
+        <result property="userId"     column="user_id"/>
         <result property="title"      column="title"/>
         <result property="content"    column="content"/>
         <result property="nickname"   column="nickname"/>
@@ -45,6 +46,7 @@
 
     <select id="selectCommunityPostDetail" parameterType="long" resultMap="communityDetailResultMap">
         SELECT cp.post_id,
+               cp.user_id,
                cp.title,
                cp.content,
                u.nickname,
