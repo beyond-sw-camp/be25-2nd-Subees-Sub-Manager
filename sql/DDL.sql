@@ -133,4 +133,8 @@ CREATE TABLE recommend_subscription_item (
     sort_order INT NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (report_id) REFERENCES recommend_report(report_id)
+<<<<<<< HEAD
 );
+=======
+);
+>>>>>>> develop
