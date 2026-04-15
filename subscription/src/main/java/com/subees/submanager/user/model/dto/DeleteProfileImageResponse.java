@@ -8,5 +8,4 @@ import lombok.Getter;
 public class DeleteProfileImageResponse {
     private Long userId;
     private String profileImageUrl;
-    private String message;
 }

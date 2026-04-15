@@ -45,6 +45,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LogoutResponse logout(Long tokenUserId) {
-        return new LogoutResponse(tokenUserId, "로그아웃이 완료되었습니다.");
+        return new LogoutResponse(tokenUserId);
     }
 }

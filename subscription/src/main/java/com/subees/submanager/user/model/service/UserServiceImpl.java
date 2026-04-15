@@ -3,23 +3,9 @@ package com.subees.submanager.user.model.service;
 import com.subees.submanager.common.exception.UniversityException;
 import com.subees.submanager.common.exception.message.ExceptionMessage;
 import com.subees.submanager.user.model.dto.*;
-import com.subees.submanager.user.model.dto.ChangePasswordRequest;
-import com.subees.submanager.user.model.dto.ChangePasswordResponse;
-import com.subees.submanager.user.model.dto.CheckEmailResponse;
-import com.subees.submanager.user.model.dto.CheckNicknameResponse;
-import com.subees.submanager.user.model.dto.DeleteProfileImageResponse;
-import com.subees.submanager.user.model.dto.GetProfileImageResponse;
-import com.subees.submanager.user.model.dto.MyInfoResponse;
-import com.subees.submanager.user.model.dto.SignUpRequest;
-import com.subees.submanager.user.model.dto.UpdateProfileImageRequest;
-import com.subees.submanager.user.model.dto.UpdateProfileImageResponse;
-import com.subees.submanager.user.model.dto.UpdateProfileRequest;
-import com.subees.submanager.user.model.dto.UpdateProfileResponse;
-import com.subees.submanager.user.model.dto.UploadProfileImageResponse;
-import com.subees.submanager.user.model.dto.WithdrawResponse;
+import com.subees.submanager.user.model.mapper.UserMapper;
 import com.subees.submanager.user.model.vo.User;
 import com.subees.submanager.user.model.vo.UserState;
-import com.subees.submanager.user.model.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -72,6 +58,7 @@ public class UserServiceImpl implements UserService {
                 .emailVerifiedAt(null)
                 .createdAt(LocalDateTime.now())
                 .build();
+
         user.updateProfileImageUrl(defaultProfileImageUrl);
         userMapper.insertUser(user);
     }
@@ -79,13 +66,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public CheckEmailResponse checkEmail(String email) {
         boolean exists = userMapper.countByEmail(email) > 0;
-        return new CheckEmailResponse(!exists, exists ? "이미 사용 중인 이메일입니다." : "사용 가능한 이메일입니다.");
+        return new CheckEmailResponse(!exists);
     }
 
     @Override
     public CheckNicknameResponse checkNickname(String nickname) {
         boolean exists = userMapper.countByNickname(nickname) > 0;
-        return new CheckNicknameResponse(!exists, exists ? "이미 사용 중인 닉네임입니다." : "사용 가능한 닉네임입니다.");
+        return new CheckNicknameResponse(!exists);
     }
 
     @Override
@@ -111,6 +98,7 @@ public class UserServiceImpl implements UserService {
         userMapper.updateNickname(pathUserId, request.getNickname());
         return new UpdateProfileResponse(user.getUserId(), user.getEmail(), request.getNickname());
     }
+
     @Override
     @Transactional
     public ChangePasswordResponse changePassword(Long pathUserId, Long tokenUserId, ChangePasswordRequest request) {
@@ -120,12 +108,13 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
             throw new UniversityException(ExceptionMessage.INVALID_CURRENT_PASSWORD);
         }
+
         if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
             throw new UniversityException(ExceptionMessage.SAME_AS_OLD_PASSWORD);
         }
 
         userMapper.updatePassword(pathUserId, passwordEncoder.encode(request.getNewPassword()));
-        return new ChangePasswordResponse(user.getUserId(), "비밀번호가 변경되었습니다.");
+        return new ChangePasswordResponse(user.getUserId());
     }
 
     @Override
@@ -139,17 +128,21 @@ public class UserServiceImpl implements UserService {
         }
 
         userMapper.updateUserState(pathUserId, UserState.INACTIVE);
-        return new WithdrawResponse(user.getUserId(), UserState.INACTIVE.name(), "회원탈퇴가 완료되었습니다.");
+
+        // message 제거
+        return new WithdrawResponse(user.getUserId(), UserState.INACTIVE.name());
     }
 
     @Override
     public GetProfileImageResponse getProfileImage(Long pathUserId, Long tokenUserId) {
         validateSelf(pathUserId, tokenUserId, "본인 프로필 이미지만 조회할 수 있습니다.");
         User user = findUserOrThrow(pathUserId);
+
         String profileImageUrl = user.getProfileImageUrl();
         if (profileImageUrl == null || profileImageUrl.isBlank()) {
             profileImageUrl = defaultProfileImageUrl;
         }
+
         return new GetProfileImageResponse(user.getUserId(), profileImageUrl);
     }
 
@@ -158,6 +151,7 @@ public class UserServiceImpl implements UserService {
     public UpdateProfileImageResponse updateProfileImage(Long pathUserId, Long tokenUserId, UpdateProfileImageRequest request) {
         validateSelf(pathUserId, tokenUserId, "본인 프로필 이미지만 수정할 수 있습니다.");
         findUserOrThrow(pathUserId);
+
         userMapper.updateProfileImageUrl(pathUserId, request.getProfileImageUrl());
         return new UpdateProfileImageResponse(pathUserId, request.getProfileImageUrl());
     }
@@ -166,15 +160,26 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public DeleteProfileImageResponse deleteProfileImage(Long pathUserId, Long tokenUserId) {
         validateSelf(pathUserId, tokenUserId, "본인 프로필 이미지만 삭제할 수 있습니다.");
-        findUserOrThrow(pathUserId);
+        User user = findUserOrThrow(pathUserId);
+
+        String currentProfileImageUrl = user.getProfileImageUrl();
+
+        if (currentProfileImageUrl == null
+                || currentProfileImageUrl.isBlank()
+                || currentProfileImageUrl.equals(defaultProfileImageUrl)) {
+            throw new UniversityException("BAD_REQUEST", "이미 삭제된 프로필 이미지입니다.", HttpStatus.BAD_REQUEST);
+        }
+
         userMapper.updateProfileImageUrl(pathUserId, defaultProfileImageUrl);
-        return new DeleteProfileImageResponse(pathUserId, defaultProfileImageUrl, "프로필 이미지가 기본 이미지로 변경되었습니다.");
+
+        return new DeleteProfileImageResponse(pathUserId, defaultProfileImageUrl);
     }
 
     @Override
     @Transactional
     public UploadProfileImageResponse uploadProfileImageFile(Long pathUserId, Long tokenUserId, MultipartFile file) {
         validateSelf(pathUserId, tokenUserId, "본인 프로필 이미지만 수정할 수 있습니다.");
+
         if (file == null || file.isEmpty()) {
             throw new UniversityException(ExceptionMessage.EMPTY_UPLOAD_FILE);
         }
@@ -199,12 +204,14 @@ public class UserServiceImpl implements UserService {
         try {
             Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
             Files.createDirectories(uploadPath);
+
             String savedFilename = UUID.randomUUID() + extension;
             Path targetPath = uploadPath.resolve(savedFilename);
             Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
 
             String profileImageUrl = "/uploads/" + savedFilename;
             userMapper.updateProfileImageUrl(pathUserId, profileImageUrl);
+
             return new UploadProfileImageResponse(pathUserId, profileImageUrl, originalFilename);
         } catch (IOException e) {
             throw new UniversityException(ExceptionMessage.FILE_UPLOAD_FAILED);

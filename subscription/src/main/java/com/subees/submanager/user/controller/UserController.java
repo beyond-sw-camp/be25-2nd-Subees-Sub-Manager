@@ -1,20 +1,7 @@
 package com.subees.submanager.user.controller;
 
 import com.subees.submanager.common.model.dto.BaseResponseDto;
-import com.subees.submanager.user.model.dto.ChangePasswordRequest;
-import com.subees.submanager.user.model.dto.ChangePasswordResponse;
-import com.subees.submanager.user.model.dto.CheckEmailResponse;
-import com.subees.submanager.user.model.dto.CheckNicknameResponse;
-import com.subees.submanager.user.model.dto.DeleteProfileImageResponse;
-import com.subees.submanager.user.model.dto.GetProfileImageResponse;
-import com.subees.submanager.user.model.dto.MyInfoResponse;
-import com.subees.submanager.user.model.dto.SignUpRequest;
-import com.subees.submanager.user.model.dto.UpdateProfileImageRequest;
-import com.subees.submanager.user.model.dto.UpdateProfileImageResponse;
-import com.subees.submanager.user.model.dto.UpdateProfileRequest;
-import com.subees.submanager.user.model.dto.UpdateProfileResponse;
-import com.subees.submanager.user.model.dto.UploadProfileImageResponse;
-import com.subees.submanager.user.model.dto.WithdrawResponse;
+import com.subees.submanager.user.model.dto.*;
 import com.subees.submanager.user.model.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,19 +28,25 @@ public class UserController {
 
     @GetMapping("/check-email")
     public ResponseEntity<BaseResponseDto<CheckEmailResponse>> checkEmail(@RequestParam String email) {
-        return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, userService.checkEmail(email)));
+        return ResponseEntity.ok(
+                new BaseResponseDto<>(HttpStatus.OK, "이메일 중복 확인 성공", userService.checkEmail(email))
+        );
     }
 
     @GetMapping("/check-nickname")
     public ResponseEntity<BaseResponseDto<CheckNicknameResponse>> checkNickname(@RequestParam String nickname) {
-        return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, userService.checkNickname(nickname)));
+        return ResponseEntity.ok(
+                new BaseResponseDto<>(HttpStatus.OK, "닉네임 중복 확인 성공", userService.checkNickname(nickname))
+        );
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<BaseResponseDto<MyInfoResponse>> getMyInfo(@PathVariable Long userId,
                                                                      Authentication authentication) {
         Long tokenUserId = (Long) authentication.getPrincipal();
-        return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, userService.getMyInfo(userId, tokenUserId)));
+        return ResponseEntity.ok(
+                new BaseResponseDto<>(HttpStatus.OK, "내 정보 조회 성공", userService.getMyInfo(userId, tokenUserId))
+        );
     }
 
     @PatchMapping("/{userId}/profile")
@@ -74,21 +67,30 @@ public class UserController {
                                                                                   @RequestBody @Valid ChangePasswordRequest request,
                                                                                   Authentication authentication) {
         Long tokenUserId = (Long) authentication.getPrincipal();
-        return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, userService.changePassword(userId, tokenUserId, request)));
+        return ResponseEntity.ok(
+                new BaseResponseDto<>(HttpStatus.OK, "비밀번호가 변경되었습니다.",
+                        userService.changePassword(userId, tokenUserId, request))
+        );
     }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<BaseResponseDto<WithdrawResponse>> withdraw(@PathVariable Long userId,
                                                                       Authentication authentication) {
         Long tokenUserId = (Long) authentication.getPrincipal();
-        return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, userService.withdraw(userId, tokenUserId)));
+        return ResponseEntity.ok(
+                new BaseResponseDto<>(HttpStatus.OK, "회원 탈퇴가 완료되었습니다.",
+                        userService.withdraw(userId, tokenUserId))
+        );
     }
 
     @GetMapping("/{userId}/profile-image")
     public ResponseEntity<BaseResponseDto<GetProfileImageResponse>> getProfileImage(@PathVariable Long userId,
                                                                                     Authentication authentication) {
         Long tokenUserId = (Long) authentication.getPrincipal();
-        return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, userService.getProfileImage(userId, tokenUserId)));
+        return ResponseEntity.ok(
+                new BaseResponseDto<>(HttpStatus.OK, "프로필 이미지 조회 성공",
+                        userService.getProfileImage(userId, tokenUserId))
+        );
     }
 
     @PatchMapping("/{userId}/profile-image")
@@ -96,14 +98,20 @@ public class UserController {
                                                                                           @RequestBody @Valid UpdateProfileImageRequest request,
                                                                                           Authentication authentication) {
         Long tokenUserId = (Long) authentication.getPrincipal();
-        return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, userService.updateProfileImage(userId, tokenUserId, request)));
+        return ResponseEntity.ok(
+                new BaseResponseDto<>(HttpStatus.OK, "프로필 이미지가 수정되었습니다.",
+                        userService.updateProfileImage(userId, tokenUserId, request))
+        );
     }
 
     @DeleteMapping("/{userId}/profile-image")
     public ResponseEntity<BaseResponseDto<DeleteProfileImageResponse>> deleteProfileImage(@PathVariable Long userId,
                                                                                           Authentication authentication) {
         Long tokenUserId = (Long) authentication.getPrincipal();
-        return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, userService.deleteProfileImage(userId, tokenUserId)));
+        return ResponseEntity.ok(
+                new BaseResponseDto<>(HttpStatus.OK, "프로필 이미지가 삭제되었습니다.",
+                        userService.deleteProfileImage(userId, tokenUserId))
+        );
     }
 
     @PatchMapping("/{userId}/profile-image/file")
@@ -113,6 +121,9 @@ public class UserController {
             Authentication authentication
     ) {
         Long tokenUserId = (Long) authentication.getPrincipal();
-        return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, userService.uploadProfileImageFile(userId, tokenUserId, file)));
+        return ResponseEntity.ok(
+                new BaseResponseDto<>(HttpStatus.OK, "프로필 이미지가 업로드되었습니다.",
+                        userService.uploadProfileImageFile(userId, tokenUserId, file))
+        );
     }
 }

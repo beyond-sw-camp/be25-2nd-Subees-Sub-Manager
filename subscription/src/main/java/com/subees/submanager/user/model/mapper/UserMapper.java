@@ -29,4 +29,6 @@ public interface UserMapper {
 
     int updateProfileImageUrl(@Param("userId") Long userId,
                               @Param("profileImageUrl") String profileImageUrl);
+
+
 }

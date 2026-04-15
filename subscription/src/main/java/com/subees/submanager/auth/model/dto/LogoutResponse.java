@@ -8,5 +8,4 @@ import lombok.Getter;
 public class LogoutResponse {
 
     private Long userId;
-    private String message;
 }

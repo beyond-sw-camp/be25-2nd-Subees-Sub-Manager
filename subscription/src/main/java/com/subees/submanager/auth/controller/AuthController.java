@@ -44,6 +44,6 @@ public class AuthController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, clearCookie.toString())
-                .body(new BaseResponseDto<>(HttpStatus.OK, response));
+                .body(new BaseResponseDto<>(HttpStatus.OK, "로그아웃이 완료되었습니다.", response));
     }
 }

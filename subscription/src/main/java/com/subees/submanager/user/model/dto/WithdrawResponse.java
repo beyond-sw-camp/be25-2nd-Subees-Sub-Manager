@@ -9,5 +9,4 @@ public class WithdrawResponse {
 
     private Long userId;
     private String userState;
-    private String message;
 }

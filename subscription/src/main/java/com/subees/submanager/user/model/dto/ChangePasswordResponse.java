@@ -8,5 +8,4 @@ import lombok.Getter;
 public class ChangePasswordResponse {
 
     private Long userId;
-    private String message;
 }
