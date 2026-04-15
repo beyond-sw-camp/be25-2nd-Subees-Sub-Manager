@@ -30,7 +30,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         return path.equals("/api/v1/login")
                 || path.equals("/api/v1/users")
-                || path.equals("/api/v1/users/check-email");
+                || path.equals("/api/v1/users/check-email")
+                || path.equals("/api/v1/users/check-nickname");
     }
 
     @Override
@@ -52,9 +53,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             response.setContentType("application/json;charset=UTF-8");
             response.getWriter().write("""
             {
-              "code": 401,
-              "message": "토큰이 만료되었습니다.",
-              "data": null
+              \"code\": 401,
+              \"message\": \"토큰이 만료되었습니다.\",
+              \"data\": null
             }
             """);
             return;
