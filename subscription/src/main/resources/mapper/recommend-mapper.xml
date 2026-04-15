@@ -119,6 +119,24 @@
         ORDER BY sort_order ASC, recommend_item_id ASC
     </select>
 
+    <select id="findReportById" resultType="com.subees.submanager.recommend.model.vo.recommend.RecommendReport">
+        SELECT
+            report_id,
+            user_id,
+            report_title,
+            request_note,
+            generated_content,
+            total_monthly_price,
+            max_monthly_budget,
+            mandatory_items_json,
+            optional_items_json,
+            report_status,
+            created_at,
+            updated_at
+        FROM recommend_report
+        WHERE report_id = #{reportId}
+    </select>
+
     <update id="updateGeneratedResult">
         UPDATE recommend_report
         SET report_title = #{reportTitle},

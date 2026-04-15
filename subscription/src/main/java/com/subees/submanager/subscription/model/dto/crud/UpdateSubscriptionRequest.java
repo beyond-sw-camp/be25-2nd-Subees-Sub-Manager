@@ -14,11 +14,11 @@ public class UpdateSubscriptionRequest {
 
     private Long categoryId;
 
-    //private String categoryName;   // 직접 입력용이면 나중에 사용
+    private String categoryName;   // 직접 입력용이면 나중에 사용
 
     private Long itemId;
 
-    //private String itemName;        // 직접 입력용이면 나중에 사용
+    private String itemName;        // 직접 입력용이면 나중에 사용
 
     private Integer price;
 

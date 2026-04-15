@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.subees.submanager.recommend.model.mapper.RecommendStatsMapper">
+<mapper namespace="com.subees.submanager.recommend.model.mapper.RecommendStatusMapper">
 
     <resultMap id="popularSubscriptionStatResultMap" type="com.subees.submanager.recommend.model.dto.PopularSubscriptionStat">
         <result property="itemName" column="item_name"/>

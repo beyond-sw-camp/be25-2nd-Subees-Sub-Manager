@@ -155,6 +155,9 @@
                )
     </insert>
 
+    <!--구독 항목 직접 입력 -> 등록-->
+
+
     <!--결제수단 없을 시 확인-->
     <select id="existsPaymentMethod" resultType="int">
         SELECT COUNT(*)
@@ -189,6 +192,26 @@
         WHERE subscription_id = #{subscriptionId}
           AND user_id = #{userId}
     </update>
+
+    <select id="findItemIdByCategoryAndName" resultType="long">
+        SELECT item_id
+        FROM subscription_item
+        WHERE category_id = #{categoryId}
+          AND item_name = #{itemName}
+    </select>
+
+    <insert id="insertSubscriptionItem">
+        INSERT INTO subscription_item
+        (
+            category_id,
+            item_name
+        )
+        VALUES
+            (
+                #{categoryId},
+                #{itemName}
+            )
+    </insert>
 
 
 

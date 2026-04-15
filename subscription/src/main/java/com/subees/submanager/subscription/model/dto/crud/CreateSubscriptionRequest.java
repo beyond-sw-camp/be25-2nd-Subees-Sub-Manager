@@ -10,12 +10,13 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 public class CreateSubscriptionRequest {
-    private Long categoryId;
-    private Long itemId;
-    private Long paymentId;
 
+    private Long categoryId;
+    private Long itemId;       // 기존 항목 선택 시 사용
+    private String itemName;   // 직접 입력 시 사용
+
+    private Long paymentId;
     private Integer price;
     private String billingCycle;
-
     private LocalDate startDate;
 }

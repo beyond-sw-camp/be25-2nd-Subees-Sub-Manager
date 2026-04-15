@@ -36,4 +36,6 @@ public interface RecommendMapper {
 
     int deleteReportByIdAndUserId(@Param("reportId") Long reportId,
                                   @Param("userId") Long userId);
+
+    RecommendReport findReportById(@Param("reportId") Long reportId);
 }
