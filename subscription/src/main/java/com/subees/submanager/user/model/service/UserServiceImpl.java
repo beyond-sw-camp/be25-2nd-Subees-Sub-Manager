@@ -100,14 +100,17 @@ public class UserServiceImpl implements UserService {
         validateSelf(pathUserId, tokenUserId, "본인 정보만 수정할 수 있습니다.");
         User user = findUserOrThrow(pathUserId);
 
-        if (!user.getNickname().equals(request.getNickname()) && userMapper.countByNickname(request.getNickname()) > 0) {
+        if (user.getNickname().equals(request.getNickname())) {
+            throw new UniversityException(ExceptionMessage.NO_PROFILE_CHANGES);
+        }
+
+        if (userMapper.countByNickname(request.getNickname()) > 0) {
             throw new UniversityException(ExceptionMessage.DUPLICATE_NICKNAME);
         }
 
         userMapper.updateNickname(pathUserId, request.getNickname());
-        return new UpdateProfileResponse(user.getUserId(), user.getEmail(), request.getNickname(), "프로필이 수정되었습니다.");
+        return new UpdateProfileResponse(user.getUserId(), user.getEmail(), request.getNickname());
     }
-
     @Override
     @Transactional
     public ChangePasswordResponse changePassword(Long pathUserId, Long tokenUserId, ChangePasswordRequest request) {

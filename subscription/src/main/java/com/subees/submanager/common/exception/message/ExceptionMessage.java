@@ -48,7 +48,7 @@ public enum ExceptionMessage {
     INTERNAL_SERVER_ERROR("서버 내부 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     DUPLICATE_CARD_NAME("이미 수정된 카드입니다.", HttpStatus.CONFLICT),
     RECOMMEND_ACCESS_DENIED("해당 추천 리포트에 대한 접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
-
+    NO_PROFILE_CHANGES("변경된 프로필 정보가 없습니다.", HttpStatus.BAD_REQUEST),
 
     // 캘린더
     INVALID_MONTH("월은 1부터 12 사이여야 합니다.", HttpStatus.BAD_REQUEST),

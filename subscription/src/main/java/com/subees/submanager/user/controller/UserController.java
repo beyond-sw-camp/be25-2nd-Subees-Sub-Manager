@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,11 +57,16 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}/profile")
-    public ResponseEntity<BaseResponseDto<UpdateProfileResponse>> updateProfile(@PathVariable Long userId,
-                                                                                @RequestBody @Valid UpdateProfileRequest request,
-                                                                                Authentication authentication) {
-        Long tokenUserId = (Long) authentication.getPrincipal();
-        return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, userService.updateProfile(userId, tokenUserId, request)));
+    public ResponseEntity<BaseResponseDto<UpdateProfileResponse>> updateProfile(
+            @PathVariable Long userId,
+            @AuthenticationPrincipal Long tokenUserId,
+            @Valid @RequestBody UpdateProfileRequest request
+    ) {
+        UpdateProfileResponse response = userService.updateProfile(userId, tokenUserId, request);
+
+        return ResponseEntity.ok(
+                new BaseResponseDto<>(HttpStatus.OK, "프로필이 수정되었습니다.", response)
+        );
     }
 
     @PatchMapping("/{userId}/password")
