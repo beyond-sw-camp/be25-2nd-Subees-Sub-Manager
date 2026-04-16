@@ -4,6 +4,7 @@ import com.subees.submanager.common.exception.UniversityException;
 import com.subees.submanager.common.exception.message.ExceptionMessage;
 import com.subees.submanager.payment.model.dto.CardCreateRequestDto;
 import com.subees.submanager.payment.model.dto.CardCreateResponseDto;
+import com.subees.submanager.payment.model.dto.CardResponseDto;
 import com.subees.submanager.payment.model.dto.CardUpdateRequestDto;
 import com.subees.submanager.payment.model.mapper.CardMapper;
 import com.subees.submanager.payment.model.vo.Payment;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Service
@@ -220,5 +222,23 @@ public class CardServiceImpl implements CardService {
             throw new UniversityException(ExceptionMessage.CARD_DELETE_FAILED);
         }
     }
+
+    @Override
+    public List<CardResponseDto> getCards(Long userId) {
+
+
+        List<Payment> paymentList = cardMapper.selectCards(userId);
+
+        return paymentList.stream()
+                .map(payment -> new CardResponseDto(
+                        payment.getPaymentId(),
+                        payment.getCardId(),
+                        payment.getCardName(),
+                        payment.getCustomCardCompany(),
+                        payment.getIsActive()
+                ))
+                .toList();
+    }
+
 
 }

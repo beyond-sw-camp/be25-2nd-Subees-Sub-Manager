@@ -4,6 +4,8 @@ import com.subees.submanager.payment.model.vo.Payment;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 @Mapper
 public interface CardMapper {
     int insertPaymentMethod(Payment payment);
@@ -33,4 +35,6 @@ public interface CardMapper {
             @Param("cardName") String cardName,
             @Param("paymentId") Long paymentId
     );
+
+    List<Payment> selectCards(@Param("userId") Long userId);
 }
