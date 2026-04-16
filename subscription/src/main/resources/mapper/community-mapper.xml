@@ -104,6 +104,12 @@
         DELETE FROM community_posts WHERE post_id = #{postId}
     </delete>
 
+    <!--스크랩 삭제 후 게시글 삭제 되게 설정-->
+    <delete id="deleteAllScrapsByPostId">
+        DELETE FROM community_scrap
+        WHERE post_id = #{postId}
+    </delete>
+
     <!-- 스크랩 저장 -->
     <!-- useGeneratedKeys: DB가 자동으로 생성한 PK 값을 자바 객체에 다시 채워줌-->
     <insert id="insertCommunityScrap" parameterType="com.subees.submanager.community.model.dto.scrap.CommunityScrapCreateDto"

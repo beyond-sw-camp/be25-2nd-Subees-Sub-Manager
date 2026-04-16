@@ -53,4 +53,6 @@ public interface CommunityMapper {
     void updateScrapCountDecrement(@Param("postId") Long postId); // scrap_count -1 (0 아래로 안 내려감)
 
 
+    void deleteAllScrapsByPostId(long postId);
+
 }
