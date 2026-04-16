@@ -103,6 +103,7 @@ public class CommunityServiceImpl implements CommunityService {
         if (!ownerUserId.equals(userId)) {
             throw new UniversityException(ExceptionMessage.FORBIDDEN);
         }
+        communityMapper.deleteAllScrapsByPostId(postId);
         return communityMapper.deleteCommunityPost(postId);
     }
 
