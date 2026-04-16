@@ -111,13 +111,15 @@
 
     <select id="selectCards" resultType="com.subees.submanager.payment.model.vo.Payment">
         SELECT
-            payment_id,
-            card_id,
-            card_name,
-            custom_card_company,
-            is_active
-        FROM payment_method
-        WHERE user_id = #{userId}
+            d.payment_id,
+            d.card_id,
+            c.card_company,
+            d.card_name,
+            d.custom_card_company,
+            d.is_active
+        FROM payment_method d
+                 Left JOIN card c ON c.card_id = d.card_id
+        WHERE user_id =  #{userId}
           AND is_active = 1
         ORDER BY created_at DESC
     </select>

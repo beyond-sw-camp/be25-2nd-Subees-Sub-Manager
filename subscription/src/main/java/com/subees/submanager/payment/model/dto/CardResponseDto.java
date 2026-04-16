@@ -12,6 +12,7 @@ import lombok.Setter;
 public class CardResponseDto {
     private Long paymentId;
     private Long cardId;
+    private String cardCompany;
     private String cardName;
     private String customCardCompany;
     private char isActive;

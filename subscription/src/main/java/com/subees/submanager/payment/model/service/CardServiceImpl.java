@@ -233,6 +233,7 @@ public class CardServiceImpl implements CardService {
                 .map(payment -> new CardResponseDto(
                         payment.getPaymentId(),
                         payment.getCardId(),
+                        payment.getCardCompany(),
                         payment.getCardName(),
                         payment.getCustomCardCompany(),
                         payment.getIsActive()
