@@ -41,17 +41,31 @@
 
     <!-- 선택 일 구독 조회(구독명, 가격, 선택일)-->
     <select id="selectDateDetailList" resultType="com.subees.submanager.consumption.model.dto.DateDetailResponseDto">
-        SELECT s.item_name AS itemName,
+        SELECT
+            s.item_name AS itemName,
             CASE
                 WHEN a.billing_cycle = '1M' THEN a.price
-                WHEN a.billing_cycle = '1Y' THEN FLOOR(a.price / 12) ELSE 0 END AS price,
-            DAY(a.start_date) AS billingDay
-            FROM add_subscription a
-        JOIN subscription_item s ON a.item_id = s.item_id
+                WHEN a.billing_cycle = '1Y' THEN FLOOR(a.price / 12)
+                ELSE 0
+                END AS price,
+            DAY(a.start_date) AS billingDay,
+            a.payment_id AS paymentId,
+            c.card_company AS cardCompany,
+            p.custom_card_company AS cardCompany,
+            p.card_name AS cardName
+        FROM add_subscription a
+            JOIN subscription_item s
+        ON a.item_id = s.item_id
+            LEFT JOIN payment_method p
+            ON a.payment_id = p.payment_id
+            LEFT JOIN card c
+            ON p.card_id = c.card_id
         WHERE a.user_id = #{userId}
-            AND a.start_date &lt; #{nextMonthStart}
-            AND (a.end_date IS NULL OR a.end_date &gt;= #{monthStart})
-            AND DAY(a.start_date) = #{startDate}
+          AND a.start_date &lt; #{nextMonthStart}
+          AND (a.end_date IS NULL OR a.end_date &gt;= #{monthStart})
+          AND DAY(a.start_date) = #{startDate}
+          AND a.use_yn = 'Y'
+        ORDER BY s.item_name ASC
     </select>
 
     <select id="selectCategory"

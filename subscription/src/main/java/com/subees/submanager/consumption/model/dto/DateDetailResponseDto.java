@@ -15,4 +15,13 @@ public class DateDetailResponseDto {
     private int billingDay;
 
     private int price;
+
+    private Long paymentId;
+
+    private String cardName;
+
+    private String cardCompany;
+
+
+
 }
