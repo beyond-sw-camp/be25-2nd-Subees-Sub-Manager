@@ -70,6 +70,7 @@
           AND is_active = '1'
     </select>
 
+
     <select id="duplicateCustomCard" resultType="int">
         SELECT COUNT(*)
         FROM payment_method
@@ -109,6 +110,7 @@
           AND user_id = #{userId}
     </update>
 
+    <!-- 카드 조회-->
     <select id="selectCards" resultType="com.subees.submanager.payment.model.vo.Payment">
         SELECT
             d.payment_id,
@@ -118,9 +120,9 @@
             d.custom_card_company,
             d.is_active
         FROM payment_method d
-                 Left JOIN card c ON c.card_id = d.card_id
+        Left JOIN card c ON c.card_id = d.card_id
         WHERE user_id =  #{userId}
-          AND is_active = 1
+        AND is_active = 1
         ORDER BY created_at DESC
     </select>
 

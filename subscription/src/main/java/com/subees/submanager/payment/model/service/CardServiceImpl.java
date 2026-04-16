@@ -132,7 +132,7 @@ public class CardServiceImpl implements CardService {
                             && existingPayment.getCardName().equals(cardUpdateRequestDto.getCardName());
 
             if (sameAsCurrent) {
-                throw new UniversityException(ExceptionMessage.DUPLICATE_CARD);
+                throw new UniversityException(ExceptionMessage. NO_CHANGES_DETECTED);
             }
 
             int duplicateCount = cardMapper.duplicateSelectedCard(
@@ -154,7 +154,7 @@ public class CardServiceImpl implements CardService {
                             && existingPayment.getCardName().equals(cardUpdateRequestDto.getCardName());
 
             if (sameAsCurrent) {
-                throw new UniversityException(ExceptionMessage.DUPLICATE_CARD_NAME);
+                throw new UniversityException(ExceptionMessage. NO_CHANGES_DETECTED);
             }
 
             int duplicateCount = cardMapper.duplicateCustomCard(

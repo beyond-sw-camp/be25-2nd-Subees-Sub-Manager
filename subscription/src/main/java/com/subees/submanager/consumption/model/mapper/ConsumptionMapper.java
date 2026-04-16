@@ -48,4 +48,5 @@ public interface ConsumptionMapper {
             @Param("yearStart") String yearStart,
             @Param("nextYearStart") String nextYearStart
     );
+
 }
