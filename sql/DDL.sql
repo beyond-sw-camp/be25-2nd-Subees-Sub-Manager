@@ -23,8 +23,6 @@ CREATE TABLE `user` (
     nickname VARCHAR(255) NOT NULL UNIQUE,
     user_state ENUM('ACTIVE', 'INACTIVE') NOT NULL,
     profile_image VARCHAR(255) DEFAULT NULL,
-    email_verified ENUM('Y','N') NOT NULL DEFAULT 'N',
-    email_verified_at DATETIME NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
