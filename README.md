@@ -219,6 +219,10 @@
 
 - [테이블 명세서 바로가기](https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?usp=sharing&ouid=102208872170708224187&rtpof=true&sd=true)
 
+<div align="center">
+  <img src="./이미지/작업이미지/테이블명세서.png" alt="테이블 명세서" width="640" />
+</div>
+
 **테이블 설계 설명**  
 본 테이블 설계는 `user`를 중심으로 구독 관리, 결제수단 관리, 커뮤니티, 알림, 추천 기능이 유기적으로 연결되도록 구성하였습니다.
 
