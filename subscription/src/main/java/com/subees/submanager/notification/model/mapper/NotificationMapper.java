@@ -15,7 +15,7 @@ public interface NotificationMapper {
 
     void updateNotificationClose(@Param("notificationId") Long notificationId);
 
-    void insertNotifications(Long userId);
+    void insertNotifications(@Param("userId") Long userId);
 
     int existsReadableNotification(@Param("notificationId") Long notificationId);
 
