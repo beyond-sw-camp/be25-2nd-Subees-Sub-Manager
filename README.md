@@ -93,7 +93,8 @@
 - [📌 프로젝트 개요](#프로젝트-개요)
 - [🎯 서비스 목표](#서비스-목표)
 - [📖 프로젝트 시나리오](#프로젝트-시나리오)
-- [🧾 요구사항 명세서](#요구사항-명세서)
+- [🧾 요구사항 정의서](#요구사항-정의서)
+- [WBS](#WBS)
 - [🗺️ ERD](#erd)
 - [📋 테이블 명세서 및 제약 조건](#테이블-명세서-및-제약-조건)
 - [🏗️ 시스템 아키텍처](#시스템-아키텍처)
@@ -173,12 +174,31 @@
 
 ---
 
-<a id="요구사항-명세서"></a>
+<a id="요구사항-정의서"></a>
 <details>
-<summary><b>🧾 요구사항 명세서</b></summary>
+<summary><b>🧾 요구사항 정의서</b></summary>
 <br>
 
-- [요구사항 명세서 바로가기](https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?usp=sharing&ouid=102208872170708224187&rtpof=true&sd=true)
+- [요구사항 정의서 바로가기](https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?usp=sharing&ouid=101095421293122595376&rtpof=true&sd=true)
+
+<div align="center">
+  <img src="https://github.com/beyond-sw-camp/be25-2nd-Subees-Sub-Manager/blob/main/%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9E%91%EC%97%85%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%20%EC%A0%95%EC%9D%98%EC%84%9C.png?raw=true" alt="ERD" width="640" />
+</div>
+
+</details>
+
+---
+
+<a id="WBS"></a>
+<details>
+<summary><b>🗺️ WBS </b></summary>
+<br>
+
+- [WBS 바로가기](https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?usp=sharing&ouid=101095421293122595376&rtpof=true&sd=true)
+
+<div align="center">
+  <img src="https://github.com/beyond-sw-camp/be25-2nd-Subees-Sub-Manager/blob/main/%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9E%91%EC%97%85%EC%9D%B4%EB%AF%B8%EC%A7%80/WBS.png?raw=true" alt="ERD" width="640" />
+</div>
 
 </details>
 
@@ -192,7 +212,7 @@
 - [ERD 바로가기](https://www.erdcloud.com/d/osSpqKzTmS8zueTJs)
 
 <div align="center">
-  <img src="./이미지/작업이미지/ERD.png" alt="ERD" width="640" />
+  <img src="https://github.com/beyond-sw-camp/be25-2nd-Subees-Sub-Manager/blob/main/%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9E%91%EC%97%85%EC%9D%B4%EB%AF%B8%EC%A7%80/ERD.png?raw=true" alt="ERD" width="640" />
 </div>
 
 **주요 관계**
@@ -217,7 +237,11 @@
 <summary><b>📋 테이블 명세서 및 제약 조건</b></summary>
 <br>
 
-- [테이블 명세서 바로가기](https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?usp=sharing&ouid=102208872170708224187&rtpof=true&sd=true)
+- [테이블 명세서 바로가기](https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?usp=sharing&ouid=101095421293122595376&rtpof=true&sd=true)
+
+<div align="center">
+  <img src="" alt="ERD" width="640" />
+</div>
 
 **테이블 설계 설명**  
 본 테이블 설계는 `user`를 중심으로 구독 관리, 결제수단 관리, 커뮤니티, 알림, 추천 기능이 유기적으로 연결되도록 구성하였습니다.
@@ -260,7 +284,7 @@
 <summary><b>📑 API 명세서</b></summary>
 <br>
 
-- [API 명세서 바로가기](https://www.notion.so/api-31e712dca4bf807e97fbe583efc7e99e?source=copy_link)
+- [API 명세서 바로가기](https://www.notion.so/API-342712dca4bf801a882fcc78e4443f21?source=copy_link)
 
 <div align="center">
   <img src="./이미지/작업이미지/api명세서.png" alt="API 명세서" width="640" />
