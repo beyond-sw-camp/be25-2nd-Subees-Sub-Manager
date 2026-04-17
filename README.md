@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://github.com/beyond-sw-camp/be25-2nd-Subees-Sub-Manager/blob/main/%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9E%91%EC%97%85%EC%9D%B4%EB%AF%B8%EC%A7%80/SUBEES%20%ED%8F%AC%EC%8A%A4%ED%84%B0.png?raw=true" alt="Subees 배너" width="900" />
+<img src="./이미지/배너/배너.svg" alt="Subees 배너" width="900" />
 
 <br/>
 
@@ -16,7 +16,7 @@
 
 </div>
 
-<img src="./이미지/로고/포스터.png" alt="Subees Poster" width="720" />
+<img src="https://github.com/beyond-sw-camp/be25-2nd-Subees-Sub-Manager/blob/main/%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9E%91%EC%97%85%EC%9D%B4%EB%AF%B8%EC%A7%80/SUBEES%20%ED%8F%AC%EC%8A%A4%ED%84%B0.png?raw=true" alt="Subees Poster" width="720" />
 
 <br/><br/>
 
