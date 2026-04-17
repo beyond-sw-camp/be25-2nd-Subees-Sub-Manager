@@ -124,8 +124,13 @@ public class CardServiceImpl implements CardService {
             throw new UniversityException(ExceptionMessage.CARD_ACCESS_DENIED);
         }
 
-        // 선택 방식 & 직접 입력 방식 카드 수정 전, 후  값 비교
+        /*
+        *선택 방식 &직접 입력 방식 카드 수정 중복 확인
+        * 수정 전과 수정 후 변경 사항 없을 시 예외처리
+         */
+        // 카드 선택 수정 중복 확인 및 예외
         if (hasCardId) {
+            //기존 카드가 선택 카드인 경우에만 아래 비교
             boolean sameAsCurrent =
                     existingPayment.getCardId() != null
                             && existingPayment.getCardId().equals(cardUpdateRequestDto.getCardId())
@@ -135,6 +140,7 @@ public class CardServiceImpl implements CardService {
                 throw new UniversityException(ExceptionMessage. NO_CHANGES_DETECTED);
             }
 
+
             int duplicateCount = cardMapper.duplicateSelectedCard(
                     cardUpdateRequestDto.getUserId(),
                     cardUpdateRequestDto.getCardId(),
@@ -142,11 +148,13 @@ public class CardServiceImpl implements CardService {
                     cardUpdateRequestDto.getPaymentId()
             );
 
+            // DB에 중복 카드 있을 시 예외처리
             if (duplicateCount > 0) {
                 throw new UniversityException(ExceptionMessage.DUPLICATE_CARD);
             }
         }
 
+        // 직접 입력 카드 조회
         if (hasCustomCardCompany) {
             boolean sameAsCurrent =
                     existingPayment.getCustomCardCompany() != null
@@ -155,6 +163,27 @@ public class CardServiceImpl implements CardService {
 
             if (sameAsCurrent) {
                 throw new UniversityException(ExceptionMessage. NO_CHANGES_DETECTED);
+            }
+
+            int duplicateCount = cardMapper.duplicateCustomCard(
+                    cardUpdateRequestDto.getUserId(),
+                    cardUpdateRequestDto.getCustomCardCompany(),
+                    cardUpdateRequestDto.getCardName(),
+                    cardUpdateRequestDto.getPaymentId()
+            );
+
+            if (duplicateCount > 0) {
+                throw new UniversityException(ExceptionMessage.DUPLICATE_CARD);
+            }
+        }else {
+            boolean sameAsCurrent =
+                    existingPayment.getCardId() == null
+                            && existingPayment.getCustomCardCompany() != null
+                            && existingPayment.getCustomCardCompany().equals(cardUpdateRequestDto.getCustomCardCompany())
+                            && existingPayment.getCardName().equals(cardUpdateRequestDto.getCardName());
+
+            if (sameAsCurrent) {
+                throw new UniversityException(ExceptionMessage.NO_CHANGES_DETECTED);
             }
 
             int duplicateCount = cardMapper.duplicateCustomCard(
@@ -223,8 +252,15 @@ public class CardServiceImpl implements CardService {
         }
     }
 
+    /*
+    * 카드 조회
+     */
     @Override
     public List<CardResponseDto> getCards(Long userId) {
+
+        if (userId == null) {
+            throw new UniversityException(ExceptionMessage.USER_NOT_FOUND);
+        }
 
 
         List<Payment> paymentList = cardMapper.selectCards(userId);
@@ -240,6 +276,5 @@ public class CardServiceImpl implements CardService {
                 ))
                 .toList();
     }
-
 
 }

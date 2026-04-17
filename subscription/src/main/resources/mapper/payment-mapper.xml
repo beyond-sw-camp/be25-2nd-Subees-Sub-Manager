@@ -3,13 +3,13 @@
 
 <mapper namespace="com.subees.submanager.payment.model.mapper.CardMapper">
 
-    <resultMap id="paymentResultMap" type="Payment">
-        <id property="userId" column="user_id"/>
+    <resultMap id="paymentDetailResultMap" type="Payment">
+        <id property="paymentId" column="payment_id"/>
+        <result property="userId" column="user_id"/>
         <result property="cardId" column="card_id"/>
-        <result property="cardCompany" column="custom_card_company"/>
+        <result property="customCardCompany" column="custom_card_company"/>
         <result property="cardName" column="card_name"/>
         <result property="isActive" column="is_active"/>
-        <result property="paymentId" column="payment_id"/>
     </resultMap>
 
     <!-- 카드 등록 -->
@@ -82,7 +82,7 @@
     </select>
 
     <!-- 카드 단건 조회 -->
-    <select id="selectPaymentById" resultMap="paymentResultMap">
+    <select id="selectPaymentById" resultMap="paymentDetailResultMap">
         SELECT
             payment_id,
             user_id,
@@ -109,6 +109,7 @@
         WHERE payment_id = #{paymentId}
           AND user_id = #{userId}
     </update>
+
 
     <!-- 카드 조회-->
     <select id="selectCards" resultType="com.subees.submanager.payment.model.vo.Payment">
