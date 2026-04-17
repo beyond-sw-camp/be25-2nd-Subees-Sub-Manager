@@ -90,126 +90,113 @@ public class CardServiceImpl implements CardService {
      * - 수정 중인 카드가 기존 카드와 중복 시(카드ID,직접입력카드,별칭,페이먼트ID) 예외처리
      */
     @Override
-    public void updateCard(CardUpdateRequestDto cardUpdateRequestDto) {
+    public void updateCard(CardUpdateRequestDto request) {
+        validateUpdateRequest(request);
 
-        if (cardUpdateRequestDto.getPaymentId() == null) {
+        Payment existing = findExistingPayment(request.getPaymentId(), request.getUserId());
+
+        CardType existingType = getExistingCardType(existing);
+        CardType requestType = getRequestCardType(request);
+
+        if (existingType != requestType) {
+            throw new UniversityException(ExceptionMessage.CARD_TYPE_CHANGE_NOT_ALLOWED);
+        }
+
+        validateNoChanges(existing, request, existingType);
+        validateDuplicate(request, existingType);
+
+        Payment payment = new Payment();
+        payment.setPaymentId(request.getPaymentId());
+        payment.setUserId(request.getUserId());
+        payment.setCardId(requestType == CardType.SELECTED ? request.getCardId() : null);
+        payment.setCustomCardCompany(requestType == CardType.CUSTOM ? request.getCustomCardCompany() : null);
+        payment.setCardName(request.getCardName());
+
+        if (cardMapper.updateCard(payment) == 0) {
+            throw new UniversityException(ExceptionMessage.CARD_UPDATE_FAILED);
+        }
+    }
+
+    private void validateUpdateRequest(CardUpdateRequestDto request) {
+        if (request.getPaymentId() == null) {
             throw new UniversityException(ExceptionMessage.PAYMENT_ID_REQUIRED);
         }
-
-        if (cardUpdateRequestDto.getUserId() == null) {
+        if (request.getUserId() == null) {
             throw new UniversityException(ExceptionMessage.FORBIDDEN);
         }
-
-        if (cardUpdateRequestDto.getCardName() == null || cardUpdateRequestDto.getCardName().trim().isEmpty()) {
+        if (request.getCardName() == null || request.getCardName().trim().isEmpty()) {
             throw new UniversityException(ExceptionMessage.CARD_NAME_REQUIRED);
         }
 
-        boolean hasCardId = cardUpdateRequestDto.getCardId() != null; // 선택 카드 여부
-        boolean hasCustomCardCompany = cardUpdateRequestDto.getCustomCardCompany() != null // 직접 입력 카드 여부
-                && !cardUpdateRequestDto.getCustomCardCompany().trim().isEmpty();
+        boolean hasCardId = request.getCardId() != null;
+        boolean hasCustom = request.getCustomCardCompany() != null
+                && !request.getCustomCardCompany().trim().isEmpty();
 
-        if ((!hasCardId && !hasCustomCardCompany) || (hasCardId && hasCustomCardCompany)) {
+        if (hasCardId == hasCustom) {
             throw new UniversityException(ExceptionMessage.CARD_INPUT_INVALID);
         }
+    }
 
-        Payment existingPayment = cardMapper.selectPaymentById(cardUpdateRequestDto.getPaymentId()); // 수정 전 원본 데이터
+    private Payment findExistingPayment(Long paymentId, Long userId) {
+        Payment existing = cardMapper.selectPaymentById(paymentId);
 
-        // 수정 카드 존재 여부
-        if (existingPayment == null) {
+        if (existing == null) {
             throw new UniversityException(ExceptionMessage.PAYMENT_METHOD_NOT_FOUND);
         }
-
-        // 수정 전, 수정할 유저 아이디 일치 여부
-        if (existingPayment.getUserId() != cardUpdateRequestDto.getUserId()) {
+        if (existing.getUserId() != userId) {
             throw new UniversityException(ExceptionMessage.CARD_ACCESS_DENIED);
         }
-
-        /*
-        *선택 방식 &직접 입력 방식 카드 수정 중복 확인
-        * 수정 전과 수정 후 변경 사항 없을 시 예외처리
-         */
-        // 카드 선택 수정 중복 확인 및 예외
-        if (hasCardId) {
-            //기존 카드가 선택 카드인 경우에만 아래 비교
-            boolean sameAsCurrent =
-                    existingPayment.getCardId() != null
-                            && existingPayment.getCardId().equals(cardUpdateRequestDto.getCardId())
-                            && existingPayment.getCardName().equals(cardUpdateRequestDto.getCardName());
-
-            if (sameAsCurrent) {
-                throw new UniversityException(ExceptionMessage. NO_CHANGES_DETECTED);
-            }
-
-
-            int duplicateCount = cardMapper.duplicateSelectedCard(
-                    cardUpdateRequestDto.getUserId(),
-                    cardUpdateRequestDto.getCardId(),
-                    cardUpdateRequestDto.getCardName(),
-                    cardUpdateRequestDto.getPaymentId()
-            );
-
-            // DB에 중복 카드 있을 시 예외처리
-            if (duplicateCount > 0) {
-                throw new UniversityException(ExceptionMessage.DUPLICATE_CARD);
-            }
+        if (existing.getIsActive() == '0') {
+            throw new UniversityException(ExceptionMessage.CARD_ALREADY_DELETED);
         }
 
-        // 직접 입력 카드 조회
-        if (hasCustomCardCompany) {
-            boolean sameAsCurrent =
-                    existingPayment.getCustomCardCompany() != null
-                            && existingPayment.getCustomCardCompany().equals(cardUpdateRequestDto.getCustomCardCompany())
-                            && existingPayment.getCardName().equals(cardUpdateRequestDto.getCardName());
+        return existing;
+    }
 
-            if (sameAsCurrent) {
-                throw new UniversityException(ExceptionMessage. NO_CHANGES_DETECTED);
-            }
+    private CardType getExistingCardType(Payment payment) {
+        return payment.getCardId() != null ? CardType.SELECTED : CardType.CUSTOM;
+    }
 
-            int duplicateCount = cardMapper.duplicateCustomCard(
-                    cardUpdateRequestDto.getUserId(),
-                    cardUpdateRequestDto.getCustomCardCompany(),
-                    cardUpdateRequestDto.getCardName(),
-                    cardUpdateRequestDto.getPaymentId()
-            );
+    private CardType getRequestCardType(CardUpdateRequestDto request) {
+        return request.getCardId() != null ? CardType.SELECTED : CardType.CUSTOM;
+    }
 
-            if (duplicateCount > 0) {
-                throw new UniversityException(ExceptionMessage.DUPLICATE_CARD);
-            }
-        }else {
-            boolean sameAsCurrent =
-                    existingPayment.getCardId() == null
-                            && existingPayment.getCustomCardCompany() != null
-                            && existingPayment.getCustomCardCompany().equals(cardUpdateRequestDto.getCustomCardCompany())
-                            && existingPayment.getCardName().equals(cardUpdateRequestDto.getCardName());
+    private void validateNoChanges(Payment existing, CardUpdateRequestDto request, CardType type) {
+        boolean same =
+                type == CardType.SELECTED
+                        ? existing.getCardId().equals(request.getCardId())
+                        && existing.getCardName().equals(request.getCardName())
+                        : existing.getCustomCardCompany().equals(request.getCustomCardCompany())
+                        && existing.getCardName().equals(request.getCardName());
 
-            if (sameAsCurrent) {
-                throw new UniversityException(ExceptionMessage.NO_CHANGES_DETECTED);
-            }
-
-            int duplicateCount = cardMapper.duplicateCustomCard(
-                    cardUpdateRequestDto.getUserId(),
-                    cardUpdateRequestDto.getCustomCardCompany(),
-                    cardUpdateRequestDto.getCardName(),
-                    cardUpdateRequestDto.getPaymentId()
-            );
-
-            if (duplicateCount > 0) {
-                throw new UniversityException(ExceptionMessage.DUPLICATE_CARD);
-            }
+        if (same) {
+            throw new UniversityException(ExceptionMessage.NO_CHANGES_DETECTED);
         }
+    }
 
-        Payment updatePayment = new Payment();
-        updatePayment.setPaymentId(cardUpdateRequestDto.getPaymentId());
-        updatePayment.setUserId(cardUpdateRequestDto.getUserId());
-        updatePayment.setCardId(hasCardId ? cardUpdateRequestDto.getCardId() : null);
-        updatePayment.setCustomCardCompany(hasCustomCardCompany ? cardUpdateRequestDto.getCustomCardCompany() : null);
-        updatePayment.setCardName(cardUpdateRequestDto.getCardName());
+    private void validateDuplicate(CardUpdateRequestDto request, CardType type) {
+        int duplicateCount =
+                type == CardType.SELECTED
+                        ? cardMapper.duplicateSelectedCard(
+                        request.getUserId(),
+                        request.getCardId(),
+                        request.getCardName(),
+                        request.getPaymentId()
+                )
+                        : cardMapper.duplicateCustomCard(
+                        request.getUserId(),
+                        request.getCustomCardCompany(),
+                        request.getCardName(),
+                        request.getPaymentId()
+                );
 
-        int updateCount = cardMapper.updateCard(updatePayment);
-
-        if (updateCount == 0) {
-            throw new UniversityException(ExceptionMessage.CARD_UPDATE_FAILED);
+        if (duplicateCount > 0) {
+            throw new UniversityException(ExceptionMessage.DUPLICATE_CARD);
         }
+    }
+
+    private enum CardType {
+        SELECTED, CUSTOM
     }
 
     /*

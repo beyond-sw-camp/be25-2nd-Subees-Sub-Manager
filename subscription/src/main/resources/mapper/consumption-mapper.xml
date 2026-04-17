@@ -20,23 +20,25 @@
     <!-- 달력 전체 조회 (결제일, 해당 일 결제건수, 해당 일 총 결제금액, 시작일 < 다음 달 시작일,    -->
     <select id="selectCalendar" resultType="com.subees.submanager.consumption.model.dto.CalendarResponseDto">
         SELECT
-            DAY(a.start_date) AS payDay,
+            LEAST(DAY(a.start_date), DAY(LAST_DAY(#{monthStart}))) AS payDay,
             COUNT(*) AS totalCount,
             COALESCE(SUM(
-                CASE
-                    WHEN a.billing_cycle = '1M' THEN a.price
-                    WHEN a.billing_cycle = '1Y' THEN FLOOR(a.price / 12)
-            ELSE 0 END), 0) AS totalAmount,
+                             CASE
+                                 WHEN a.billing_cycle = '1M' THEN a.price
+                                 WHEN a.billing_cycle = '1Y' THEN FLOOR(a.price / 12)
+                                 ELSE 0
+                                 END
+                     ), 0) AS totalAmount,
             GROUP_CONCAT(s.item_name ORDER BY s.item_name SEPARATOR ', ') AS itemNames
         FROM add_subscription a
-        JOIN subscription_item s ON a.item_id = s.item_id
+                 JOIN subscription_item s
+                      ON a.item_id = s.item_id
         WHERE a.user_id = #{userId}
-        AND a.start_date &lt; #{nextMonthStart}
-        AND (a.end_date IS NULL OR a.end_date &gt;= #{monthStart})
-        GROUP BY DAY(a.start_date)
+          AND a.start_date &lt; #{nextMonthStart}
+          AND (a.end_date IS NULL OR a.end_date &gt;= #{monthStart})
+        GROUP BY LEAST(DAY(a.start_date), DAY(LAST_DAY(#{monthStart})))
         ORDER BY payDay
     </select>
-
     <!-- 선택 일 구독 조회(구독명, 가격, 선택일)-->
     <select id="selectDateDetailList" resultType="com.subees.submanager.consumption.model.dto.DateDetailResponseDto">
         SELECT
@@ -46,23 +48,19 @@
                 WHEN a.billing_cycle = '1Y' THEN FLOOR(a.price / 12)
                 ELSE 0
                 END AS price,
-            DAY(a.start_date) AS billingDay,
+            LEAST(DAY(a.start_date), DAY(LAST_DAY(#{monthStart}))) AS billingDay,
             a.payment_id AS paymentId,
-            c.card_company AS cardCompany,
-            p.custom_card_company AS cardCompany,
+            COALESCE(c.card_company, p.custom_card_company) AS cardCompany,
             p.card_name AS cardName
         FROM add_subscription a
-            JOIN subscription_item s
-        ON a.item_id = s.item_id
-            LEFT JOIN payment_method p
-            ON a.payment_id = p.payment_id
-            LEFT JOIN card c
-            ON p.card_id = c.card_id
+        JOIN subscription_item s ON a.item_id = s.item_id
+        LEFT JOIN payment_method p ON a.payment_id = p.payment_id
+        LEFT JOIN card c ON p.card_id = c.card_id
         WHERE a.user_id = #{userId}
-        AND a.start_date &lt; #{nextMonthStart}
-        AND (a.end_date IS NULL OR a.end_date &gt;= #{monthStart})
-        AND DAY(a.start_date) = #{startDate}
-        AND a.use_yn = 'Y'
+          AND a.start_date &lt; #{nextMonthStart}
+          AND (a.end_date IS NULL OR a.end_date &gt;= #{monthStart})
+          AND LEAST(DAY(a.start_date), DAY(LAST_DAY(#{monthStart}))) = #{startDate}
+          AND a.use_yn = 'Y'
         ORDER BY s.item_name ASC
     </select>
 
