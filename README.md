@@ -320,6 +320,205 @@ Subees의 API는 구독 관리, 결제 및 소비 분석, 커뮤니티, 회원 �
 - **설명:** 데이터베이스 구조 정의와 주요 동작 로직을 정리할 예정입니다.
 - **상태:** 추후 작성 예정
 
+<details>
+  <summary>📌DDL</summary>
+  
+   <details>
+     <summary>    구독 카테고리 </summary>
+        
+```sql
+-- 1. subscription_category
+CREATE TABLE subscription_category (
+    category_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    category_name VARCHAR(255) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+```
+  </details>   
+  <details>
+        <summary>구독항목 </summary>
+        
+```sql
+CREATE TABLE subscription_item (
+    item_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    category_id BIGINT NOT NULL ,
+    item_name VARCHAR(255) NOT NULL ,
+    FOREIGN KEY (category_id) REFERENCES subscription_category(category_id),
+    UNIQUE (category_id, item_name)
+);
+```
+  </details>   
+  <details>
+        <summary>사용자</summary>
+        
+```sql
+CREATE TABLE `user` (
+    user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    `password` VARCHAR(255) NOT NULL,
+    nickname VARCHAR(255) NOT NULL UNIQUE,
+    user_state ENUM('ACTIVE', 'INACTIVE') NOT NULL,
+    profile_image VARCHAR(255) DEFAULT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+```
+  </details>   
+  <details>
+        <summary>카드</summary>
+        
+```sql
+CREATE TABLE card (
+    card_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    card_company VARCHAR(50) NOT NULL UNIQUE
+);
+```
+  </details>   
+  <details>
+        <summary>결제수단</summary>
+        
+```sql
+-- 5. payment_method
+CREATE TABLE payment_method (
+    payment_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    card_id BIGINT NULL,
+    user_id BIGINT NOT NULL,
+    card_name VARCHAR(255) NULL,
+    is_active TINYINT(1) NOT NULL DEFAULT 1 CHECK (is_active IN (0,1)),
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    custom_card_company VARCHAR(50) NULL,
+    FOREIGN KEY (user_id) REFERENCES `user`(user_id),
+    FOREIGN KEY (card_id) REFERENCES `card`(card_id),
+    CHECK (
+        (card_id IS NOT NULL AND custom_card_company IS NULL)
+        OR
+        (card_id IS NULL AND custom_card_company IS NOT NULL)
+    )
+);
+```
+  </details>   
+  <details>
+        <summary>구독 항목 추가</summary>
+        
+```sql
+-- 6. add_subscription
+CREATE TABLE add_subscription (
+    subscription_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    item_id BIGINT NOT NULL,
+    payment_id BIGINT NOT NULL,
+    price INT NOT NULL,
+    billing_cycle ENUM('1M', '1Y') NOT NULL,
+    start_date DATETIME NOT NULL,
+    end_date DATETIME NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    use_yn ENUM('Y','N') NOT NULL DEFAULT 'Y',
+    FOREIGN KEY (user_id) REFERENCES `user`(user_id),
+    FOREIGN KEY (item_id) REFERENCES subscription_item(item_id),
+    FOREIGN KEY (payment_id) REFERENCES payment_method(payment_id)
+);
+```
+  </details>   
+  <details>
+        <summary>게시글 등록</summary>
+        
+```sql
+-- 7. community_posts
+CREATE TABLE community_posts (
+    post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    view_count INT NOT NULL DEFAULT 0,
+    scrap_count INT NOT NULL DEFAULT 0,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES `user`(user_id)
+);
+```
+  </details>   
+    <details>
+        <summary>게시글 저장</summary>
+        
+```sql
+-- 8. community_scrap
+CREATE TABLE community_scrap (
+    scrap_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    post_id BIGINT NOT NULL ,
+    user_id BIGINT NOT NULL , 
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	 FOREIGN KEY (post_id) REFERENCES community_posts(post_id),
+	 FOREIGN KEY (user_id) REFERENCES `user`(user_id),
+	 UNIQUE (user_id, post_id)
+);
+
+```
+  </details>  
+    <details>
+        <summary>알림</summary>
+        
+```sql
+-- 9. notifications
+CREATE TABLE notifications (
+    notification_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    subscription_id BIGINT NOT NULL,
+    is_read TINYINT(1) NOT NULL DEFAULT 0 CHECK (is_read IN (0,1)),
+    is_closed TINYINT(1) NOT NULL DEFAULT 0 CHECK (is_closed IN (0,1)),
+    notify_type ENUM('D3', 'D0') NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    content TEXT NOT NULL,
+    target_date DATE NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES `user`(user_id),
+    FOREIGN KEY (subscription_id) REFERENCES add_subscription(subscription_id),
+    UNIQUE (user_id, subscription_id, notify_type, target_date)
+);
+```
+  </details>  
+      <details>
+        <summary>AI 추천</summary>
+        
+```sql
+-- 10. recommend_report
+CREATE TABLE recommend_report (
+    report_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    report_title VARCHAR(200) NOT NULL,
+    request_note TEXT NOT NULL,
+    generated_content LONGTEXT DEFAULT NULL,
+    total_monthly_price INT NOT NULL DEFAULT 0,
+    max_monthly_budget INT NOT NULL,
+    mandatory_items_json TEXT NOT NULL,
+    optional_items_json TEXT DEFAULT NULL,
+    report_status VARCHAR(20) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES `user`(user_id)
+);
+```
+  </details>  
+      <details>
+        <summary>추천구독 항목 저장</summary>
+        
+```sql
+-- 11. recommend_subscription_item
+CREATE TABLE recommend_subscription_item (
+    recommend_item_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    report_id BIGINT NOT NULL,
+    service_name VARCHAR(100) NOT NULL,
+    category VARCHAR(100) DEFAULT NULL,
+    monthly_price INT NOT NULL,
+    `description` VARCHAR(255) DEFAULT NULL,
+    sort_order INT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (report_id) REFERENCES recommend_report(report_id)
+);
+```
+  </details>  
+  
+   </details>
 </details>
 
 ---
@@ -339,7 +538,7 @@ Subees의 API는 구독 관리, 결제 및 소비 분석, 커뮤니티, 회원 �
 <summary><b>🧪 API 단위 테스트 결과서</b></summary>
 <br>
 
--[테스트 기획서 바로가기](https://www.figma.com/design/8EOuGl8Jxtz5RJapDro4ky/Subees-%ED%99%94%EB%A9%B4-%EB%B0%8F-%EA%B8%B0%EB%8A%A5%EC%84%A4%EA%B3%84%EC%84%9C-%EC%8A%A4%EC%BC%88%EB%A0%88%ED%86%A4-?node-id=171-498&t=FHeZP6i194wx87xW-1)
+-[테스트 기획서 바로가기](https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?usp=sharing&ouid=101095421293122595376&rtpof=true&sd=true)
 
 
 <div align="center">
