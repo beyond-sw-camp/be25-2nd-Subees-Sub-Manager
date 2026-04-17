@@ -264,7 +264,7 @@
 <summary><b>📑 API 명세서</b></summary>
 <br>
 
-- [API 명세서 바로가기](https://www.notion.so/api-31e712dca4bf807e97fbe583efc7e99e?source=copy_link)
+- [API 명세서 바로가기](https://www.notion.so/API-342712dca4bf801a882fcc78e4443f21)
 
 <div align="center">
   <img src="./이미지/작업이미지/api명세서.png" alt="API 명세서" width="640" />
