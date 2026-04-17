@@ -178,8 +178,12 @@
 <summary><b>🧾 요구사항 명세서</b></summary>
 <br>
 
-- [요구사항 명세서 바로가기](https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?usp=sharing&ouid=102208872170708224187&rtpof=true&sd=true)
+- [요구사항 명세서 바로가기](https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?gid=955682159#gid=955682159)
 
+<div align="center">
+  <img src="./이미지/작업이미지/요구사항명세서.png" alt="요구사항 명세서" width="640" />
+</div>
+  
 </details>
 
 ---
