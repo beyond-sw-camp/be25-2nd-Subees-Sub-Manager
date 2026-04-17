@@ -217,7 +217,7 @@
 <summary><b>📋 테이블 명세서 및 제약 조건</b></summary>
 <br>
 
-- [테이블 명세서 바로가기](https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?usp=sharing&ouid=102208872170708224187&rtpof=true&sd=true)
+- [테이블 명세서 바로가기](https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?gid=2057065080#gid=2057065080)
 
 <div align="center">
   <img src="./이미지/작업이미지/테이블명세서.png" alt="테이블 명세서" width="640" />
@@ -232,8 +232,8 @@
 - `payment_method`, `card`: 사용자 결제수단 및 카드사 정보 관리
 - `community_posts`, `community_scrap`: 게시글 및 스크랩 기능 관리
 - `notifications`: 결제 알림 및 상태 관리
-- `recommendations`: 예산 기반 추천 결과 저장
-- `setting`, `editlog`: 설정 변경 및 수정 이력 관리
+- `recommend_subscription_item`, `recommend_report`: 예산 기반 추천 결과 저장
+- `editlog`: 설정 변경 및 수정 이력 관리
 
 **주요 제약 조건**
 - **UNIQUE**: 이메일, 닉네임 중복 방지
