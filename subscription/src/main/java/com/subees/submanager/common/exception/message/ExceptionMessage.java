@@ -23,6 +23,7 @@ public enum ExceptionMessage {
     FILE_UPLOAD_FAILED("파일 저장 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     SUBSCRIPTION_NOT_FOUND("구독 정보를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     CARD_NOT_FOUND("등록된 카드 정보를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    CARD_TYPE_CHANGE_NOT_ALLOWED("카드 등록 방식은 수정할 수 없습니다.", HttpStatus.BAD_REQUEST),
     POST_NOT_FOUND("해당 게시글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     INVALID_PAGE("유효하지 않은 페이지입니다.", HttpStatus.BAD_REQUEST),
     INVALID_REQUEST("유효하지 않은 요청입니다.", HttpStatus.BAD_REQUEST),

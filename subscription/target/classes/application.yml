@@ -32,7 +32,7 @@ mybatis:
 
 jwt:
   secret: subees1234subees1234subees1234subees1234
-  access-token-expiration: 180000000000
+  access-token-expiration: 180000
 
 app:
   upload:
