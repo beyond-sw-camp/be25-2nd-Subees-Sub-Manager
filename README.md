@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./이미지/배너/배너.svg" alt="Subees 배너" width="900" />
+<img src="https://raw.githubusercontent.com/beyond-sw-camp/be25-2nd-Subees-Sub-Manager/8140d7060dddb394ab8b46295d534e70c3024dba/%EC%9D%B4%EB%AF%B8%EC%A7%80/%EB%B0%B0%EB%84%88/%EB%B0%B0%EB%84%88.svg" alt="Subees 배너" width="900" />
 
 <br/>
 
