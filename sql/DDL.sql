@@ -81,11 +81,12 @@ CREATE TABLE community_posts (
 -- 8. community_scrap
 CREATE TABLE community_scrap (
     scrap_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    post_id BIGINT NOT NULL UNIQUE ,
-    user_id BIGINT NOT NULL UNIQUE , 
+    post_id BIGINT NOT NULL ,
+    user_id BIGINT NOT NULL , 
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	 FOREIGN KEY (post_id) REFERENCES community_posts(post_id),
-	 FOREIGN KEY (user_id) REFERENCES `user`(user_id)
+	 FOREIGN KEY (user_id) REFERENCES `user`(user_id),
+	 UNIQUE (user_id, post_id)
 );
 
 -- 9. notifications
@@ -110,11 +111,11 @@ CREATE TABLE recommend_report (
     report_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
     report_title VARCHAR(200) NOT NULL,
-    request_note TEXT DEFAULT NOT NULL,
+    request_note TEXT NOT NULL,
     generated_content LONGTEXT DEFAULT NULL,
     total_monthly_price INT NOT NULL DEFAULT 0,
-    max_monthly_budget INT DEFAULT NOT NULL,
-    mandatory_items_json TEXT DEFAULT NOT NULL,
+    max_monthly_budget INT NOT NULL,
+    mandatory_items_json TEXT NOT NULL,
     optional_items_json TEXT DEFAULT NULL,
     report_status VARCHAR(20) NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -133,8 +134,6 @@ CREATE TABLE recommend_subscription_item (
     sort_order INT NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (report_id) REFERENCES recommend_report(report_id)
-<<<<<<< HEAD
 );
-=======
-);
->>>>>>> develop
+
+
