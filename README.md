@@ -245,7 +245,7 @@
 <summary><b>🏗️ 시스템 아키텍처</b></summary>
 <br>
 
-- [시스템 아키텍처 바로가기](https://app.cloudcraft.co/view/65bc3092-5496-4d52-adb4-1ba4d1d7a0ac?key=4c22b50e-a162-4c2f-89c3-520f55bc47e1)
+- [시스템 아키텍처 바로가기](https://app.cloudcraft.co/blueprint/861df300-1950-40d0-9379-f620c6eecfff)
 
 <div align="center">
   <img src="./이미지/작업이미지/시스템아키텍쳐.png" alt="시스템 아키텍처" width="640" />
