@@ -44,7 +44,12 @@ CREATE TABLE payment_method (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     custom_card_company VARCHAR(50) NULL,
     FOREIGN KEY (user_id) REFERENCES `user`(user_id),
-    FOREIGN KEY (card_id) REFERENCES `card`(card_id)
+    FOREIGN KEY (card_id) REFERENCES `card`(card_id),
+    CHECK (
+        (card_id IS NOT NULL AND custom_card_company IS NULL)
+        OR
+        (card_id IS NULL AND custom_card_company IS NOT NULL)
+    )
 );
 
 -- 6. add_subscription
