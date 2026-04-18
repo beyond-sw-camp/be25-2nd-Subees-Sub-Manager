@@ -11,8 +11,6 @@
         <result property="password" column="password"/>
         <result property="nickname" column="nickname"/>
         <result property="userState" column="user_state"/>
-        <result property="emailVerified" column="email_verified"/>
-        <result property="emailVerifiedAt" column="email_verified_at"/>
         <result property="createdAt" column="created_at"/>
         <result property="profileImageUrl" column="profile_image"/>
     </resultMap>
@@ -36,8 +34,6 @@
             password,
             nickname,
             user_state,
-            email_verified,
-            email_verified_at,
             created_at,
             profile_image
         FROM `user`
@@ -51,8 +47,6 @@
             password,
             nickname,
             user_state,
-            email_verified,
-            email_verified_at,
             created_at,
             profile_image
         FROM `user`
@@ -68,8 +62,6 @@
             password,
             nickname,
             user_state,
-            email_verified,
-            email_verified_at,
             created_at,
             profile_image
         ) VALUES (
@@ -77,8 +69,6 @@
                      #{password},
                      #{nickname},
                      #{userState},
-                     #{emailVerified},
-                     #{emailVerifiedAt},
                      #{createdAt},
                      #{profileImageUrl}
                  )

@@ -336,6 +336,7 @@
     <update id="softDeleteSubscription" parameterType="long">
         UPDATE add_subscription
         SET use_yn = 'N',
+            end_date = CURDATE(),
             updated_at = NOW()
         WHERE subscription_id = #{subscriptionId}
           AND user_id = #{userId}
