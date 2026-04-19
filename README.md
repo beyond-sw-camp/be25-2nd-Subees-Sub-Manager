@@ -182,7 +182,7 @@
 - [요구사항 정의서 바로가기](https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?gid=955682159#gid=955682159)
 
 <div align="center">
-  <img src="https://github.com/beyond-sw-camp/be25-2nd-Subees-Sub-Manager/blob/main/%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9E%91%EC%97%85%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%20%EC%A0%95%EC%9D%98%EC%84%9C.png?raw=true" alt="ERD" width="640" />
+  <img src="https://github.com/beyond-sw-camp/be25-2nd-Subees-Sub-Manager/blob/main/%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9E%91%EC%97%85%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%20%EC%A0%95%EC%9D%98%EC%84%9C.png" alt="ERD" width="640" />
 </div>
 
 </details>
