@@ -3,6 +3,7 @@ package com.subees.submanager.consumption.model.mapper;
 import com.subees.submanager.consumption.model.dto.CalendarResponseDto;
 import com.subees.submanager.consumption.model.dto.CategoryAnalysisResponseDto;
 import com.subees.submanager.consumption.model.dto.DateDetailResponseDto;
+import com.subees.submanager.consumption.model.dto.MonthlyPaymentResponseDto;
 import com.subees.submanager.consumption.model.vo.CategorySummary;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -48,5 +49,11 @@ public interface ConsumptionMapper {
             @Param("yearStart") String yearStart,
             @Param("nextYearStart") String nextYearStart
     );
+
+        List<MonthlyPaymentResponseDto> selectMonthlyPaymentList(
+                @Param("userId") Long userId,
+                @Param("monthStart") String monthStart,
+                @Param("nextMonthStart") String nextMonthStart
+        );
 
 }

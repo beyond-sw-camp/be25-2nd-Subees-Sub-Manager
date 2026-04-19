@@ -8,6 +8,7 @@ import com.subees.submanager.consumption.model.dto.CategoryAnalysisResponseDto;
 import com.subees.submanager.consumption.model.dto.CategoryAnalysisResultDto;
 import com.subees.submanager.consumption.model.dto.CategoryResponseDto;
 import com.subees.submanager.consumption.model.dto.DateDetailResponseDto;
+import com.subees.submanager.consumption.model.dto.MonthlyPaymentResponseDto;
 import com.subees.submanager.consumption.model.mapper.ConsumptionMapper;
 import com.subees.submanager.consumption.model.vo.CategorySummary;
 import lombok.RequiredArgsConstructor;
@@ -184,4 +185,24 @@ public class ConsumptionServiceImpl implements ConsumptionService {
 
         return new CategoryAnalysisResultDto(year, month, rangeType, totalAmount, categories);
     }
+
+    /*
+    월별 분석
+     */
+    @Override
+    public List<MonthlyPaymentResponseDto> getMonthlyPaymentList(Long userId, int year, int month) {
+        if (userId == null) {
+            throw new UniversityException(ExceptionMessage.USER_NOT_FOUND);
+        }
+
+        LocalDate monthStart = LocalDate.of(year, month, 1);
+        LocalDate nextMonthStart = monthStart.plusMonths(1);
+
+        return consumptionMapper.selectMonthlyPaymentList(
+                userId,
+                monthStart.toString(),
+                nextMonthStart.toString()
+        );
+    }
+
 }

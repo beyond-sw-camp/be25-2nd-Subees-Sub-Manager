@@ -6,6 +6,7 @@ import com.subees.submanager.consumption.model.dto.CalendarResultDto;
 import com.subees.submanager.consumption.model.dto.CategoryAnalysisResultDto;
 import com.subees.submanager.consumption.model.dto.CategoryResponseDto;
 import com.subees.submanager.consumption.model.dto.DateDetailResponseDto;
+import com.subees.submanager.consumption.model.dto.MonthlyPaymentResponseDto;
 import com.subees.submanager.consumption.model.service.ConsumptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -71,5 +72,22 @@ public class ConsumptionController {
         CategoryAnalysisResultDto result = consumptionService.getCategoryAnalysis(userId, year, month, rangeType);
         return ResponseEntity.ok(new BaseResponseDto<>(HttpStatus.OK, result));
     }
+
+    @GetMapping("/analysis/month")
+    public ResponseEntity<BaseResponseDto<List<MonthlyPaymentResponseDto>>> getMonthlyPaymentList(
+            Authentication authentication,
+            @RequestParam int year,
+            @RequestParam int month
+    ) {
+        Long userId = (Long) authentication.getPrincipal();
+
+        List<MonthlyPaymentResponseDto> result =
+                consumptionService.getMonthlyPaymentList(userId, year, month);
+
+        return ResponseEntity.ok(
+                new BaseResponseDto<>(HttpStatus.OK, result)
+        );
+    }
+
 
 }
