@@ -156,7 +156,7 @@
 <br>
 
 <div align="center">
-  <img src="https://github.com/beyond-sw-camp/be25-2nd-Subees-Sub-Manager/blob/main/%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9E%91%EC%97%85%EC%9D%B4%EB%AF%B8%EC%A7%80/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%20%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4.png?raw=true" alt="프로젝트 시나리오" width="640" />
+  <img src="https://github.com/beyond-sw-camp/be25-2nd-Subees-Sub-Manager/blob/main/%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9E%91%EC%97%85%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%20%EC%A0%95%EC%9D%98%EC%84%9C.png" alt="프로젝트 시나리오" width="640" />
 </div>
 
 1. 사용자는 서비스 접속 후 회원 여부에 따라 회원가입 또는 로그인을 진행합니다.
@@ -179,10 +179,10 @@
 <summary><b>🧾 요구사항 정의서</b></summary>
 <br>
 
-- [요구사항 정의서 바로가기](https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?usp=sharing&ouid=101095421293122595376&rtpof=true&sd=true)
+- [요구사항 정의서 바로가기](https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?gid=955682159#gid=955682159)
 
 <div align="center">
-  <img src="https://github.com/beyond-sw-camp/be25-2nd-Subees-Sub-Manager/blob/main/%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9E%91%EC%97%85%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%20%EC%A0%95%EC%9D%98%EC%84%9C.png?raw=true" alt="ERD" width="640" />
+  <img src="https://github.com/beyond-sw-camp/be25-2nd-Subees-Sub-Manager/blob/main/%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9E%91%EC%97%85%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%20%EC%A0%95%EC%9D%98%EC%84%9C.png" alt="ERD" width="640" />
 </div>
 
 </details>
@@ -287,7 +287,7 @@
 - [API 명세서 바로가기](https://www.notion.so/API-342712dca4bf801a882fcc78e4443f21?source=copy_link)
 
 <div align="center">
-  <img src="./이미지/작업이미지/api명세서.png" alt="API 명세서" width="640" />
+  <img src="./이미지/작업이미지/API 명세서.png" alt="API 명세서" width="640" />
 </div>
 
 **API 명세서 설명**  
