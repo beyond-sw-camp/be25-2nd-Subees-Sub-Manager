@@ -53,9 +53,9 @@
 
             CASE
                 WHEN DATEDIFF(calc.target_date, CURDATE()) = 3
-                    THEN CONCAT(c.card_company, '로 결제될 예정이에요.')
+                    THEN CONCAT(COALESCE(c.card_company, pm.custom_card_company), '로 결제될 예정이에요.')
                 WHEN DATEDIFF(calc.target_date, CURDATE()) = 0
-                    THEN CONCAT(c.card_company, '로 오늘 결제 예정이에요.')
+                    THEN CONCAT(COALESCE(c.card_company, pm.custom_card_company), '로 오늘 결제 예정이에요.')
                 END AS content,
 
             calc.target_date,
@@ -68,7 +68,7 @@
                       ON s.item_id = i.item_id
                  JOIN payment_method pm
                       ON s.payment_id = pm.payment_id
-                 JOIN card c
+                 LEFT JOIN card c
                       ON pm.card_id = c.card_id
                  JOIN (
             SELECT
