@@ -20,11 +20,23 @@
 
 <br/><br/>
 
-<img src="https://img.shields.io/badge/Backend-Spring%20Boot-0f172a?style=for-the-badge" alt="Backend" />
-<img src="https://img.shields.io/badge/Language-Java-0f172a?style=for-the-badge" alt="Java" />
-<img src="https://img.shields.io/badge/DB-MariaDB-0f172a?style=for-the-badge" alt="MariaDB" />
-<img src="https://img.shields.io/badge/ORM-JPA%20%2F%20QueryDSL-0f172a?style=for-the-badge" alt="ORM" />
-<img src="https://img.shields.io/badge/Docs-Swagger-0f172a?style=for-the-badge" alt="Swagger" />
+-----
+
+### Backend
+<img src="https://img.shields.io/badge/Java-0f172a?style=for-the-badge&logo=openjdk&logoColor=white" />
+<img src="https://img.shields.io/badge/Spring%20Boot-0f172a?style=for-the-badge&logo=springboot&logoColor=white" />
+<img src="https://img.shields.io/badge/Spring%20Security-0f172a?style=for-the-badge&logo=springsecurity&logoColor=white" />
+<img src="https://img.shields.io/badge/MyBatis-0f172a?style=for-the-badge&logoColor=white" />
+
+### Database & Tools
+<img src="https://img.shields.io/badge/MariaDB-1f2937?style=for-the-badge&logo=mariadb&logoColor=white" />
+<img src="https://img.shields.io/badge/Postman-1f2937?style=for-the-badge&logo=postman&logoColor=white" />
+<img src="https://img.shields.io/badge/HeidiSQL-1f2937?style=for-the-badge&logoColor=white" />
+
+### Collaboration
+<img src="https://img.shields.io/badge/GitHub-6b7280?style=for-the-badge&logo=github&logoColor=white" />
+<img src="https://img.shields.io/badge/Notion-6b7280?style=for-the-badge&logo=notion&logoColor=white" />
+<img src="https://img.shields.io/badge/Figma-6b7280?style=for-the-badge&logo=figma&logoColor=white" />
 
 </div>
 
@@ -102,8 +114,8 @@
 - [✅ 개발 산출물 및 검증](#개발-산출물-및-검증)
 - [🧩 화면 설계서](#화면설계서)
 - [📄 SQL 산출물](#sql-산출물)
-- [🧪 API 단위 테스트 결과서](#api-단위-테스트-결과서)
-- [📝 프로젝트 마무리 회고 및 향후 확장 계획](#프로젝트-마무리-회고-및-향후-확장-계획)
+- [🧪 테스트 결과 보고서](#테스트-결과-보고서)
+- [📝 회고록](#회고록)
 
 ---
 
@@ -533,35 +545,43 @@ CREATE TABLE recommend_subscription_item (
 
 ---
 
-<a id="api-단위-테스트-결과서"></a>
+<a id="테스트-결과-보고서"></a>
 <details>
-<summary><b>🧪 API 단위 테스트 결과서</b></summary>
+<summary><b>🧪 테스트 결과 보고서</b></summary>
+	
 <br>
 
--[테스트 기획서 바로가기](https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?usp=sharing&ouid=101095421293122595376&rtpof=true&sd=true)
+- [테스트 결과 보고서 바로가기](https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?usp=sharing&ouid=101095421293122595376&rtpof=true&sd=true)
 
 
 <div align="center">
   <img src="https://github.com/beyond-sw-camp/be25-2nd-Subees-Sub-Manager/blob/main/%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9E%91%EC%97%85%EC%9D%B4%EB%AF%B8%EC%A7%80/%EB%B0%B1_%ED%85%8C%EC%8A%A4%ED%8A%B8%EA%B8%B0%ED%9A%8D%EC%84%9C.png?raw=true" alt="테스트 기획서" width="640" />
 </div>
 
-</details>
-
-
-- **내용:** DB 적재 확인 및 조회 쿼리 증빙
-- **설명:** API 요청 결과와 데이터 반영 여부를 검증한 내용을 정리할 예정입니다.
-- **상태:** 추후 작성 예정
 
 </details>
 
 ---
 
-<a id="프로젝트-마무리-회고-및-향후-확장-계획"></a>
+<a id="회고록"></a>
 <details>
-<summary><b>📝 프로젝트 마무리 회고 및 향후 확장 계획</b></summary>
+<summary><b>📝 회고록</b></summary>
 <br>
 
-- 프로젝트 진행 과정에서의 개선점과 협업 회고를 정리할 예정입니다.
-- 향후에는 추천 로직 고도화, 알림 자동화, 사용자 맞춤 분석 기능 확장을 목표로 합니다.
 
+### ✏️ 김가영
+>프로젝트를 진행하며 회고 내용을 작성해주세요.
+
+
+### ✏️ 김다솜
+>프로젝트를 진행하며 회고 내용을 작성해주세요.
+
+### ✏️ 김승욱
+>프로젝트를 진행하며 회고 내용을 작성해주세요.
+
+### ✏️ 신민수
+>프로젝트를 진행하며 회고 내용을 작성해주세요.
+
+### ✏️ 이서윤
+>프로젝트를 진행하며 회고 내용을 작성해주세요.
 </details>
