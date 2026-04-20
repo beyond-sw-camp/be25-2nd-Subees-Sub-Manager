@@ -156,7 +156,7 @@
 <br>
 
 <div align="center">
-  <img src="https://github.com/beyond-sw-camp/be25-2nd-Subees-Sub-Manager/blob/main/%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9E%91%EC%97%85%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%20%EC%A0%95%EC%9D%98%EC%84%9C.png" alt="프로젝트 시나리오" width="640" />
+  <img src="https://github.com/beyond-sw-camp/be25-2nd-Subees-Sub-Manager/blob/main/%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9E%91%EC%97%85%EC%9D%B4%EB%AF%B8%EC%A7%80/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%20%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4.png" alt="프로젝트 시나리오" width="640" />
 </div>
 
 1. 사용자는 서비스 접속 후 회원 여부에 따라 회원가입 또는 로그인을 진행합니다.
