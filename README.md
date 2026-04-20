@@ -298,7 +298,7 @@
 - [API 명세서 바로가기](https://www.notion.so/API-342712dca4bf801a882fcc78e4443f21?source=copy_link)
 
 <div align="center">
-  <img src="./이미지/작업이미지/API 명세서.png" alt="API 명세서" width="640" />
+  <img src="./이미지/작업이미지/api명세서.png" alt="API 명세서" width="640" />
 </div>
 
 **API 명세서 설명**  
