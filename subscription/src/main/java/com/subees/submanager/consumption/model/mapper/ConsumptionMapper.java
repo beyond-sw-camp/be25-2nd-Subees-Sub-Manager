@@ -22,14 +22,16 @@ public interface ConsumptionMapper {
     List<CalendarResponseDto> selectCalendar(
             @Param("userId") Long userId,
             @Param("monthStart") String monthStart,
-            @Param("nextMonthStart") String nextMonthStart
+            @Param("nextMonthStart") String nextMonthStart,
+            @Param("month") int month
     );
 
-    List<DateDetailResponseDto> selectDateDetailList(
+    List<DateDetailResponseDto> getDetail(
             @Param("userId") Long userId,
             @Param("monthStart") String monthStart,
             @Param("nextMonthStart") String nextMonthStart,
-            @Param("startDate") Integer startDate
+            @Param("month") int month,
+            @Param("date") Integer date
     );
 
     List<CategorySummary> selectCategory(
@@ -53,7 +55,8 @@ public interface ConsumptionMapper {
         List<MonthlyPaymentResponseDto> selectMonthlyPaymentList(
                 @Param("userId") Long userId,
                 @Param("monthStart") String monthStart,
-                @Param("nextMonthStart") String nextMonthStart
+                @Param("nextMonthStart") String nextMonthStart,
+                @Param("month") int month
         );
 
 }

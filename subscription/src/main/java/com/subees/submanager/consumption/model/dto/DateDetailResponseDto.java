@@ -10,17 +10,19 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DateDetailResponseDto {
+
+    private Long subscriptionId;
+
     private String itemName;
 
     private int billingDay;
 
     private int price;
 
-    private Long paymentId;
-
-    private String cardName;
+    private String customCardCompany;
 
     private String cardCompany;
+
 
 
 

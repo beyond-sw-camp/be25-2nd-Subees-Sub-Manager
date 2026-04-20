@@ -51,7 +51,8 @@ public class ConsumptionServiceImpl implements ConsumptionService {
         List<CalendarResponseDto> items = consumptionMapper.selectCalendar(
                 userId,
                 monthStart.toString(),
-                nextMonthStart.toString()
+                nextMonthStart.toString(),
+                month
         );
 
         return new CalendarResultDto(year, month, monthTotalAmount, items);
@@ -83,10 +84,11 @@ public class ConsumptionServiceImpl implements ConsumptionService {
         LocalDate monthStart = LocalDate.of(year, month, 1);
         LocalDate nextMonthStart = monthStart.plusMonths(1);
 
-        return consumptionMapper.selectDateDetailList(
+        return consumptionMapper.getDetail(
                 userId,
                 monthStart.toString(),
                 nextMonthStart.toString(),
+                month,
                 date
         );
     }
@@ -201,7 +203,8 @@ public class ConsumptionServiceImpl implements ConsumptionService {
         return consumptionMapper.selectMonthlyPaymentList(
                 userId,
                 monthStart.toString(),
-                nextMonthStart.toString()
+                nextMonthStart.toString(),
+                month
         );
     }
 
