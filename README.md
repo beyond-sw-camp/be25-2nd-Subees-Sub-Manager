@@ -237,7 +237,7 @@
 <summary><b>📋 테이블 명세서 및 제약 조건</b></summary>
 <br>
 
-- [테이블 명세서 바로가기](https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?usp=sharing&ouid=101095421293122595376&rtpof=true&sd=true)
+- [테이블 명세서 바로가기](https://docs.google.com/spreadsheets/d/1t28YAF3teou6grdUzRbnRs2NyKi5boFY/edit?gid=2057065080#gid=2057065080)
 
 <div align="center">
   <img src="https://github.com/beyond-sw-camp/be25-2nd-Subees-Sub-Manager/blob/main/%EC%9D%B4%EB%AF%B8%EC%A7%80/%EC%9E%91%EC%97%85%EC%9D%B4%EB%AF%B8%EC%A7%80/%ED%85%8C%EC%9D%B4%EB%B8%94%20%EB%AA%85%EC%84%B8%EC%84%9C.png?raw=true" alt="테이블 명세서" width="640" />
