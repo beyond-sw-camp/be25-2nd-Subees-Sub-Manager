@@ -18,41 +18,41 @@
     </select>
 
 
-    <!-- 달력 전체 조회 (연간 월간 모두 반영 -> 결제일, 해당 일 결제건수, 해당 일 총 결제금액, 시작일 < 다음 달 시작일)    -->
-        <select id="selectCalendar" resultType="com.subees.submanager.consumption.model.dto.CalendarResponseDto">
+    <!-- 달력 전체 조회 -->
+    <select id="selectCalendar" resultType="com.subees.submanager.consumption.model.dto.CalendarResponseDto">
+        SELECT
+            pay_day AS payDay,
+            COUNT(*) AS totalCount,
+            SUM(amount) AS totalAmount,
+            GROUP_CONCAT(item_name ORDER BY item_name SEPARATOR ', ') AS itemNames
+        FROM (
             SELECT
-                pay_day AS payDay,
-                COUNT(*) AS totalCount,
-                SUM(amount) AS totalAmount,
-                GROUP_CONCAT(item_name ORDER BY item_name SEPARATOR ', ') AS itemNames
-            FROM ( -- 월간 쿼리
-                     SELECT
-                         DAY(a.start_date) AS pay_day,
-                         s.item_name AS item_name,
-                         a.price AS amount
-                     FROM add_subscription a
-                         JOIN subscription_item s ON a.item_id = s.item_id
-                     WHERE a.user_id = #{userId}
-                       AND a.billing_cycle = '1M'
-                       AND a.start_date &lt; #{nextMonthStart}
-                       AND (a.end_date IS NULL OR a.end_date &gt;= #{monthStart})
+                LEAST(DAY(a.start_date), DAY(LAST_DAY(#{monthStart}))) AS pay_day,
+                s.item_name AS item_name,
+                a.price AS amount
+            FROM add_subscription a
+                     JOIN subscription_item s ON a.item_id = s.item_id
+            WHERE a.user_id = #{userId}
+              AND a.billing_cycle = '1M'
+              AND a.start_date &lt; #{nextMonthStart}
+              AND (a.end_date IS NULL OR a.end_date &gt;= #{monthStart})
 
-                     UNION ALL
+            UNION ALL
 
-                     SELECT -- 연간 쿼리
-                         DAY(a.start_date) AS pay_day,
-                         s.item_name AS item_name,
-                         a.price AS amount
-                     FROM add_subscription a
-                         JOIN subscription_item s ON a.item_id = s.item_id
-                     WHERE a.user_id = #{userId}
-                       AND a.billing_cycle = '1Y'
-                       AND MONTH(a.start_date) = #{month}
-                       AND a.start_date &lt; #{nextMonthStart}
-                       AND (a.end_date IS NULL OR a.end_date &gt;= #{monthStart})
-                 ) t
-            GROUP BY pay_day
-            ORDER BY pay_day
+            SELECT
+                LEAST(DAY(a.start_date), DAY(LAST_DAY(#{monthStart}))) AS pay_day,
+                s.item_name AS item_name,
+                a.price AS amount
+            FROM add_subscription a
+                     JOIN subscription_item s ON a.item_id = s.item_id
+            WHERE a.user_id = #{userId}
+                      AND a.billing_cycle = '1Y'
+                      AND MONTH(a.start_date) = #{month}
+            AND a.start_date &lt; #{nextMonthStart}
+            AND (a.end_date IS NULL OR a.end_date &gt;= #{monthStart})
+            ) t
+        GROUP BY pay_day
+        ORDER BY pay_day
     </select>
     <!-- 선택 일 구독 조회(구독명, 가격, 선택일)-->
     <select id="getDetail" resultType="com.subees.submanager.consumption.model.dto.DateDetailResponseDto">
@@ -60,23 +60,28 @@
             a.subscription_id AS subscriptionId,
             s.item_name AS itemName,
             a.price AS price,
-            DAY(a.start_date) AS billingDay,
+            LEAST(DAY(a.start_date), DAY(LAST_DAY(#{monthStart}))) AS billingDay,
             pm.custom_card_company AS customCardCompany,
             c.card_company AS cardCompany
         FROM add_subscription a
-            JOIN subscription_item s ON a.item_id = s.item_id
-            LEFT JOIN payment_method pm ON a.payment_id = pm.payment_id
-            LEFT JOIN card c ON pm.card_id = c.card_id
+                 JOIN subscription_item s ON a.item_id = s.item_id
+                 LEFT JOIN payment_method pm ON a.payment_id = pm.payment_id
+                 LEFT JOIN card c ON pm.card_id = c.card_id
         WHERE a.user_id = #{userId}
-          AND DAY(a.start_date) = #{date}
+          AND LEAST(DAY(a.start_date), DAY(LAST_DAY(#{monthStart}))) = #{date}
           AND (
-            (a.billing_cycle = '1M'
-          AND a.start_date &lt; #{nextMonthStart}
-          AND (a.end_date IS NULL OR a.end_date &gt;= #{monthStart}))
-           OR (a.billing_cycle = '1Y'
-          AND MONTH(a.start_date) = #{month}
-          AND a.start_date &lt; #{nextMonthStart}
-          AND (a.end_date IS NULL OR a.end_date &gt;= #{monthStart}))
+            (
+                a.billing_cycle = '1M'
+                    AND a.start_date &lt; #{nextMonthStart}
+                    AND (a.end_date IS NULL OR a.end_date &gt;= #{monthStart})
+                )
+                OR
+            (
+                a.billing_cycle = '1Y'
+                    AND MONTH(a.start_date) = #{month}
+                AND a.start_date &lt; #{nextMonthStart}
+                AND (a.end_date IS NULL OR a.end_date &gt;= #{monthStart})
+            )
             )
         ORDER BY s.item_name
     </select>
